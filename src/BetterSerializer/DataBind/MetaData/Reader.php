@@ -34,6 +34,7 @@ final class Reader
      */
     public function read(string $className): MetaData
     {
+        echo 'a';
         return new MetaData();
     }
 }
