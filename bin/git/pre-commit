@@ -1,12 +1,12 @@
 #!/bin/bash
 
-PHPCS_BIN=./bin/phpcs
+PHPCS_BIN="./bin/phpcs"
 PHPCS_CODING_STANDARD=PSR2
 PHPCS_IGNORE="tests/*,bin/*"
 PHPCS_FILE_PATTERN="\.(php|phtml)$"
 PHPCS_ENCODING=utf-8
 
-PHPMD_BIN=./bin/phpmd
+PHPMD_BIN="./bin/phpmd"
 PHPMD_RULESETS=bin/static_analysis/phpmd.ruleset.xml
 
 PHPLINT_OUTPUT=""
@@ -37,7 +37,7 @@ then
     against=HEAD
 else
     # Initial commit: diff against an empty tree object
-    against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+    against=74c0f0ef290579f90f814f1142736e782f1d4127
 fi
 
 # this is the magic:
@@ -116,7 +116,7 @@ if [ "$PHP_STAGED_FILES" != "" ]; then
     PHPCS_RETVAL=$?
 
     PHPMD_OUTPUT=$($PHPMD_BIN $TMP_STAGING text $PHPMD_RULESETS --exclude $PHPCS_IGNORE)
-    PHPMD_RETVAL=0
+    PHPMD_RETVAL=$?
 fi
 
 # delete temporary copy of staging area
