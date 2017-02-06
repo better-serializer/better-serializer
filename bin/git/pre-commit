@@ -19,6 +19,8 @@ PHPMD_RETVAL=0
 
 TMP_STAGING=".tmp_staging"
 
+export PATH="/usr/local/bin:$PATH"
+
 # Check if executables are present
 if [ ! -x $PHPMD_BIN ]; then
     echo "PHP Mess Detector is missing -> $PHPMD_BIN";
@@ -103,7 +105,7 @@ if [ "$PHP_STAGED_FILES" != "" ]; then
 
     for FILE in $PHP_STAGED_FILES
     do
-        OUTPUT=$(php -l -d display_errors=0 $FILE)
+        OUTPUT=$(php -l $FILE)
         if [ $? -ne 0 ]; then
             PHPLINT_RETVAL=1
             PHPLINT_OUTPUT="$PHPLINT_OUTPUT $OUTPUT"
@@ -113,7 +115,7 @@ if [ "$PHP_STAGED_FILES" != "" ]; then
     PHPCS_OUTPUT=$($PHPCS_BIN -s $IGNORE_WARNINGS  --standard=$PHPCS_CODING_STANDARD $ENCODING $IGNORE $PHP_STAGED_FILES)
     PHPCS_RETVAL=$?
 
-#    PHPMD_OUTPUT=$($PHPMD_BIN $TMP_STAGING text $PHPMD_RULESETS --exclude $PHPCS_IGNORE)
+    PHPMD_OUTPUT=$($PHPMD_BIN $TMP_STAGING text $PHPMD_RULESETS --exclude $PHPCS_IGNORE)
     PHPMD_RETVAL=0
 fi
 
