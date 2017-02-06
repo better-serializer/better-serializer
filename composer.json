@@ -1,0 +1,34 @@
+{
+    "name": "rastusik/better-serializer",
+    "description": "General de/serializer for vatious serialization formats.",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Rastusik",
+            "email": "rasta@lj.sk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "marc-mabe/php-enum": "^2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "BetterSerializer\\": "src/BetterSerializer/"
+        }
+    },
+
+    "autoload-dev": {
+        "psr-4": {
+            "BetterSerializer\\": "tests/BetterSerializer/"
+        }
+    }
+}
