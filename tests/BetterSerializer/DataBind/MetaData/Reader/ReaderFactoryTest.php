@@ -18,7 +18,5 @@ class ReaderFactoryTest extends TestCase
         $reader = $readerFactory->createReader();
 
         self::assertInstanceOf(Reader::class, $reader);
-        $metaData = $reader->read(Car::class);
-
     }
 }

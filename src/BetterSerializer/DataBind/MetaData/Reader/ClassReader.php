@@ -39,7 +39,6 @@ final class ClassReader implements ClassReaderInterface
     public function getClassMetadata(ReflectionClass $reflectionClass): ClassMetadataInterface
     {
         $classAnnotations = $this->annotationReader->getClassAnnotations($reflectionClass);
-        dump($classAnnotations);
 
         return new ClassMetadata($classAnnotations);
     }

@@ -15,7 +15,7 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\RootName::KEY_VALUE, type="string", required=true),
  * })
  */
-final class RootName
+final class RootName implements AnnotationInterface
 {
 
     /**

@@ -5,6 +5,7 @@
 declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
+use BetterSerializer\DataBind\MetaData\PropertyMetadata;
 use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use ReflectionClass;
@@ -37,11 +38,14 @@ final class PropertyReader implements PropertyReaderInterface
      */
     public function getPropertyMetadata(ReflectionClass $reflectionClass): array
     {
+        $metaData = [];
+
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
-            $propertyAnnotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
-            dump($propertyAnnotations);
+            $propertyName = $reflectionProperty->getName();
+            $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
+            $metaData[$propertyName] = new PropertyMetadata($reflectionProperty, $annotations);
         }
 
-        return[];
+        return $metaData;
     }
 }

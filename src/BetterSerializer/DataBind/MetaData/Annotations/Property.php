@@ -16,7 +16,7 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\Property::KEY_TYPE, type="string", required=true),
  * })
  */
-final class Property
+final class Property implements AnnotationInterface
 {
 
     /**
