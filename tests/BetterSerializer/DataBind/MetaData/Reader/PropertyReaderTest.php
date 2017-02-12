@@ -41,6 +41,8 @@ class PropertyReaderTest extends TestCase
 
         self::assertInternalType('array', $propertyMetadata);
         self::assertCount(2, $propertyMetadata);
+        self::assertArrayHasKey('property1', $propertyMetadata);
+        self::assertArrayHasKey('property2', $propertyMetadata);
         self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property1']);
         self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property2']);
     }
