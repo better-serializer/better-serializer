@@ -2,6 +2,8 @@
 /**
  * @author  mfris
  */
+declare(strict_types=1);
+
 namespace BetterSerializer\Common;
 
 use MabeEnum\Enum;

@@ -2,18 +2,24 @@
 /**
  * @author  mfris
  */
+declare(strict_types=1);
+
 namespace BetterSerializer\Dto;
+
+use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
 
 /**
  * Class Car
  * @author mfris
  * @package BetterSerializer\Dto
+ * @Serializer\RootName(value="car")
  */
 final class Car
 {
 
     /**
      * @var string
+     * @Serializer\Property(type="string")
      */
     private $title;
 
@@ -34,6 +40,7 @@ final class Car
     }
 
     /**
+     * @Serializer'Property(name="titlex")
      * @return string
      */
     public function getTitle(): string

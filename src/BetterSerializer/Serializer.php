@@ -2,8 +2,11 @@
 /**
  * @author  mfris
  */
-namespace BetterSerializer\DataBind;
+declare(strict_types=1);
 
+namespace BetterSerializer;
+
+use BetterSerializer\DataBind\Writer;
 use BetterSerializer\Common\SerializationType;
 
 /**
@@ -11,7 +14,7 @@ use BetterSerializer\Common\SerializationType;
  * @author mfris
  * @package BetterSerializer
  */
-final class ObjectMapper
+final class Serializer
 {
 
     /**
@@ -29,9 +32,10 @@ final class ObjectMapper
     }
 
     /**
-     * @param object $object
+     * @param Object $object
      * @param SerializationType $type
      * @return string
+     * @SuppressWarnings(PHPMD) // temporary
      */
     public function writeValueAsString($object, SerializationType $type): string
     {
