@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @author  mfris
  */
-declare(strict_types=1);
-
 namespace BetterSerializer\Dto;
 
 use BetterSerializer\DataBind\MetaData\Annotations as Serializer;

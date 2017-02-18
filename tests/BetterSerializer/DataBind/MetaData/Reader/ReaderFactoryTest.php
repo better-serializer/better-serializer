@@ -1,14 +1,19 @@
 <?php
+declare(strict_types = 1);
+
 /**
  * @author  mfris
  */
-declare(strict_types = 1);
-
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ReaderFactoryTest
+ * @author mfris
+ * @package BetterSerializer\DataBind\MetaData\Reader
+ */
 class ReaderFactoryTest extends TestCase
 {
 

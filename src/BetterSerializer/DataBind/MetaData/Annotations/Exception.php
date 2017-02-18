@@ -1,8 +1,9 @@
 <?php
+declare(strict_types = 1);
+
 /**
  * @author  mfris
  */
-declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Annotations;
 
 use LogicException;
