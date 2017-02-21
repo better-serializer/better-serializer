@@ -1,3 +1,6 @@
 .idea
-/bin/p*
+/bin
+!bin/git
+!bin/static_analysis
+!bin/setup-dev.sh
 /vendor/

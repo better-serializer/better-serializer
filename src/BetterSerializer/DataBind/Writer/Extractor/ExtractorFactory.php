@@ -16,7 +16,7 @@ use BetterSerializer\DataBind\MetaData\PropertyMetadata;
 final class ExtractorFactory
 {
 
-//    public function getInstance(PropertyMetadata $metadata): ExtractorInterface
-//    {
-//    }
+    public function getInstance(PropertyMetadata $metadata): ExtractorInterface
+    {
+    }
 }

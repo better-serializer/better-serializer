@@ -20,7 +20,8 @@
         "squizlabs/php_codesniffer": "^2.6",
         "phpmd/phpmd": "^2.5",
         "symfony/var-dumper": "^v3.2",
-        "mockery/mockery": "^0.9.8"
+        "mockery/mockery": "^0.9.8",
+        "phpro/grumphp": "^0.11.2"
     },
     "config": {
         "bin-dir": "bin"
