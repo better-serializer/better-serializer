@@ -18,5 +18,6 @@ final class ExtractorFactory
 
     public function getInstance(PropertyMetadata $metadata): ExtractorInterface
     {
+        a
     }
 }
