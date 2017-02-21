@@ -12,7 +12,7 @@ use MabeEnum\Enum;
  * Class SerializationType
  * @author mfris
  * @package BetterSerializer\Common
- * @method SerializationType JSON
+ * @method static SerializationType JSON
  */
 final class SerializationType extends Enum
 {

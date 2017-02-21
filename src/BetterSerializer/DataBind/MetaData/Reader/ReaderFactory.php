@@ -6,8 +6,10 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
+use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
 /**
  * Class ReaderFactory
@@ -17,6 +19,15 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 final class ReaderFactory
 {
 
+    /**
+     * @var DocBlockFactoryInterface
+     */
+    private $docBlockFactory;
+
+    /**
+     * @var TypeFactoryInterface
+     */
+    private $typeFactory;
 
     /**
      * @var Reader
@@ -24,7 +35,20 @@ final class ReaderFactory
     private $reader;
 
     /**
+     * ReaderFactory constructor.
+     * @param DocBlockFactoryInterface $docBlockFactory
+     * @param TypeFactoryInterface $typeFactory
+     */
+    public function __construct(DocBlockFactoryInterface $docBlockFactory, TypeFactoryInterface $typeFactory)
+    {
+        //DocBlockFactory::createInstance()
+        $this->docBlockFactory = $docBlockFactory;
+        $this->typeFactory = $typeFactory;
+    }
+
+    /**
      * @return Reader
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function createReader(): Reader
     {
@@ -35,7 +59,7 @@ final class ReaderFactory
         $annotationReader = $this->createAnnotationReader();
         $this->reader = new Reader(
             new ClassReader($annotationReader),
-            new PropertyReader($annotationReader)
+            new PropertyReader($annotationReader, $this->docBlockFactory, $this->typeFactory)
         );
 
         return $this->reader;
