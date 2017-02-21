@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Writer\Extractor;
 
@@ -21,7 +21,7 @@ class ExtractorFactoryTest extends TestCase
      */
     public function testGetInstance(): void
     {
-//        $factory = new ExtractorFactory();
+        //        $factory = new ExtractorFactory();
 //        $extractor = $factory->getInstance('string');
 //
 //        self::assertInstanceOf(ExtractorInterface::class, $extractor);

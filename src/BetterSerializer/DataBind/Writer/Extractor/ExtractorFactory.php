@@ -2,7 +2,9 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * Short desc
+ *
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Writer\Extractor;
 
@@ -15,9 +17,7 @@ use BetterSerializer\DataBind\MetaData\PropertyMetadata;
  */
 final class ExtractorFactory
 {
-
     public function getInstance(PropertyMetadata $metadata): ExtractorInterface
     {
-        a
     }
 }

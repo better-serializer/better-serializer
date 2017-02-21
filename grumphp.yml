@@ -1,4 +1,35 @@
 parameters:
     git_dir: .
     bin_dir: vendor/bin
-    tasks: {  }
+    tasks:
+      phpcpd: ~
+      phpcs:
+        standard: PSR2
+        show_warnings: true
+        tab_width: 4
+        whitelist_patterns: []
+        encoding: ~
+        ignore_patterns: []
+        sniffs: []
+        triggered_by: [php]
+      phpcsfixer2:
+        allow_risky: false
+        cache_file: ~
+        config: ~
+        rules:
+          - '@@PSR2'
+        using_cache: true
+        path_mode: ~
+        verbose: false
+        diff: true
+        triggered_by: ['php']
+      phplint: ~
+      phpmd:
+        exclude: []
+        ruleset: ['cleancode', 'codesize', 'naming']
+        triggered_by: ['php']
+      phpparser: ~
+      phpunit: ~
+      phpversion: ~
+      securitychecker: ~
+      shell: ~

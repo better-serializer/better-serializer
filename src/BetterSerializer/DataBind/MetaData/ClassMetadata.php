@@ -2,13 +2,14 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\MetaData;
 
 /**
  * Class ClassMetadata
- * @author mfris
+ *
+ * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
 final class ClassMetadata implements ClassMetadataInterface
@@ -21,6 +22,7 @@ final class ClassMetadata implements ClassMetadataInterface
 
     /**
      * ClassMetadata constructor.
+     *
      * @param array $annotations
      */
     public function __construct(array $annotations)

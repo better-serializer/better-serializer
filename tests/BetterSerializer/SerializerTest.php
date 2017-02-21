@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer;
 
@@ -24,7 +24,7 @@ class SerializerTest extends TestCase
      */
     public function testWriteValue(): void
     {
-//        $mapper = new Serializer(new Writer());
+        //        $mapper = new Serializer(new Writer());
 //        $return = $mapper->writeValueAsString(new Car('Volvo', 'red'), SerializationType::JSON());
 //
 //        self::assertEquals('test', $return);

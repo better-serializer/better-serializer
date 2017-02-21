@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\MetaData\Annotations;
 
@@ -22,7 +22,7 @@ final class RootName implements AnnotationInterface
     /**
      * @const string
      */
-    public const KEY_VALUE = 'value';
+    const KEY_VALUE = 'value';
 
     /**
      * @var string

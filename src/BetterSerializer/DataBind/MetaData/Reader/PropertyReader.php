@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
@@ -21,7 +21,8 @@ use ReflectionProperty;
 
 /**
  * Class PropertyReader
- * @author mfris
+ *
+ * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
 final class PropertyReader implements PropertyReaderInterface
@@ -44,9 +45,10 @@ final class PropertyReader implements PropertyReaderInterface
 
     /**
      * PropertyReader constructor.
-     * @param AnnotationReader $annotationReader
+     *
+     * @param AnnotationReader         $annotationReader
      * @param DocBlockFactoryInterface $docBlockFactory
-     * @param TypeFactoryInterface $typeFactory
+     * @param TypeFactoryInterface     $typeFactory
      */
     public function __construct(
         AnnotationReader $annotationReader,
@@ -78,7 +80,7 @@ final class PropertyReader implements PropertyReaderInterface
     }
 
     /**
-     * @param ReflectionProperty $reflectionProperty
+     * @param ReflectionProperty    $reflectionProperty
      * @param AnnotationInterface[] $annotations
      * @return TypeInterface
      * @throws Exception

@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Writer\Extractor;
 
@@ -13,5 +13,4 @@ namespace BetterSerializer\DataBind\Writer\Extractor;
  */
 interface ExtractorInterface
 {
-
 }

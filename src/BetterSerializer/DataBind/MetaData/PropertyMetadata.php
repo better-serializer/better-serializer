@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\MetaData;
 
@@ -12,7 +12,8 @@ use ReflectionProperty;
 
 /**
  * Class PropertyMetadata
- * @author mfris
+ *
+ * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
 final class PropertyMetadata implements PropertyMetadataInterface
@@ -35,9 +36,10 @@ final class PropertyMetadata implements PropertyMetadataInterface
 
     /**
      * PropertyMetadata constructor.
-     * @param ReflectionProperty $reflectionProperty
+     *
+     * @param ReflectionProperty    $reflectionProperty
      * @param AnnotationInterface[] $annotations
-     * @param TypeInterface $type
+     * @param TypeInterface         $type
      */
     public function __construct(ReflectionProperty $reflectionProperty, array $annotations, TypeInterface $type)
     {

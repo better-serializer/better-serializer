@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\Common;
 
@@ -10,12 +10,12 @@ use MabeEnum\Enum;
 
 /**
  * Class SerializationType
- * @author mfris
+ *
+ * @author  mfris
  * @package BetterSerializer\Common
- * @method static SerializationType JSON
+ * @method  static SerializationType JSON
  */
 final class SerializationType extends Enum
 {
-
-    public const JSON = 'json';
+    const JSON = 'json';
 }

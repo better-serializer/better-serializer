@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * @author  mfris
+ * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer;
 
@@ -11,7 +11,8 @@ use BetterSerializer\Common\SerializationType;
 
 /**
  * Class Jackson
- * @author mfris
+ *
+ * @author  mfris
  * @package BetterSerializer
  */
 final class Serializer
@@ -24,6 +25,7 @@ final class Serializer
 
     /**
      * ObjectMapper constructor.
+     *
      * @param Writer $writer
      */
     public function __construct(Writer $writer)
@@ -32,7 +34,7 @@ final class Serializer
     }
 
     /**
-     * @param Object $object
+     * @param Object            $object
      * @param SerializationType $type
      * @return string
      * @SuppressWarnings(PHPMD) // temporary
