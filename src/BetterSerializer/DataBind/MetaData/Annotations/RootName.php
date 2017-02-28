@@ -22,7 +22,7 @@ final class RootName implements AnnotationInterface
     /**
      * @const string
      */
-    const KEY_VALUE = 'value';
+    const KEY_VALUE = '';
 
     /**
      * @var string
@@ -32,10 +32,31 @@ final class RootName implements AnnotationInterface
     /**
      * RootName constructor.
      * @param array $values
+     * @throws Exception
      */
     public function __construct(array $values)
     {
-        $this->value = $values[self::KEY_VALUE];
+        $this->setValue($values);
+    }
+
+    /**
+     * @param array $values
+     * @return void
+     * @throws Exception
+     */
+    private function setValue(array $values): void
+    {
+        if (!array_key_exists(self::KEY_VALUE, $values)) {
+            throw new Exception('Value missing.');
+        }
+
+        $value = trim((string) $values[self::KEY_VALUE]);
+
+        if ($value === '') {
+            throw new Exception('Value property cannot be empty if set.');
+        }
+
+        $this->value = $value;
     }
 
     /**

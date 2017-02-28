@@ -14,7 +14,7 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  * @Target("PROPERTY")
  * @Attributes({
  *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\Property::KEY_NAME, type="string"),
- *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\Property::KEY_TYPE, type="string", required=true),
+ *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\Property::KEY_TYPE, type="string"),
  * })
  */
 final class Property implements AnnotationInterface
@@ -33,12 +33,12 @@ final class Property implements AnnotationInterface
     /**
      * @var string
      */
-    private $name;
+    private $name = '';
 
     /**
      * @var string
      */
-    private $type;
+    private $type = '';
 
     /**
      * Property constructor.
@@ -55,17 +55,19 @@ final class Property implements AnnotationInterface
      * @param array $values
      * @throws Exception
      */
-    private function setName(array $values)
+    private function setName(array $values): void
     {
-        if (array_key_exists(self::KEY_NAME, $values)) {
-            $name = trim((string) $values[self::KEY_NAME]);
-
-            if ($name === '') {
-                throw new Exception('Name property cannot be empty.');
-            }
-
-            $this->name = $name;
+        if (!array_key_exists(self::KEY_NAME, $values)) {
+            return;
         }
+
+        $name = trim((string) $values[self::KEY_NAME]);
+
+        if ($name === '') {
+            throw new Exception('Name property cannot be empty if set.');
+        }
+
+        $this->name = $name;
     }
 
     /**
@@ -78,10 +80,20 @@ final class Property implements AnnotationInterface
 
     /**
      * @param array $values
+     * @throws Exception
      */
-    private function setType(array $values)
+    private function setType(array $values): void
     {
+        if (!array_key_exists(self::KEY_TYPE, $values)) {
+            return;
+        }
+
         $type = trim((string) $values[self::KEY_TYPE]);
+
+        if ($type === '') {
+            throw new Exception('Type property cannot be empty if set.');
+        }
+
         $this->type = $type;
     }
 
