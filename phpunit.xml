@@ -1,8 +1,30 @@
 <phpunit bootstrap="vendor/autoload.php"
-         colors="true">
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    syntaxCheck="false">
     <testsuites>
         <testsuite name="BetterSerializer">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+    </filter>
+
+
+    <logging>
+        <log type="coverage-html" target="./log/codeCoverage" charset="UTF-8"
+             yui="true" highlight="true"
+             lowUpperBound="50" highLowerBound="80"/>
+        <log type="coverage-text" target="php://stdout" />
+    </logging>
 </phpunit>

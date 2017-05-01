@@ -7,7 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
-use BetterSerializer\DataBind\MetaData\Annotations\Property;
+use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetadata;
 use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
@@ -117,7 +117,7 @@ final class PropertyReader implements PropertyReaderInterface
         $propertyAnnotation = null;
 
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof Property) {
+            if ($annotation instanceof PropertyInterface) {
                 $propertyAnnotation = $annotation;
                 break;
             }

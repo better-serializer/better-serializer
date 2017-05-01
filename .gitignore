@@ -5,3 +5,4 @@
 !bin/static_analysis
 !bin/setup-dev.sh
 /vendor/
+/log/

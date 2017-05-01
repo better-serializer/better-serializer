@@ -20,8 +20,8 @@ final class ObjectType extends AbstractType
      */
     public function __construct()
     {
-        if (self::$type === null) {
-            self::$type = TypeEnum::OBJECT();
+        if ($this->type === null) {
+            $this->type = TypeEnum::OBJECT();
         }
     }
 }

@@ -31,5 +31,11 @@ class ReaderFactoryTest extends TestCase
         $reader = $readerFactory->createReader();
 
         self::assertInstanceOf(Reader::class, $reader);
+
+        // test cached reader
+        $reader2 = $readerFactory->createReader();
+
+        self::assertInstanceOf(Reader::class, $reader2);
+        self::assertSame($reader, $reader2);
     }
 }

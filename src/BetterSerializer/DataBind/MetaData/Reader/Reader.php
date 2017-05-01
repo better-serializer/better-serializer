@@ -8,6 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\MetaData;
 use ReflectionClass;
+use ReflectionException;
 use LogicException;
 
 /**
@@ -44,6 +45,7 @@ final class Reader
      * @param string $className
      * @return MetaData
      * @throws LogicException
+     * @throws ReflectionException
      */
     public function read(string $className): MetaData
     {
@@ -58,6 +60,7 @@ final class Reader
      * @param string $className
      * @return ReflectionClass
      * @throws LogicException
+     * @throws ReflectionException
      */
     private function getReflectionClass(string $className): ReflectionClass
     {

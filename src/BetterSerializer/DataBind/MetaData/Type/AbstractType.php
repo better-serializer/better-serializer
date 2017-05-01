@@ -17,7 +17,7 @@ abstract class AbstractType implements TypeInterface
     /**
      * @var TypeEnum
      */
-    protected static $type;
+    protected $type;
 
 
     /**
@@ -25,6 +25,6 @@ abstract class AbstractType implements TypeInterface
      */
     public function getType(): TypeEnum
     {
-        return self::$type;
+        return $this->type;
     }
 }

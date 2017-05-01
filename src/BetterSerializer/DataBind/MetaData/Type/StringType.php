@@ -20,8 +20,8 @@ final class StringType extends AbstractType
      */
     public function __construct()
     {
-        if (self::$type === null) {
-            self::$type = TypeEnum::STRING();
+        if ($this->type === null) {
+            $this->type = TypeEnum::STRING();
         }
     }
 }

@@ -20,8 +20,8 @@ final class BooleanType extends AbstractType
      */
     public function __construct()
     {
-        if (self::$type === null) {
-            self::$type = TypeEnum::BOOLEAN();
+        if ($this->type === null) {
+            $this->type = TypeEnum::BOOLEAN();
         }
     }
 }
