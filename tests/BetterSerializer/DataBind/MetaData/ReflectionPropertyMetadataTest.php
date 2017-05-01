@@ -17,7 +17,7 @@ use ReflectionProperty;
  * @package BetterSerializer\DataBind\MetaData
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class PropertyMetadataTest extends TestCase
+class ReflectionPropertyMetadataTest extends TestCase
 {
 
     /**
@@ -30,7 +30,8 @@ class PropertyMetadataTest extends TestCase
         /* @var $type TypeInterface */
         $type = Mockery::mock(TypeInterface::class);
 
-        $metaData = new PropertyMetadata($reflProperty, [], $type);
+        $metaData = new ReflectionPropertyMetadata($reflProperty, [], $type);
         self::assertSame($type, $metaData->getType());
+        self::assertSame($reflProperty, $metaData->getReflectionProperty());
     }
 }

@@ -8,7 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\ClassMetadataInterface;
 use BetterSerializer\DataBind\MetaData\MetaData;
-use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\CarImpl;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use LogicException;
@@ -37,7 +37,7 @@ class ReaderTest extends TestCase
         $propertyReader = Mockery::mock(PropertyReaderInterface::class, ['getPropertyMetadata' => []]);
 
         $reader = new Reader($classReader, $propertyReader);
-        $metaData = $reader->read(Car::class);
+        $metaData = $reader->read(CarImpl::class);
 
         self::assertInstanceOf(MetaData::class, $metaData);
     }

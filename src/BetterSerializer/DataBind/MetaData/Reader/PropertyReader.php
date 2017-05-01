@@ -8,7 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use BetterSerializer\DataBind\MetaData\PropertyMetadata;
+use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
@@ -73,7 +73,7 @@ final class PropertyReader implements PropertyReaderInterface
             $propertyName = $reflectionProperty->getName();
             $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
             $type = $this->getType($reflectionProperty, $annotations);
-            $metaData[$propertyName] = new PropertyMetadata($reflectionProperty, $annotations, $type);
+            $metaData[$propertyName] = new ReflectionPropertyMetadata($reflectionProperty, $annotations, $type);
         }
 
         return $metaData;

@@ -6,7 +6,6 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData;
 
-use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use ReflectionProperty;
 
 /**
@@ -14,11 +13,11 @@ use ReflectionProperty;
  *
  * @package BetterSerializer\DataBind\MetaData
  */
-interface PropertyMetadataInterface
+interface ReflectionPropertyMetadataInterface extends PropertyMetadataInterface
 {
 
     /**
-     * @return TypeInterface
+     * @return ReflectionProperty
      */
-    public function getType(): TypeInterface;
+    public function getReflectionProperty() : ReflectionProperty;
 }

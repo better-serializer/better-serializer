@@ -13,4 +13,10 @@ namespace BetterSerializer\DataBind\Writer\Extractor;
  */
 interface ExtractorInterface
 {
+
+    /**
+     * @param object $instance
+     * @return mixed
+     */
+    public function extract($instance);
 }

@@ -8,7 +8,7 @@ namespace BetterSerializer;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\DataBind\Writer;
-use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\CarImpl;
 use PHPUnit\Framework\TestCase;
 
 /**

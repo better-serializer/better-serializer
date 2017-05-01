@@ -16,7 +16,7 @@ use ReflectionProperty;
  * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-final class PropertyMetadata implements PropertyMetadataInterface
+final class ReflectionPropertyMetadata implements ReflectionPropertyMetadataInterface
 {
 
     /**
@@ -54,5 +54,13 @@ final class PropertyMetadata implements PropertyMetadataInterface
     public function getType(): TypeInterface
     {
         return $this->type;
+    }
+
+    /**
+     * @return ReflectionProperty
+     */
+    public function getReflectionProperty(): ReflectionProperty
+    {
+        return $this->reflectionProperty;
     }
 }

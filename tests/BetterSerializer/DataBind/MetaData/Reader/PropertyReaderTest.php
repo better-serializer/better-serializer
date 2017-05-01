@@ -7,7 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use BetterSerializer\DataBind\MetaData\PropertyMetadata;
+use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
@@ -89,8 +89,8 @@ class PropertyReaderTest extends TestCase
         self::assertCount(2, $propertyMetadata);
         self::assertArrayHasKey('property1', $propertyMetadata);
         self::assertArrayHasKey('property2', $propertyMetadata);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property1']);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property2']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property1']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property2']);
     }
 
     /**
@@ -145,8 +145,8 @@ class PropertyReaderTest extends TestCase
         self::assertCount(2, $propertyMetadata);
         self::assertArrayHasKey('property1', $propertyMetadata);
         self::assertArrayHasKey('property2', $propertyMetadata);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property1']);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property2']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property1']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property2']);
     }
 
     /**
@@ -211,8 +211,8 @@ class PropertyReaderTest extends TestCase
         self::assertCount(2, $propertyMetadata);
         self::assertArrayHasKey('property1', $propertyMetadata);
         self::assertArrayHasKey('property2', $propertyMetadata);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property1']);
-        self::assertInstanceOf(PropertyMetadata::class, $propertyMetadata['property2']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property1']);
+        self::assertInstanceOf(ReflectionPropertyMetadata::class, $propertyMetadata['property2']);
     }
 
     /**

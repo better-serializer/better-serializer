@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
  * @package BetterSerializer\Dto
  * @Serializer\RootName(value="car")
  */
-final class Car
+final class CarImpl implements CarInterface
 {
 
     /**

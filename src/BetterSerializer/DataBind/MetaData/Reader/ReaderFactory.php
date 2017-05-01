@@ -41,7 +41,6 @@ final class ReaderFactory
      */
     public function __construct(DocBlockFactoryInterface $docBlockFactory, TypeFactoryInterface $typeFactory)
     {
-        //DocBlockFactory::createInstance()
         $this->docBlockFactory = $docBlockFactory;
         $this->typeFactory = $typeFactory;
     }
