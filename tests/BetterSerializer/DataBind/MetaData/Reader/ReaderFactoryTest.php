@@ -19,6 +19,10 @@ use Mockery;
  */
 class ReaderFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
     public function testCreateReader(): void
     {
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */

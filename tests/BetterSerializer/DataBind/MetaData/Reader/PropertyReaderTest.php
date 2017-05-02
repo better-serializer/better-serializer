@@ -32,6 +32,14 @@ class PropertyReaderTest extends TestCase
     /**
      *
      */
+    protected function tearDown()
+    {
+        Mockery::close();
+    }
+
+    /**
+     *
+     */
     public function testGetPropertyMetadataWithoutAnnotations(): void
     {
         /* @var $annotationReaderStub AnnotationReader */
@@ -39,34 +47,38 @@ class PropertyReaderTest extends TestCase
 
         $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
             ->shouldReceive('getType')
+            ->twice()
             ->andReturn('string')
-            ->mock();
+            ->getMock();
 
         $docBlockStub = Mockery::mock(new DocBlock())
             ->shouldReceive('getTagsByName')
+            ->twice()
             ->andReturn([$varTagStub])
-            ->mock();
+            ->getMock();
 
         /* @var $docBlockFactoryStub Mockery\MockInterface */
         $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class)
             ->shouldReceive('create')
+            ->twice()
             ->andReturnValues([
                 $docBlockStub,
                 $docBlockStub
             ])
-            ->mock();
+            ->getMock();
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
 
         /* @var $typeFactoryStub Mockery\MockInterface */
         $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
         $typeFactoryStub->shouldReceive('getType')
+            ->times(4)
             ->andReturnValues([
                 new NullType(),
                 new StringType(),
                 new NullType(),
                 new StringType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
@@ -108,7 +120,7 @@ class PropertyReaderTest extends TestCase
                 [$propertyAnnotStub1],
                 [$propertyAnnotStub2]
             ])
-            ->mock();
+            ->getMock();
         /* @var $annotationReaderStub AnnotationReader */
 
         /* @var $docBlockFactoryStub Mockery\MockInterface */
@@ -117,12 +129,12 @@ class PropertyReaderTest extends TestCase
 
         /* @var $typeFactoryStub Mockery\MockInterface */
         $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
+        $typeFactoryStub = $typeFactoryStub->shouldReceive('getType')
             ->andReturnValues([
                 new StringType(),
                 new StringType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
@@ -163,18 +175,18 @@ class PropertyReaderTest extends TestCase
                 [$propertyAnnotStub1],
                 []
             ])
-            ->mock();
+            ->getMock();
         /* @var $annotationReaderStub AnnotationReader */
 
         $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
             ->shouldReceive('getType')
             ->andReturn('string')
-            ->mock();
+            ->getMock();
 
         $docBlockStub = Mockery::mock(new DocBlock())
             ->shouldReceive('getTagsByName')
             ->andReturn([$varTagStub])
-            ->mock();
+            ->getMock();
 
         /* @var $docBlockFactoryStub Mockery\MockInterface */
         $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
@@ -188,7 +200,7 @@ class PropertyReaderTest extends TestCase
                 new NullType(),
                 new StringType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
@@ -234,7 +246,7 @@ class PropertyReaderTest extends TestCase
             ->andReturnValues([
                 new NullType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
@@ -271,7 +283,7 @@ class PropertyReaderTest extends TestCase
             ->andReturnValues([
                 new NullType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
@@ -299,7 +311,7 @@ class PropertyReaderTest extends TestCase
         $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
             ->shouldReceive('getType')
             ->andReturn('mixed')
-            ->mock();
+            ->getMock();
 
         $docBlockStub = Mockery::mock(new DocBlock(), ['getTagsByName' => [$varTagStub]]);
 
@@ -314,7 +326,7 @@ class PropertyReaderTest extends TestCase
                 new NullType(),
                 new NullType()
             ])
-            ->mock();
+            ->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
 
         $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
