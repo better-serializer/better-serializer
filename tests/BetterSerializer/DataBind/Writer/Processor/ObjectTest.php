@@ -44,4 +44,25 @@ class ObjectTest extends TestCase
         $processor = new Object([$processorMock, $processorMock], $outputKey);
         $processor->process($contextMock, $instance);
     }
+
+    /**
+     *
+     */
+    public function testProcessNull(): void
+    {
+        $outputKey = 'key';
+        $instance = null;
+        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock->expects(self::once())
+            ->method('write')
+            ->with($outputKey, null);
+
+        $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processorMock->expects(self::exactly(0))
+            ->method('process');
+
+        /* @var $contextMock ContextInterface */
+        $processor = new Object([$processorMock, $processorMock], $outputKey);
+        $processor->process($contextMock, $instance);
+    }
 }

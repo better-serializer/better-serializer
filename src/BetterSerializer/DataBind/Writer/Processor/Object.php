@@ -44,6 +44,12 @@ final class Object implements ProcessorInterface
      */
     public function process(ContextInterface $context, $instance): void
     {
+        if ($instance === null) {
+            $context->write($this->outputKey, null);
+
+            return;
+        }
+
         $subContext = $context->createSubContext();
 
         foreach ($this->processors as $processor) {
