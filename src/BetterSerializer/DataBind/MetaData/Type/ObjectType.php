@@ -15,13 +15,26 @@ final class ObjectType extends AbstractType
 {
 
     /**
+     * @var string
+     */
+    private $className;
+
+    /**
      * StringDataType constructor.
+     * @param string $className
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct()
+    public function __construct(string $className)
     {
-        if ($this->type === null) {
-            $this->type = TypeEnum::OBJECT();
-        }
+        $this->type = TypeEnum::OBJECT();
+        $this->className = $className;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string
+    {
+        return $this->className;
     }
 }

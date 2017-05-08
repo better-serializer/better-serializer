@@ -14,6 +14,7 @@ use MabeEnum\Enum;
  * @package BetterSerializer\DataBind\MetaData\Type
  * @method static TypeEnum STRING
  * @method static TypeEnum INTEGER
+ * @method static TypeEnum FLOAT
  * @method static TypeEnum BOOLEAN
  * @method static TypeEnum OBJECT
  * @method static TypeEnum NULL
@@ -30,6 +31,11 @@ final class TypeEnum extends Enum
      * @const string
      */
     const INTEGER = 'int';
+
+    /**
+     * @const string
+     */
+    const FLOAT = 'float';
 
     /**
      * @const string

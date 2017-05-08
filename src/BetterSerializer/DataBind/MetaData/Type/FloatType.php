@@ -11,7 +11,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-final class StringType extends AbstractType
+final class FloatType extends AbstractType
 {
 
     /**
@@ -20,6 +20,6 @@ final class StringType extends AbstractType
      */
     public function __construct()
     {
-        $this->type = TypeEnum::STRING();
+        $this->type = TypeEnum::FLOAT();
     }
 }

@@ -20,8 +20,6 @@ final class IntegerType extends AbstractType
      */
     public function __construct()
     {
-        if ($this->type === null) {
-            $this->type = TypeEnum::INTEGER();
-        }
+        $this->type = TypeEnum::INTEGER();
     }
 }

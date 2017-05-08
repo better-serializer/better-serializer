@@ -21,4 +21,9 @@ interface PropertyMetadataInterface
      * @return TypeInterface
      */
     public function getType(): TypeInterface;
+
+    /**
+     * @return bool
+     */
+    public function isObject(): bool;
 }

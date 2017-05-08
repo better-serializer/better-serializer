@@ -7,6 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
+use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use ReflectionProperty;
 
@@ -54,6 +55,14 @@ final class ReflectionPropertyMetadata implements ReflectionPropertyMetadataInte
     public function getType(): TypeInterface
     {
         return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isObject(): bool
+    {
+        return $this->type instanceof ObjectType;
     }
 
     /**

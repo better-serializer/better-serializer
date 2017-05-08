@@ -20,8 +20,6 @@ final class NullType extends AbstractType
      */
     public function __construct()
     {
-        if ($this->type === null) {
-            $this->type = TypeEnum::NULL();
-        }
+        $this->type = TypeEnum::NULL();
     }
 }

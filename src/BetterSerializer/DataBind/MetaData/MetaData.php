@@ -23,17 +23,33 @@ final class MetaData
     /**
      * @var PropertyMetadataInterface[]
      */
-    private $propertyMetadata;
+    private $propertiesMetadata;
 
     /**
      * MetaData constructor.
      *
      * @param ClassMetadataInterface      $classMetadata
-     * @param PropertyMetadataInterface[] $propertyMetadata
+     * @param PropertyMetadataInterface[] $propertiesMetadata
      */
-    public function __construct(ClassMetadataInterface $classMetadata, array $propertyMetadata)
+    public function __construct(ClassMetadataInterface $classMetadata, array $propertiesMetadata)
     {
         $this->classMetadata = $classMetadata;
-        $this->propertyMetadata = $propertyMetadata;
+        $this->propertiesMetadata = $propertiesMetadata;
+    }
+
+    /**
+     * @return ClassMetadataInterface
+     */
+    public function getClassMetadata(): ClassMetadataInterface
+    {
+        return $this->classMetadata;
+    }
+
+    /**
+     * @return PropertyMetadataInterface[]
+     */
+    public function getPropertiesMetadata(): array
+    {
+        return $this->propertiesMetadata;
     }
 }

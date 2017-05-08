@@ -10,6 +10,7 @@ use BetterSerializer\DataBind\MetaData\ClassMetadata;
 use BetterSerializer\DataBind\MetaData\ClassMetadataInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class ClassReader

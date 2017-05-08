@@ -26,4 +26,12 @@ final class FakePropertyMetadata implements PropertyMetadataInterface
     {
         return new NullType();
     }
+
+    /**
+     * @return bool
+     */
+    public function isObject(): bool
+    {
+        return false;
+    }
 }

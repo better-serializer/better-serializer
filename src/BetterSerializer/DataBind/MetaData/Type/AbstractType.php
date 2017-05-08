@@ -19,7 +19,6 @@ abstract class AbstractType implements TypeInterface
      */
     protected $type;
 
-
     /**
      * @return TypeEnum
      */

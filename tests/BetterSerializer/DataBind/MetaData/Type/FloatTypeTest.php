@@ -1,20 +1,20 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
+
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use BetterSerializer\Dto\CarImpl;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ObjectTypeTest
+ * Class FloatTypeTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-class ObjectTypeTest extends TestCase
+class FloatTypeTest extends TestCase
 {
 
     /**
@@ -22,8 +22,7 @@ class ObjectTypeTest extends TestCase
      */
     public function testGetType(): void
     {
-        $object = new ObjectType(CarImpl::class);
-        self::assertInstanceOf(get_class(TypeEnum::OBJECT()), $object->getType());
-        self::assertSame(CarImpl::class, $object->getClassName());
+        $int = new FloatType();
+        self::assertInstanceOf(get_class(TypeEnum::FLOAT()), $int->getType());
     }
 }
