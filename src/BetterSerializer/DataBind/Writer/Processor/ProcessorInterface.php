@@ -19,7 +19,7 @@ interface ProcessorInterface
 
     /**
      * @param ContextInterface $context
-     * @param mixed $instance
+     * @param mixed $data
      */
-    public function process(ContextInterface $context, $instance): void;
+    public function process(ContextInterface $context, $data): void;
 }

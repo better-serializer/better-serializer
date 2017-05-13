@@ -42,11 +42,11 @@ final class Property implements ProcessorInterface
 
     /**
      * @param ContextInterface $context
-     * @param mixed $instance
+     * @param mixed $data
      */
-    public function process(ContextInterface $context, $instance): void
+    public function process(ContextInterface $context, $data): void
     {
-        $value = $this->extractor->extract($instance);
+        $value = $this->extractor->extract($data);
         $this->valueWriter->writeValue($context, $value);
     }
 }

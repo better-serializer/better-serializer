@@ -7,14 +7,16 @@ declare(strict_types=1);
 namespace BetterSerializer;
 
 use BetterSerializer\Common\SerializationType;
-use BetterSerializer\DataBind\Writer;
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\DataBind\Writer\WriterInterface;
+use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
+use Mockery;
 
 /**
  * Class ObjectMapperTest
  * @author mfris
  * @package BetterSerializer\DataBind
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class SerializerTest extends TestCase
 {
@@ -22,14 +24,30 @@ class SerializerTest extends TestCase
     /**
      *
      */
-    public function testWriteValue(): void
+    protected function tearDown()
     {
-        //        $mapper = new Serializer(new Writer());
-//        $return = $mapper->writeValueAsString(new Car('Volvo', 'red'), SerializationType::JSON());
-//
-//        self::assertEquals('test', $return);
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        Mockery::close();
+    }
+
+    /**
+     *
+     */
+    public function testWriteValueAsString(): void
+    {
+        $toSerialize = new Radio('test');
+        $serializationType = SerializationType::NONE();
+        $serializedData = 'serialized';
+
+        $writer = Mockery::mock(WriterInterface::class);
+        $writer->shouldReceive('writeValueAsString')
+            ->with($toSerialize, $serializationType)
+            ->once()
+            ->andReturn($serializedData)
+            ->getMock();
+
+        $serializer = new Serializer($writer);
+        $output = $serializer->writeValueAsString($toSerialize, $serializationType);
+
+        self::assertSame($serializedData, $output);
     }
 }

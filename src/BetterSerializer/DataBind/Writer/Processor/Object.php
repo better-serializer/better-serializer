@@ -40,11 +40,11 @@ final class Object implements ProcessorInterface
 
     /**
      * @param ContextInterface $context
-     * @param mixed $instance
+     * @param mixed $data
      */
-    public function process(ContextInterface $context, $instance): void
+    public function process(ContextInterface $context, $data): void
     {
-        if ($instance === null) {
+        if ($data === null) {
             $context->write($this->outputKey, null);
 
             return;
@@ -53,7 +53,7 @@ final class Object implements ProcessorInterface
         $subContext = $context->createSubContext();
 
         foreach ($this->processors as $processor) {
-            $processor->process($subContext, $instance);
+            $processor->process($subContext, $data);
         }
 
         $context->mergeSubContext($this->outputKey, $subContext);

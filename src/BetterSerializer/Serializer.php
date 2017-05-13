@@ -6,8 +6,11 @@ declare(strict_types=1);
  */
 namespace BetterSerializer;
 
-use BetterSerializer\DataBind\Writer;
+use BetterSerializer\DataBind\Writer\WriterInterface;
 use BetterSerializer\Common\SerializationType;
+use LogicException;
+use ReflectionException;
+use RuntimeException;
 
 /**
  * Class Serializer
@@ -19,28 +22,30 @@ final class Serializer
 {
 
     /**
-     * @var Writer
+     * @var WriterInterface
      */
     private $writer;
 
     /**
      * ObjectMapper constructor.
      *
-     * @param Writer $writer
+     * @param WriterInterface $writer
      */
-    public function __construct(Writer $writer)
+    public function __construct(WriterInterface $writer)
     {
         $this->writer = $writer;
     }
 
     /**
-     * @param Object            $object
+     * @param mixed             $data
      * @param SerializationType $type
      * @return string
-     * @SuppressWarnings(PHPMD) // temporary
+     * @throws LogicException
+     * @throws ReflectionException
+     * @throws RuntimeException
      */
-    public function writeValueAsString($object, SerializationType $type): string
+    public function writeValueAsString($data, SerializationType $type): string
     {
-        return 'test';
+        return $this->writer->writeValueAsString($data, $type);
     }
 }
