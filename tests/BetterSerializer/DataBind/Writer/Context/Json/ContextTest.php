@@ -27,21 +27,22 @@ class ContextTest extends TestCase
     {
         $context = new Context();
         $context->write('key', 'value');
-        $data = $context->getData();
+        $data = $context->getRawData();
 
         self::assertInternalType('array', $data);
         self::assertArrayHasKey('key', $data);
         self::assertSame('value', $data['key']);
 
+        /* @var $subContext Context */
         $subContext = $context->createSubContext();
         self::assertInstanceOf(Context::class, $subContext);
-        $data = $subContext->getData();
+        $data = $subContext->getRawData();
         self::assertEmpty($data);
 
         $subContext->write('key2', 'value2');
         $context->mergeSubContext('sub', $subContext);
 
-        $data = $context->getData();
+        $data = $context->getRawData();
         self::assertInternalType('array', $data);
         self::assertArrayHasKey('key', $data);
         self::assertSame('value', $data['key']);
@@ -49,6 +50,9 @@ class ContextTest extends TestCase
         self::assertInternalType('array', $data['sub']);
         self::assertArrayHasKey('key2', $data['sub']);
         self::assertSame('value2', $data['sub']['key2']);
+
+        $json = $context->getData();
+        self::assertSame(json_encode($data), $json);
     }
 
     /**

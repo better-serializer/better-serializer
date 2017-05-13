@@ -24,7 +24,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor\Factory
  */
-final class ProcessorFactory
+final class ProcessorFactory implements ProcessorFactoryInterface
 {
 
     /**

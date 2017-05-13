@@ -16,7 +16,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Context
  */
-final class ContextFactory
+final class ContextFactory implements ContextFactoryInterface
 {
 
     /**

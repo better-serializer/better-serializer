@@ -6,7 +6,12 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\DataBind\Writer;
 
-use BetterSerializer\DataBind\MetaData\Reader\Reader;
+use BetterSerializer\Common\SerializationType;
+use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
+use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
+use LogicException;
+use ReflectionException;
+use RuntimeException;
 
 /**
  * Class Writer
@@ -17,16 +22,40 @@ final class Writer
 {
 
     /**
-     * @var Reader
+     * @var ProcessorFactoryInterface
      */
-    private $metaDataReader;
+    private $processorFactory;
+
+    /**
+     * @var ContextFactoryInterface
+     */
+    private $contextFactory;
 
     /**
      * Writer constructor.
-     * @param Reader $metaDataReader
+     * @param ProcessorFactoryInterface $processorFactory
+     * @param ContextFactoryInterface $contextFactory
      */
-    public function __construct(Reader $metaDataReader)
+    public function __construct(ProcessorFactoryInterface $processorFactory, ContextFactoryInterface $contextFactory)
     {
-        $this->metaDataReader = $metaDataReader;
+        $this->processorFactory = $processorFactory;
+        $this->contextFactory = $contextFactory;
+    }
+
+    /**
+     * @param mixed             $object
+     * @param SerializationType $type
+     * @return string
+     * @throws RuntimeException
+     * @throws ReflectionException
+     * @throws LogicException
+     */
+    public function writeValueAsString($object, SerializationType $type): string
+    {
+        $context = $this->contextFactory->createContext($type);
+        $processor = $this->processorFactory->create(get_class($object));
+        $processor->process($context, $object);
+
+        return $context->getData();
     }
 }

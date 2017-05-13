@@ -35,5 +35,10 @@ interface ContextInterface
     /**
      * @return mixed
      */
+    public function getRawData();
+
+    /**
+     * @return string
+     */
     public function getData();
 }

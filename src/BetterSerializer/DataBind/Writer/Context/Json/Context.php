@@ -58,14 +58,22 @@ final class Context implements ContextInterface
             );
         }
 
-        $this->data[$key] = $context->getData();
+        $this->data[$key] = $context->getRawData();
     }
 
     /**
      * @return array
      */
-    public function getData()
+    public function getRawData()
     {
         return $this->data;
+    }
+
+    /**
+     * @return string
+     */
+    public function getData()
+    {
+        return json_encode($this->data);
     }
 }
