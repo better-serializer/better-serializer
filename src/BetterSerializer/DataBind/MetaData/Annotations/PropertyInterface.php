@@ -11,7 +11,7 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Annotations
  */
-interface PropertyInterface
+interface PropertyInterface extends AnnotationInterface
 {
     /**
      * @return string

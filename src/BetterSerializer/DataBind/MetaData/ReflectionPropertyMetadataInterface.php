@@ -1,23 +1,24 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
+
 namespace BetterSerializer\DataBind\MetaData;
 
 use ReflectionProperty;
 
 /**
- * Interface PropertyMetadataInterface
- *
+ * Interface ReflectionPropertyMetadataInterface
  * @package BetterSerializer\DataBind\MetaData
  */
-interface ReflectionPropertyMetadataInterface extends PropertyMetadataInterface
+interface ReflectionPropertyMetaDataInterface extends PropertyMetaDataInterface
 {
 
     /**
      * @return ReflectionProperty
+     *
      */
-    public function getReflectionProperty() : ReflectionProperty;
+    public function getReflectionProperty(): ReflectionProperty;
 }

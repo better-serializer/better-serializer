@@ -12,7 +12,7 @@ namespace BetterSerializer\DataBind\MetaData;
  * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-final class MetaData
+final class MetaData implements MetaDataInterface
 {
 
     /**
@@ -21,7 +21,7 @@ final class MetaData
     private $classMetadata;
 
     /**
-     * @var PropertyMetadataInterface[]
+     * @var PropertyMetaDataInterface[]
      */
     private $propertiesMetadata;
 
@@ -29,7 +29,7 @@ final class MetaData
      * MetaData constructor.
      *
      * @param ClassMetadataInterface      $classMetadata
-     * @param PropertyMetadataInterface[] $propertiesMetadata
+     * @param PropertyMetaDataInterface[] $propertiesMetadata
      */
     public function __construct(ClassMetadataInterface $classMetadata, array $propertiesMetadata)
     {
@@ -46,7 +46,7 @@ final class MetaData
     }
 
     /**
-     * @return PropertyMetadataInterface[]
+     * @return PropertyMetaDataInterface[]
      */
     public function getPropertiesMetadata(): array
     {

@@ -7,16 +7,18 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Helper\DataBind\MetaData;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Dto\CarImpl;
+use ReflectionProperty;
 
 /**
  * Class FakePropertyMetadata
  * @author mfris
  * @package BetterSerializer\Helper\DataBind\MetaData
  */
-final class FakePropertyMetadata implements PropertyMetadataInterface
+final class FakePropertyMetaData implements PropertyMetaDataInterface
 {
 
     /**
@@ -33,5 +35,13 @@ final class FakePropertyMetadata implements PropertyMetadataInterface
     public function isObject(): bool
     {
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputKey(): string
+    {
+        return 'fake';
     }
 }

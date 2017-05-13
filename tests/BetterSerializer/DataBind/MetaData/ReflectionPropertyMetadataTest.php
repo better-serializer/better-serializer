@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData;
 
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
@@ -34,22 +34,49 @@ class ReflectionPropertyMetadataTest extends TestCase
         $metaData = new ReflectionPropertyMetadata($reflProperty, [], $type);
         self::assertSame($type, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());
-        self::assertFalse($metaData->isObject());
     }
 
     /**
      *
      */
-    public function testGetTypeObject(): void
+    public function testGetOutputKeyFromReflProperty(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class);
-        $type = new ObjectType('asd');
-
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
         /* @var $type TypeInterface */
+        $type = Mockery::mock(TypeInterface::class);
+
         $metaData = new ReflectionPropertyMetadata($reflProperty, [], $type);
-        self::assertSame($type, $metaData->getType());
-        self::assertSame($reflProperty, $metaData->getReflectionProperty());
-        self::assertTrue($metaData->isObject());
+        self::assertSame('test', $metaData->getOutputKey());
+    }
+
+    /**
+     *
+     */
+    public function testGetOutputKeyFromReflPropertyWhenInvalidPropertyAnnotationProvided(): void
+    {
+        /* @var $reflProperty ReflectionProperty */
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
+        /* @var $type TypeInterface */
+        $type = Mockery::mock(TypeInterface::class);
+        $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => '']);
+
+        $metaData = new ReflectionPropertyMetadata($reflProperty, [$propertyAnnotation], $type);
+        self::assertSame('test', $metaData->getOutputKey());
+    }
+
+    /**
+     *
+     */
+    public function testGetOutputKeyFromPropertyAnnotation(): void
+    {
+        /* @var $reflProperty ReflectionProperty */
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
+        /* @var $type TypeInterface */
+        $type = Mockery::mock(TypeInterface::class);
+        $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => 'test2']);
+
+        $metaData = new ReflectionPropertyMetadata($reflProperty, [$propertyAnnotation], $type);
+        self::assertSame('test2', $metaData->getOutputKey());
     }
 }

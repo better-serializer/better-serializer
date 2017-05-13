@@ -26,8 +26,8 @@ class MetaDataTest extends TestCase
     {
         $classMetadata = Mockery::mock(ClassMetadataInterface::class);
         $propertiesMetaData = [
-            Mockery::mock(PropertyMetadataInterface::class),
-            Mockery::mock(PropertyMetadataInterface::class),
+            Mockery::mock(PropertyMetaDataInterface::class),
+            Mockery::mock(PropertyMetaDataInterface::class),
         ];
 
         /* @var $classMetadata ClassMetadataInterface */
@@ -39,7 +39,7 @@ class MetaDataTest extends TestCase
         self::assertCount(2, $metaData->getPropertiesMetadata());
 
         foreach ($metaData->getPropertiesMetadata() as $propertyMetaData) {
-            self::assertInstanceOf(PropertyMetadataInterface::class, $propertyMetaData);
+            self::assertInstanceOf(PropertyMetaDataInterface::class, $propertyMetaData);
         }
     }
 }

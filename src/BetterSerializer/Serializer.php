@@ -10,7 +10,7 @@ use BetterSerializer\DataBind\Writer;
 use BetterSerializer\Common\SerializationType;
 
 /**
- * Class Jackson
+ * Class Serializer
  *
  * @author  mfris
  * @package BetterSerializer

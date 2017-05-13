@@ -29,14 +29,21 @@ final class CarImpl implements CarInterface
     private $color;
 
     /**
+     * @var Radio
+     */
+    private $radio;
+
+    /**
      * Car constructor.
      * @param string $title
      * @param string $color
+     * @param Radio $radio
      */
-    public function __construct(string $title, string $color)
+    public function __construct(string $title, string $color, Radio $radio)
     {
         $this->title = $title;
         $this->color = $color;
+        $this->radio = $radio;
     }
 
     /**
@@ -54,5 +61,13 @@ final class CarImpl implements CarInterface
     public function getColor(): string
     {
         return $this->color;
+    }
+
+    /**
+     * @return Radio
+     */
+    public function getRadio(): Radio
+    {
+        return $this->radio;
     }
 }

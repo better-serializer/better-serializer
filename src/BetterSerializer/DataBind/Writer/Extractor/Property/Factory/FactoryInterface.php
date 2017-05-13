@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Extractor\Property\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 
 /**
@@ -18,8 +18,8 @@ use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 interface FactoryInterface
 {
     /**
-     * @param PropertyMetadataInterface $metaData
+     * @param PropertyMetaDataInterface $metaData
      * @return ExtractorInterface
      */
-    public function newExtractor(PropertyMetadataInterface $metaData): ExtractorInterface;
+    public function newExtractor(PropertyMetaDataInterface $metaData): ExtractorInterface;
 }

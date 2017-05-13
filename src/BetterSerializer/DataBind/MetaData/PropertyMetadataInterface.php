@@ -14,7 +14,7 @@ use ReflectionProperty;
  *
  * @package BetterSerializer\DataBind\MetaData
  */
-interface PropertyMetadataInterface
+interface PropertyMetaDataInterface
 {
 
     /**
@@ -23,7 +23,7 @@ interface PropertyMetadataInterface
     public function getType(): TypeInterface;
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isObject(): bool;
+    public function getOutputKey(): string;
 }

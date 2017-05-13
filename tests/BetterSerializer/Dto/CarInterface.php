@@ -24,4 +24,9 @@ interface CarInterface
      * @return string
      */
     public function getColor(): string;
+
+    /**
+     * @return Radio
+     */
+    public function getRadio(): Radio;
 }

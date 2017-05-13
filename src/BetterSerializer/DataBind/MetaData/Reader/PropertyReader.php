@@ -8,8 +8,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetadata;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -62,7 +63,7 @@ final class PropertyReader implements PropertyReaderInterface
 
     /**
      * @param ReflectionClass $reflectionClass
-     * @return PropertyMetadataInterface[]
+     * @return PropertyMetaDataInterface[]
      * @throws Exception
      */
     public function getPropertyMetadata(ReflectionClass $reflectionClass): array

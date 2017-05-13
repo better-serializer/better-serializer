@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use ReflectionClass;
 
 /**
@@ -18,7 +18,7 @@ interface PropertyReaderInterface
 {
     /**
      * @param ReflectionClass $reflectionClass
-     * @return PropertyMetadataInterface[]
+     * @return PropertyMetaDataInterface[]
      */
     public function getPropertyMetadata(ReflectionClass $reflectionClass): array;
 }

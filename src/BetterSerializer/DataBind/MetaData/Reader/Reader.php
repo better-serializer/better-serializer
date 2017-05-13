@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\MetaData;
+use BetterSerializer\DataBind\MetaData\MetaDataInterface;
 use ReflectionClass;
 use ReflectionException;
 use LogicException;
@@ -16,7 +17,7 @@ use LogicException;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-final class Reader
+final class Reader implements ReaderInterface
 {
     /**
      * @var ClassReaderInterface
@@ -43,11 +44,11 @@ final class Reader
 
     /**
      * @param string $className
-     * @return MetaData
+     * @return MetaDataInterface
      * @throws LogicException
      * @throws ReflectionException
      */
-    public function read(string $className): MetaData
+    public function read(string $className): MetaDataInterface
     {
         $reflectionClass = $this->getReflectionClass($className);
         $classMetadata = $this->classReader->getClassMetadata($reflectionClass);

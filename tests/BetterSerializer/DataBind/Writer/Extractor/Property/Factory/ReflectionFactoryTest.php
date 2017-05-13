@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Extractor\Property\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -30,9 +30,9 @@ class ReflectionFactoryTest extends TestCase
         /* @var $reflPropertyStub ReflectionProperty */
         $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
 
-        /* @var $propertyMetadataStub PropertyMetadataInterface */
+        /* @var $propertyMetadataStub PropertyMetaDataInterface */
         $propertyMetadataStub = Mockery::mock(
-            PropertyMetadataInterface::class,
+            PropertyMetaDataInterface::class,
             ['getReflectionProperty' => $reflPropertyStub]
         );
 

@@ -8,8 +8,8 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\Writer\Extractor\Property\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
-use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use RuntimeException;
 
@@ -25,7 +25,7 @@ final class AbstractFactory implements FactoryInterface
      * @const string[]
      */
     private const METADATA2FACTORY_MAPPING = [
-        ReflectionPropertyMetadataInterface::class => ReflectionFactory::class,
+        ReflectionPropertyMetaDataInterface::class => ReflectionFactory::class,
     ];
 
     /**
@@ -34,11 +34,11 @@ final class AbstractFactory implements FactoryInterface
     private static $factories = [];
 
     /**
-     * @param PropertyMetadataInterface $metaData
+     * @param PropertyMetaDataInterface $metaData
      * @return ExtractorInterface
      * @throws RuntimeException
      */
-    public function newExtractor(PropertyMetadataInterface $metaData): ExtractorInterface
+    public function newExtractor(PropertyMetaDataInterface $metaData): ExtractorInterface
     {
         $foundFactoryClass = '';
 

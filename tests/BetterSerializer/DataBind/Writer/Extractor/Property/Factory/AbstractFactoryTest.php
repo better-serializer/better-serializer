@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Extractor\Property\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetadataInterface;
-use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
-use BetterSerializer\Helper\DataBind\MetaData\FakePropertyMetadata;
+use BetterSerializer\Helper\DataBind\MetaData\FakePropertyMetaData;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use ReflectionProperty;
@@ -27,10 +27,10 @@ class AbstractFactoryTest extends TestCase
 
     /**
      * @dataProvider classMappingProvider
-     * @param PropertyMetadataInterface $propertyMetadata
+     * @param PropertyMetaDataInterface $propertyMetadata
      * @param string $propExtractorClass
      */
-    public function testNewExtractor(PropertyMetadataInterface $propertyMetadata, string $propExtractorClass): void
+    public function testNewExtractor(PropertyMetaDataInterface $propertyMetadata, string $propExtractorClass): void
     {
         $factory = new AbstractFactory();
         $extractor = $factory->newExtractor($propertyMetadata);
@@ -45,7 +45,7 @@ class AbstractFactoryTest extends TestCase
     public function testNewExtractorThrowsException(): void
     {
         $factory = new AbstractFactory();
-        $factory->newExtractor(new FakePropertyMetadata());
+        $factory->newExtractor(new FakePropertyMetaData());
     }
 
     /**
@@ -55,7 +55,7 @@ class AbstractFactoryTest extends TestCase
     {
         $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
         $reflPropertyMetadata = Mockery::mock(
-            ReflectionPropertyMetadataInterface::class,
+            ReflectionPropertyMetaDataInterface::class,
             ['getReflectionProperty' => $reflPropertyStub]
         );
 
