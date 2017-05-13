@@ -18,7 +18,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Extractor
  */
-final class AbstractFactory implements FactoryInterface
+final class AbstractFactory implements AbstractFactoryInterface
 {
 
     /**
