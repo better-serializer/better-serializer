@@ -14,8 +14,21 @@ use MabeEnum\Enum;
  * @author  mfris
  * @package BetterSerializer\Common
  * @method  static SerializationType JSON
+ * @method  static SerializationType NONE
+ * @method string getType
  */
 final class SerializationType extends Enum
 {
+
+    /**
+     * @const string
+     */
     const JSON = 'json';
+
+    /**
+     * only for testing purposes
+     *
+     * @const string
+     */
+    const NONE = 'none';
 }
