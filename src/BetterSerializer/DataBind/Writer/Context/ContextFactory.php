@@ -20,9 +20,9 @@ final class ContextFactory implements ContextFactoryInterface
 {
 
     /**
-     * @var string[string]
+     * @const string[string]
      */
-    private static $type2FactoryMapping = [
+    private const TYPE_2_FACTORY_MAPPING = [
         SerializationType::JSON => JsonContext::class,
     ];
 
@@ -36,11 +36,11 @@ final class ContextFactory implements ContextFactoryInterface
         /* @var $serialization string */
         $serialization = $serializationType->getValue();
 
-        if (!isset(self::$type2FactoryMapping[$serialization])) {
+        if (!isset(self::TYPE_2_FACTORY_MAPPING[$serialization])) {
             throw new RuntimeException(sprintf('Invalid serialization type: %s', $serialization));
         }
 
-        $contextClass = self::$type2FactoryMapping[$serialization];
+        $contextClass = self::TYPE_2_FACTORY_MAPPING[$serialization];
 
         return new $contextClass();
     }

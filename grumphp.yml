@@ -29,6 +29,11 @@ parameters:
         ruleset: ['unusedcode', 'design', 'controversial', 'naming', 'codesize', 'cleancode']
         triggered_by: ['php']
       phpparser: ~
+      phpstan:
+        autoload_file: ~
+        configuration: dev/phpstan.neon
+        level: 5
+        triggered_by: ['php']
       phpunit: ~
       phpversion: ~
       securitychecker: ~

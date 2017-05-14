@@ -38,9 +38,9 @@ final class ObjectPropertyMetadata extends AbstractReflectionPropertyMetaData im
      */
     public function getObjectClass(): string
     {
+        /* @var $type ObjectType */
         $type = $this->getType();
 
-        /* @var $type ObjectType */
         return $type->getClassName();
     }
 }
