@@ -10,6 +10,8 @@ namespace BetterSerializer\DataBind\MetaData;
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use ReflectionProperty;
+use LogicException;
+use RuntimeException;
 
 /**
  * Class AbstractReflectionPropertyMetaData
@@ -35,6 +37,7 @@ abstract class AbstractReflectionPropertyMetaData extends AbstractPropertyMetaDa
     public function __construct(ReflectionProperty $reflectionProperty, array $annotations, TypeInterface $type)
     {
         $this->reflectionProperty = $reflectionProperty;
+        $this->reflectionProperty->setAccessible(true);
         parent::__construct($annotations, $type);
     }
 
@@ -44,5 +47,18 @@ abstract class AbstractReflectionPropertyMetaData extends AbstractPropertyMetaDa
     public function getReflectionProperty(): ReflectionProperty
     {
         return $this->reflectionProperty;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputKey(): string
+    {
+        try {
+            return parent::getOutputKey();
+        } catch (RuntimeException | LogicException $e) {
+        }
+
+        return $this->reflectionProperty->getName();
     }
 }

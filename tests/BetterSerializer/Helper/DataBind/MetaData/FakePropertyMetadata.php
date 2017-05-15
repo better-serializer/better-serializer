@@ -10,7 +10,7 @@ namespace BetterSerializer\Helper\DataBind\MetaData;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\Dto\Car;
 use ReflectionProperty;
 
 /**

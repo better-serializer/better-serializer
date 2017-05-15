@@ -14,10 +14,11 @@ use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\Factory\AbstractFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Object as ObjectProcessor;
+use BetterSerializer\DataBind\Writer\Processor\ObjectProperty as ObjectPropertyProcessor;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Property as PropertyProcessor;
 use BetterSerializer\DataBind\Writer\ValueWriter\Property as PropertyValueWriter;
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
 use Mockery;
@@ -59,7 +60,7 @@ class ProcessorFactoryTest extends TestCase
                          ->once()
                          ->andReturn(Radio::class)
                          ->getMock();
-        $radioPropertyBrand = Mockery::mock(PropertyMetaDataInterface::class);
+        $radioPropertyBrand = Mockery::mock(PropertyMetadataInterface::class);
         $radioPropertyBrand->shouldReceive('getOutputKey')
                            ->once()
                            ->andReturn('brand')
@@ -76,7 +77,7 @@ class ProcessorFactoryTest extends TestCase
 
         $metaDataReader = Mockery::mock(ReaderInterface::class);
         $metaDataReader->shouldReceive('read')
-                       ->with(CarImpl::class)
+                       ->with(Car::class)
                        ->once()
                        ->andReturn($carMetaData)
                        ->getMock()
@@ -94,6 +95,11 @@ class ProcessorFactoryTest extends TestCase
                          ->andReturn($propertyExtractor)
                          ->getMock()
                          ->shouldReceive('newExtractor')
+                         ->with($carPropertyRadio)
+                         ->once()
+                         ->andReturn($propertyExtractor)
+                         ->getMock()
+                         ->shouldReceive('newExtractor')
                          ->with($radioPropertyBrand)
                          ->once()
                          ->andReturn($propertyExtractor);
@@ -101,7 +107,7 @@ class ProcessorFactoryTest extends TestCase
         /* @var $metaDataReader ReaderInterface */
         /* @var $extractorFactory AbstractFactoryInterface */
         $processorFactory = new ProcessorFactory($metaDataReader, $extractorFactory);
-        $processor = $processorFactory->create(CarImpl::class);
+        $processor = $processorFactory->create(Car::class);
 
         self::assertInstanceOf(ProcessorInterface::class, $processor);
         self::assertInstanceOf(ObjectProcessor::class, $processor);
@@ -109,10 +115,6 @@ class ProcessorFactoryTest extends TestCase
         $objectReflClass = new ReflectionClass(ObjectProcessor::class);
         $processorsProperty = $objectReflClass->getProperty('processors');
         $processorsProperty->setAccessible(true);
-        $outputKeyProperty = $objectReflClass->getProperty('outputKey');
-        $outputKeyProperty->setAccessible(true);
-
-        self::assertSame('', $outputKeyProperty->getValue($processor));
 
         $objectProcessors = $processorsProperty->getValue($processor);
         self::assertInternalType('array', $objectProcessors);
@@ -132,12 +134,22 @@ class ProcessorFactoryTest extends TestCase
         self::assertInstanceOf(PropertyProcessor::class, $titleProcessor);
         self::assertSame('title', $outputKeyProperty2->getValue($titleValueWriter));
 
+        $objectPropertyReflClass = new ReflectionClass(ObjectPropertyProcessor::class);
+        $outputKeyProperty = $objectPropertyReflClass->getProperty('outputKey');
+        $outputKeyProperty->setAccessible(true);
+        $objProcessorProperty = $objectPropertyReflClass->getProperty('objectProcessor');
+        $objProcessorProperty->setAccessible(true);
+
         $radioProcessor = $objectProcessors[1];
         $radioOutputKey = $outputKeyProperty->getValue($radioProcessor);
-        $radioProcessors = $processorsProperty->getValue($radioProcessor);
+        $radioObjProcessor = $objProcessorProperty->getValue($radioProcessor);
 
-        self::assertInstanceOf(ObjectProcessor::class, $radioProcessor);
+        self::assertInstanceOf(ObjectPropertyProcessor::class, $radioProcessor);
         self::assertSame('radio', $radioOutputKey);
+        self::assertInstanceOf(ObjectProcessor::class, $radioObjProcessor);
+
+        $radioProcessors = $processorsProperty->getValue($radioObjProcessor);
+
         self::assertInternalType('array', $radioProcessors);
         self::assertCount(1, $radioProcessors);
 

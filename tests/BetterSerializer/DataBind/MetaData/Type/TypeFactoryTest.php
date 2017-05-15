@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
+use LogicException;
 
 /**
  * Class TypeFactoryTest
@@ -53,14 +53,14 @@ class TypeFactoryTest extends TestCase
     {
         $typeFactory = new TypeFactory();
         /* @var $typeObject ObjectType */
-        $typeObject = $typeFactory->getType(CarImpl::class);
+        $typeObject = $typeFactory->getType(Car::class);
 
         self::assertInstanceOf(ObjectType::class, $typeObject);
-        self::assertSame($typeObject->getClassName(), CarImpl::class);
+        self::assertSame($typeObject->getClassName(), Car::class);
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException LogicException
      * @expectedExceptionMessageRegExp /Unknown type - '[a-zA-Z0-9]+'+/
      */
     public function testGetTypeThrowsException(): void

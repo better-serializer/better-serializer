@@ -24,45 +24,15 @@ class ObjectTest extends TestCase
      */
     public function testProcess(): void
     {
-        $outputKey = 'key';
         $instance = $this->getMockBuilder(CarInterface::class)->getMock();
-        $subContextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $contextMock->expects(self::once())
-                    ->method('createSubContext')
-                    ->willReturn($subContextMock);
-        $contextMock->expects(self::once())
-                    ->method('mergeSubContext')
-                    ->with($outputKey, $subContextMock);
-
         $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
         $processorMock->expects(self::exactly(2))
                       ->method('process')
-                      ->with($subContextMock, $instance);
+                      ->with($contextMock, $instance);
 
         /* @var $contextMock ContextInterface */
-        $processor = new Object([$processorMock, $processorMock], $outputKey);
-        $processor->process($contextMock, $instance);
-    }
-
-    /**
-     *
-     */
-    public function testProcessNull(): void
-    {
-        $outputKey = 'key';
-        $instance = null;
-        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $contextMock->expects(self::once())
-            ->method('write')
-            ->with($outputKey, null);
-
-        $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
-        $processorMock->expects(self::exactly(0))
-            ->method('process');
-
-        /* @var $contextMock ContextInterface */
-        $processor = new Object([$processorMock, $processorMock], $outputKey);
+        $processor = new Object([$processorMock, $processorMock]);
         $processor->process($contextMock, $instance);
     }
 }

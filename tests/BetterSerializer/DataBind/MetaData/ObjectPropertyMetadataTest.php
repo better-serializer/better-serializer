@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData;
 
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use ReflectionProperty;
@@ -29,14 +29,13 @@ class ObjectPropertyMetadataTest extends TestCase
     public function testGetType(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class);
-        /* @var $type TypeInterface */
-        $type = new ObjectType(CarImpl::class);
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['setAccessible' => null]);
+        $type = new ObjectType(Car::class);
 
         $metaData = new ObjectPropertyMetadata($reflProperty, [], $type);
         self::assertSame($type, $metaData->getType());
         self::assertInstanceOf(ObjectType::class, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());
-        self::assertSame(CarImpl::class, $metaData->getObjectClass());
+        self::assertSame(Car::class, $metaData->getObjectClass());
     }
 }

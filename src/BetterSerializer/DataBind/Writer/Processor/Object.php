@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\Writer\Context\ContextInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class Object implements ProcessorInterface
+final class Object implements ObjectProcessorInterface
 {
 
     /**
@@ -23,19 +23,12 @@ final class Object implements ProcessorInterface
     private $processors;
 
     /**
-     * @var string
-     */
-    private $outputKey;
-
-    /**
      * Object constructor.
      * @param ProcessorInterface[] $processors
-     * @param string $outputKey
      */
-    public function __construct(array $processors, $outputKey = '')
+    public function __construct(array $processors)
     {
         $this->processors = $processors;
-        $this->outputKey = $outputKey;
     }
 
     /**
@@ -44,18 +37,8 @@ final class Object implements ProcessorInterface
      */
     public function process(ContextInterface $context, $data): void
     {
-        if ($data === null) {
-            $context->write($this->outputKey, null);
-
-            return;
-        }
-
-        $subContext = $context->createSubContext();
-
         foreach ($this->processors as $processor) {
-            $processor->process($subContext, $data);
+            $processor->process($context, $data);
         }
-
-        $context->mergeSubContext($this->outputKey, $subContext);
     }
 }

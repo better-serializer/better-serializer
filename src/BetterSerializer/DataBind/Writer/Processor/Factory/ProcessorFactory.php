@@ -13,6 +13,7 @@ use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\Factory\AbstractFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Object as ObjectProcessor;
+use BetterSerializer\DataBind\Writer\Processor\ObjectProperty as ObjectPropertyProcessor;
 use BetterSerializer\DataBind\Writer\Processor\Property as PropertyProcessor;
 use BetterSerializer\DataBind\Writer\ValueWriter\Property as PropertyValueWriter;
 use LogicException;
@@ -62,33 +63,22 @@ final class ProcessorFactory implements ProcessorFactoryInterface
 
     /**
      * @param string $className
-     * @param string $outputKey
-     * @return ProcessorInterface
+     * @return ObjectProcessor
      * @throws ReflectionException
      * @throws LogicException
      * @throws RuntimeException
      */
-    private function createObjectProcessor(
-        string $className,
-        string $outputKey = ''
-    ): ProcessorInterface {
+    private function createObjectProcessor(string $className): ObjectProcessor
+    {
         $metaData = $this->metadataReader->read($className);
-        $propertiesMetadata = $metaData->getPropertiesMetadata();
+        $propertiesMetaData = $metaData->getPropertiesMetadata();
         $propertyProcessors = [];
 
-        foreach ($propertiesMetadata as $propertyMetadata) {
-            if ($propertyMetadata instanceof ObjectPropertyMetadataInterface) {
-                $propertyProcessors[] = $this->createObjectProcessor(
-                    $propertyMetadata->getObjectClass(),
-                    $propertyMetadata->getOutputKey()
-                );
-                continue;
-            }
-
-            $propertyProcessors[] = $this->createPropertyProcessor($propertyMetadata);
+        foreach ($propertiesMetaData as $propertyMetaData) {
+            $propertyProcessors[] = $this->createPropertyProcessor($propertyMetaData);
         }
 
-        return new ObjectProcessor($propertyProcessors, $outputKey);
+        return new ObjectProcessor($propertyProcessors);
     }
 
     /**
@@ -98,9 +88,35 @@ final class ProcessorFactory implements ProcessorFactoryInterface
      */
     private function createPropertyProcessor(PropertyMetaDataInterface $propertyMetaData): ProcessorInterface
     {
+        if ($propertyMetaData instanceof ObjectPropertyMetadataInterface) {
+            return $this->createObjectPropertyProcessor($propertyMetaData);
+        }
+
+        return $this->createSimplePropertyProcessor($propertyMetaData);
+    }
+
+    /**
+     * @param PropertyMetaDataInterface $propertyMetaData
+     * @return PropertyProcessor
+     */
+    private function createSimplePropertyProcessor(PropertyMetaDataInterface $propertyMetaData): PropertyProcessor
+    {
         $extractor = $this->extractorFactory->newExtractor($propertyMetaData);
         $valueWriter = new PropertyValueWriter($propertyMetaData->getOutputKey());
 
         return new PropertyProcessor($extractor, $valueWriter);
+    }
+
+    /**
+     * @param ObjectPropertyMetadataInterface $propertyMetaData
+     * @return ObjectPropertyProcessor
+     */
+    private function createObjectPropertyProcessor(
+        ObjectPropertyMetadataInterface $propertyMetaData
+    ): ObjectPropertyProcessor {
+        $extractor = $this->extractorFactory->newExtractor($propertyMetaData);
+        $objectProcessor = $this->createObjectProcessor($propertyMetaData->getObjectClass());
+
+        return new ObjectPropertyProcessor($extractor, $objectProcessor, $propertyMetaData->getOutputKey());
     }
 }

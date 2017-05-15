@@ -17,5 +17,5 @@ interface TypeFactoryInterface
      * @param string $stringType
      * @return TypeInterface
      */
-    public function getType(string $stringType = null): TypeInterface;
+    public function getType(string $stringType): TypeInterface;
 }

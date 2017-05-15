@@ -8,16 +8,14 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
-use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
-use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use ReflectionClass;
 use ReflectionProperty;
+use LogicException;
+use RuntimeException;
 
 /**
  * Class PropertyReaderTest
@@ -25,6 +23,7 @@ use ReflectionProperty;
  * @package BetterSerializer\DataBind\MetaData\Reader
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class PropertyReaderTest extends TestCase
 {
@@ -44,57 +43,46 @@ class PropertyReaderTest extends TestCase
     {
         /* @var $annotationReaderStub AnnotationReader */
         $annotationReaderStub = Mockery::mock(AnnotationReader::class, ['getPropertyAnnotations' => []]);
-
-        $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
+        $annotationPropertyTypeReaderStub = Mockery::mock(AnnotationPropertyTypeReaderInterface::class)
             ->shouldReceive('getType')
             ->twice()
-            ->andReturn('string')
+            ->with([])
+            ->andThrow(RuntimeException::class, 'Property annotation missing.')
             ->getMock();
+        /* @var $annotationPropertyTypeReaderStub AnnotationPropertyTypeReaderInterface */
 
-        $docBlockStub = Mockery::mock(new DocBlock())
-            ->shouldReceive('getTagsByName')
-            ->twice()
-            ->andReturn([$varTagStub])
-            ->getMock();
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class)
-            ->shouldReceive('create')
-            ->twice()
-            ->andReturnValues([
-                $docBlockStub,
-                $docBlockStub
-            ])
-            ->getMock();
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->times(4)
-            ->andReturnValues([
-                new NullType(),
-                new StringType(),
-                new NullType(),
-                new StringType()
-            ])
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
         $reflPropertyStub1 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '/** @var string  */']
+            ['getName' => 'property1', 'setAccessible' => null]
         );
         $reflPropertyStub2 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property2', 'getDocComment' => '/** @var string  */']
+            ['getName' => 'property2', 'setAccessible' => null]
         );
         $reflClassStub = Mockery::mock(
             ReflectionClass::class,
             ['getProperties' => [$reflPropertyStub1, $reflPropertyStub2]]
         );
         /* @var $reflClassStub ReflectionClass */
+
+        $docBlockPropertyTypeReaderStub = Mockery::mock(DocBlockPropertyTypeReaderInterface::class)
+            ->shouldReceive('getType')
+            ->once()
+            ->with($reflPropertyStub1)
+            ->andReturn(new StringType())
+            ->getMock()
+            ->shouldReceive('getType')
+            ->once()
+            ->with($reflPropertyStub2)
+            ->andReturn(new StringType())
+            ->getMock();
+        /* @var $docBlockPropertyTypeReaderStub DocBlockPropertyTypeReaderInterface */
+
+        $reader = new PropertyReader(
+            $annotationReaderStub,
+            $annotationPropertyTypeReaderStub,
+            $docBlockPropertyTypeReaderStub
+        );
         $propertyMetadata = $reader->getPropertyMetadata($reflClassStub);
 
         self::assertInternalType('array', $propertyMetadata);
@@ -110,12 +98,13 @@ class PropertyReaderTest extends TestCase
      */
     public function testGetPropertyMetadataWithAnnotations(): void
     {
-        $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class, ['getType' => 'string']);
-        $propertyAnnotStub2 = Mockery::mock(PropertyInterface::class, ['getType' => 'string']);
+        $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class);
+        $propertyAnnotStub2 = Mockery::mock(PropertyInterface::class);
 
         /* @var $annotationReaderStub Mockery\Mock */
         $annotationReaderStub = Mockery::mock(AnnotationReader::class);
         $annotationReaderStub->shouldReceive('getPropertyAnnotations')
+            ->twice()
             ->andReturnValues([
                 [$propertyAnnotStub1],
                 [$propertyAnnotStub2]
@@ -123,28 +112,34 @@ class PropertyReaderTest extends TestCase
             ->getMock();
         /* @var $annotationReaderStub AnnotationReader */
 
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub = $typeFactoryStub->shouldReceive('getType')
-            ->andReturnValues([
-                new StringType(),
-                new StringType()
-            ])
+        $annotationPropertyTypeReaderStub = Mockery::mock(AnnotationPropertyTypeReaderInterface::class)
+            ->shouldReceive('getType')
+            ->once()
+            ->with([$propertyAnnotStub1])
+            ->andReturn(new StringType())
+            ->getMock()
+            ->shouldReceive('getType')
+            ->once()
+            ->with([$propertyAnnotStub2])
+            ->andReturn(new StringType())
             ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
+        /* @var $annotationPropertyTypeReaderStub AnnotationPropertyTypeReaderInterface */
 
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
+        $docBlockPropertyTypeReaderStub = Mockery::mock(DocBlockPropertyTypeReaderInterface::class);
+        /* @var $docBlockPropertyTypeReaderStub DocBlockPropertyTypeReaderInterface */
+
+        $reader = new PropertyReader(
+            $annotationReaderStub,
+            $annotationPropertyTypeReaderStub,
+            $docBlockPropertyTypeReaderStub
+        );
         $reflPropertyStub1 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '']
+            ['getName' => 'property1', 'setAccessible' => null,]
         );
         $reflPropertyStub2 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property2', 'getDocComment' => '']
+            ['getName' => 'property2', 'setAccessible' => null,]
         );
         $reflClassStub = Mockery::mock(
             ReflectionClass::class,
@@ -166,7 +161,7 @@ class PropertyReaderTest extends TestCase
      */
     public function testGetPropertyMetadataWithAnnotationsAndDocBlock(): void
     {
-        $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class, ['getType' => 'string']);
+        $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class);
 
         /* @var $annotationReaderStub Mockery\Mock */
         $annotationReaderStub = Mockery::mock(AnnotationReader::class);
@@ -178,44 +173,46 @@ class PropertyReaderTest extends TestCase
             ->getMock();
         /* @var $annotationReaderStub AnnotationReader */
 
-        $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
+        $annotationPropertyTypeReaderStub = Mockery::mock(AnnotationPropertyTypeReaderInterface::class)
             ->shouldReceive('getType')
-            ->andReturn('string')
+            ->once()
+            ->with([$propertyAnnotStub1])
+            ->andReturn(new StringType())
+            ->getMock()
+            ->shouldReceive('getType')
+            ->once()
+            ->with([])
+            ->andThrow(RuntimeException::class, 'Property annotation missing.')
             ->getMock();
+        /* @var $annotationPropertyTypeReaderStub AnnotationPropertyTypeReaderInterface */
 
-        $docBlockStub = Mockery::mock(new DocBlock())
-            ->shouldReceive('getTagsByName')
-            ->andReturn([$varTagStub])
-            ->getMock();
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->andReturnValues([
-                new StringType(),
-                new NullType(),
-                new StringType()
-            ])
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
         $reflPropertyStub1 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '']
+            ['getName' => 'property1', 'setAccessible' => null]
         );
         $reflPropertyStub2 = Mockery::mock(
             ReflectionProperty::class,
-            ['getName' => 'property2', 'getDocComment' => '/** @var string  */']
+            ['getName' => 'property2', 'setAccessible' => null]
         );
         $reflClassStub = Mockery::mock(
             ReflectionClass::class,
             ['getProperties' => [$reflPropertyStub1, $reflPropertyStub2]]
         );
+
+        $docBlockPropertyTypeReaderStub = Mockery::mock(DocBlockPropertyTypeReaderInterface::class)
+            ->shouldReceive('getType')
+            ->once()
+            ->with($reflPropertyStub2)
+            ->andReturn(new StringType())
+            ->getMock();
+        /* @var $docBlockPropertyTypeReaderStub DocBlockPropertyTypeReaderInterface */
+
+        $reader = new PropertyReader(
+            $annotationReaderStub,
+            $annotationPropertyTypeReaderStub,
+            $docBlockPropertyTypeReaderStub
+        );
+
         /* @var $reflClassStub ReflectionClass */
         $propertyMetadata = $reader->getPropertyMetadata($reflClassStub);
 
@@ -228,126 +225,83 @@ class PropertyReaderTest extends TestCase
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessageRegExp /You need to add a docblock to property "[a-zA-Z0-9]+"/
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp /Type declaration missing in class: [a-zA-Z0-9]+, property: [a-zA-Z0-9]+/
      */
     public function testGetPropertyMetadataWithoutDocblock(): void
     {
-        /* @var $annotationReaderStub AnnotationReader */
-        $annotationReaderStub = Mockery::mock(AnnotationReader::class, ['getPropertyAnnotations' => []]);
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->andReturnValues([
-                new NullType()
-            ])
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '']
+        $this->runPropertyReaderExceptionTest(
+            RuntimeException::class,
+            'You need to add a docblock to property "property1"'
         );
-        $reflClassStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getProperties' => [$reflPropertyStub]]
-        );
-        /* @var $reflClassStub ReflectionClass */
-        $reader->getPropertyMetadata($reflClassStub);
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessageRegExp /You need to add an @var annotation to property "[a-zA-Z0-9]+"/
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp /Type declaration missing in class: [a-zA-Z0-9]+, property: [a-zA-Z0-9]+/
      */
     public function testGetPropertyMetadataWithoutVarTag(): void
     {
-        /* @var $annotationReaderStub AnnotationReader */
-        $annotationReaderStub = Mockery::mock(AnnotationReader::class, ['getPropertyAnnotations' => []]);
-
-        $docBlockStub = Mockery::mock(new DocBlock(), ['getTagsByName' => []]);
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->andReturnValues([
-                new NullType()
-            ])
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '/** @global */']
+        $this->runPropertyReaderExceptionTest(
+            RuntimeException::class,
+            'You need to add an @var annotation to property "propoerty1"'
         );
-        $reflClassStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getProperties' => [$reflPropertyStub]]
-        );
-        /* @var $reflClassStub ReflectionClass */
-        $reader->getPropertyMetadata($reflClassStub);
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessageRegExp /Type declaration missing in class: [a-zA-Z0-9]+, property: [a-zA-Z0-9]+/
+     * @expectedException LogicException
+     * @expectedExceptionMessageRegExp /Unknown type - 'mixed'/
      */
     public function testGetPropertyMetadataWithMixedVarTag(): void
+    {
+        $this->runPropertyReaderExceptionTest(
+            LogicException::class,
+            "Unknown type - 'mixed'"
+        );
+    }
+
+    /**
+     * @param string $exceptionClass
+     * @param string $exceptionMsg
+     */
+    private function runPropertyReaderExceptionTest(string $exceptionClass, string $exceptionMsg): void
     {
         /* @var $annotationReaderStub AnnotationReader */
         $annotationReaderStub = Mockery::mock(AnnotationReader::class, ['getPropertyAnnotations' => []]);
 
-        $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
+        $annotationPropertyTypeReaderStub = Mockery::mock(AnnotationPropertyTypeReaderInterface::class)
             ->shouldReceive('getType')
-            ->andReturn('mixed')
+            ->once()
+            ->with([])
+            ->andThrow(RuntimeException::class, 'Property annotation missing.')
             ->getMock();
+        /* @var $annotationPropertyTypeReaderStub AnnotationPropertyTypeReaderInterface */
 
-        $docBlockStub = Mockery::mock(new DocBlock(), ['getTagsByName' => [$varTagStub]]);
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->andReturnValues([
-                new NullType(),
-                new NullType()
-            ])
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new PropertyReader($annotationReaderStub, $docBlockFactoryStub, $typeFactoryStub);
-
-        $reflClassHelperStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getName' => 'TestClass']
-        );
+        $declaringReflClassStub = Mockery::mock(ReflectionClass::class, ['getName' => 'TestClass']);
 
         $reflPropertyStub = Mockery::mock(
             ReflectionProperty::class,
-            [
-                'getName' => 'property1',
-                'getDocComment' => '/** @var mixed */',
-                'getDeclaringClass' => $reflClassHelperStub
-            ]
+            ['getName' => 'property1', 'getDeclaringClass' => $declaringReflClassStub]
         );
         $reflClassStub = Mockery::mock(
             ReflectionClass::class,
             ['getProperties' => [$reflPropertyStub]]
         );
+
+        $docBlockPropertyTypeReaderStub = Mockery::mock(DocBlockPropertyTypeReaderInterface::class)
+            ->shouldReceive('getType')
+            ->once()
+            ->with($reflPropertyStub)
+            ->andThrow($exceptionClass, $exceptionMsg)
+            ->getMock();
+        /* @var $docBlockPropertyTypeReaderStub DocBlockPropertyTypeReaderInterface */
+
+        $reader = new PropertyReader(
+            $annotationReaderStub,
+            $annotationPropertyTypeReaderStub,
+            $docBlockPropertyTypeReaderStub
+        );
+
         /* @var $reflClassStub ReflectionClass */
         $reader->getPropertyMetadata($reflClassStub);
     }

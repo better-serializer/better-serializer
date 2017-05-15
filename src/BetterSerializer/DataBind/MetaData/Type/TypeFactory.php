@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use RuntimeException;
+use LogicException;
 
 /**
  * Class TypeFactory
@@ -30,9 +30,9 @@ final class TypeFactory implements TypeFactoryInterface
     /**
      * @param string $stringType
      * @return TypeInterface
-     * @throws RuntimeException
+     * @throws LogicException
      */
-    public function getType(string $stringType = null): TypeInterface
+    public function getType(string $stringType): TypeInterface
     {
         if (isset(self::$type2Instance[$stringType])) {
             $className = self::$type2Instance[$stringType];
@@ -44,6 +44,6 @@ final class TypeFactory implements TypeFactoryInterface
             return new ObjectType($stringType);
         }
 
-        throw new RuntimeException("Unknown type - '{$stringType}'");
+        throw new LogicException("Unknown type - '{$stringType}'");
     }
 }

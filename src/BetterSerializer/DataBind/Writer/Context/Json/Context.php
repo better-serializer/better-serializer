@@ -52,7 +52,7 @@ final class Context implements ContextInterface
             throw new RuntimeException(
                 sprintf(
                     'Invalid context to merge. Expected: %s, actual: %s',
-                    get_class(),
+                    __CLASS__,
                     get_class($context)
                 )
             );

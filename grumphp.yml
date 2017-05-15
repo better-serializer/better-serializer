@@ -32,7 +32,7 @@ parameters:
       phpstan:
         autoload_file: ~
         configuration: dev/phpstan.neon
-        level: 5
+        level: 7
         triggered_by: ['php']
       phpunit: ~
       phpversion: ~

@@ -27,7 +27,7 @@ class ReflectionPropertyMetadataTest extends TestCase
     public function testGetType(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class);
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['setAccessible' => null]);
         /* @var $type TypeInterface */
         $type = Mockery::mock(TypeInterface::class);
 
@@ -42,7 +42,7 @@ class ReflectionPropertyMetadataTest extends TestCase
     public function testGetOutputKeyFromReflProperty(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
         /* @var $type TypeInterface */
         $type = Mockery::mock(TypeInterface::class);
 
@@ -56,7 +56,7 @@ class ReflectionPropertyMetadataTest extends TestCase
     public function testGetOutputKeyFromReflPropertyWhenInvalidPropertyAnnotationProvided(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
         /* @var $type TypeInterface */
         $type = Mockery::mock(TypeInterface::class);
         $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => '']);
@@ -71,7 +71,7 @@ class ReflectionPropertyMetadataTest extends TestCase
     public function testGetOutputKeyFromPropertyAnnotation(): void
     {
         /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test']);
+        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
         /* @var $type TypeInterface */
         $type = Mockery::mock(TypeInterface::class);
         $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => 'test2']);

@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
  * @package BetterSerializer\Dto
  * @Serializer\RootName(value="car")
  */
-final class CarImpl implements CarInterface
+final class Car implements CarInterface
 {
 
     /**
@@ -47,7 +47,7 @@ final class CarImpl implements CarInterface
     }
 
     /**
-     * @Serializer'Property(name="titlex")
+     * @Serializer\Property(name="titlex")
      * @return string
      */
     public function getTitle(): string

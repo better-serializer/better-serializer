@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use BetterSerializer\Dto\CarImpl;
+use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,8 +22,8 @@ class ObjectTypeTest extends TestCase
      */
     public function testGetType(): void
     {
-        $object = new ObjectType(CarImpl::class);
+        $object = new ObjectType(Car::class);
         self::assertInstanceOf(get_class(TypeEnum::OBJECT()), $object->getType());
-        self::assertSame(CarImpl::class, $object->getClassName());
+        self::assertSame(Car::class, $object->getClassName());
     }
 }

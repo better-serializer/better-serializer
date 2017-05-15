@@ -7,9 +7,6 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData;
 
-use LogicException;
-use RuntimeException;
-
 /**
  * Class ReflectionPropertyMetadata
  * @author mfris
@@ -17,17 +14,4 @@ use RuntimeException;
  */
 final class ReflectionPropertyMetadata extends AbstractReflectionPropertyMetaData
 {
-
-    /**
-     * @return string
-     */
-    public function getOutputKey(): string
-    {
-        try {
-            return parent::getOutputKey();
-        } catch (RuntimeException | LogicException $e) {
-        }
-
-        return $this->getReflectionProperty()->getName();
-    }
 }

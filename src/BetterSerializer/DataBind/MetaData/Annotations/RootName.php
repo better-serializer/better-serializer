@@ -22,7 +22,7 @@ final class RootName implements AnnotationInterface
     /**
      * @const string
      */
-    const KEY_VALUE = '';
+    const KEY_VALUE = 'value';
 
     /**
      * @var string
