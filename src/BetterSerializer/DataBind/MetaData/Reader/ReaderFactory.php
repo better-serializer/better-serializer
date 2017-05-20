@@ -10,6 +10,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
+use InvalidArgumentException;
 
 /**
  * Class ReaderFactory
@@ -47,6 +48,7 @@ final class ReaderFactory
 
     /**
      * @return Reader
+     * @throws InvalidArgumentException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function createReader(): Reader
@@ -68,14 +70,12 @@ final class ReaderFactory
 
     /**
      * @return AnnotationReader
+     * @throws InvalidArgumentException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createAnnotationReader(): AnnotationReader
     {
-        AnnotationRegistry::registerAutoloadNamespace(
-            "BetterSerializer\\DataBind\\MetaData\\Annotations",
-            dirname(__DIR__, 4)
-        );
+        AnnotationRegistry::registerLoader('class_exists');
 
         return new AnnotationReader();
     }

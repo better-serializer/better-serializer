@@ -58,7 +58,7 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
      */
     public function getOutputKey(): string
     {
-        $propertyAnnotations = array_filter($this->annotations, function (AnnotationInterface $annotation) {
+        $propertyAnnotations = array_filter($this->annotations, function ($annotation) {
             return $annotation instanceof PropertyInterface;
         });
 

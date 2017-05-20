@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Dto;
 
+use JMS\Serializer\Annotation as JmsSerializer;
+
 /**
  * Class Radio
  * @author mfris
@@ -17,6 +19,7 @@ final class Radio implements RadioInterface
 
     /**
      * @var string
+     * @JmsSerializer\Type("string")
      */
     private $brand;
 

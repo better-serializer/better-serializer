@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
+use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
  * Class Car
@@ -20,16 +21,19 @@ final class Car implements CarInterface
     /**
      * @var string
      * @Serializer\Property(type="string")
+     * @JmsSerializer\Type("string")
      */
     private $title;
 
     /**
      * @var string
+     * @JmsSerializer\Type("string")
      */
     private $color;
 
     /**
      * @var Radio
+     * @JmsSerializer\Type("BetterSerializer\Dto\Radio")
      */
     private $radio;
 
@@ -47,7 +51,6 @@ final class Car implements CarInterface
     }
 
     /**
-     * @Serializer\Property(name="titlex")
      * @return string
      */
     public function getTitle(): string
