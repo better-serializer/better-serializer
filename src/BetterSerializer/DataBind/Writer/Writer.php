@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Writer;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
+use BetterSerializer\DataBind\Writer\Type\ExtractorInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -22,6 +23,11 @@ final class Writer implements WriterInterface
 {
 
     /**
+     * @var ExtractorInterface
+     */
+    private $typeExtractor;
+
+    /**
      * @var ProcessorFactoryInterface
      */
     private $processorFactory;
@@ -33,27 +39,33 @@ final class Writer implements WriterInterface
 
     /**
      * Writer constructor.
+     * @param ExtractorInterface $typeExtractor
      * @param ProcessorFactoryInterface $processorFactory
      * @param ContextFactoryInterface $contextFactory
      */
-    public function __construct(ProcessorFactoryInterface $processorFactory, ContextFactoryInterface $contextFactory)
-    {
+    public function __construct(
+        ExtractorInterface $typeExtractor,
+        ProcessorFactoryInterface $processorFactory,
+        ContextFactoryInterface $contextFactory
+    ) {
+        $this->typeExtractor = $typeExtractor;
         $this->processorFactory = $processorFactory;
         $this->contextFactory = $contextFactory;
     }
 
     /**
      * @param mixed             $data
-     * @param SerializationType $type
+     * @param SerializationType $serializationType
      * @return string
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function writeValueAsString($data, SerializationType $type): string
+    public function writeValueAsString($data, SerializationType $serializationType): string
     {
-        $context = $this->contextFactory->createContext($type);
-        $processor = $this->processorFactory->create(get_class($data));
+        $context = $this->contextFactory->createContext($serializationType);
+        $type = $this->typeExtractor->extract($data);
+        $processor = $this->processorFactory->createFromType($type);
         $processor->process($context, $data);
 
         return $context->getData();

@@ -15,11 +15,11 @@ interface ContextInterface
 {
 
     /**
-     * @param string $key
+     * @param string|int $key
      * @param mixed $value
      * @return void
      */
-    public function write(string $key, $value): void;
+    public function write($key, $value): void;
 
     /**
      * @return ContextInterface
@@ -27,10 +27,10 @@ interface ContextInterface
     public function createSubContext(): ContextInterface;
 
     /**
-     * @param string $key
+     * @param mixed $key
      * @param ContextInterface $context
      */
-    public function mergeSubContext(string $key, ContextInterface $context): void;
+    public function mergeSubContext($key, ContextInterface $context): void;
 
     /**
      * @return mixed

@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use RuntimeException;

@@ -15,7 +15,7 @@ use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class ObjectProperty implements ProcessorInterface
+final class ObjectProperty extends NestedProcessor
 {
 
     /**
@@ -29,11 +29,6 @@ final class ObjectProperty implements ProcessorInterface
     private $objectProcessor;
 
     /**
-     * @var string
-     */
-    private $outputKey;
-
-    /**
      * Property constructor.
      * @param ExtractorInterface $extractor
      * @param ObjectProcessorInterface $objectProcessor
@@ -44,9 +39,9 @@ final class ObjectProperty implements ProcessorInterface
         ObjectProcessorInterface $objectProcessor,
         string $outputKey
     ) {
+        parent::__construct($outputKey);
         $this->extractor = $extractor;
         $this->objectProcessor = $objectProcessor;
-        $this->outputKey = $outputKey;
     }
 
     /**

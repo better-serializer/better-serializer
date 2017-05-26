@@ -1,5 +1,8 @@
 parameters:
     ignoreErrors:
+        - '#Method BetterSerializer\\DataBind\\MetaData\\Type\\Factory\\TypeFactory::getType\(\) should return BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface but returns BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface|null#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getNestedType\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getClassName\(\)#'
 
     excludes_analyse:
         - %rootDir%/../../../tests/*

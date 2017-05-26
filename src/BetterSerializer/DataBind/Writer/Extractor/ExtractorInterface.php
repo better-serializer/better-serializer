@@ -15,8 +15,8 @@ interface ExtractorInterface
 {
 
     /**
-     * @param object $instance
+     * @param mixed $data
      * @return mixed
      */
-    public function extract($instance);
+    public function extract($data);
 }

@@ -17,6 +17,7 @@ use MabeEnum\Enum;
  * @method static TypeEnum FLOAT
  * @method static TypeEnum BOOLEAN
  * @method static TypeEnum OBJECT
+ * @method static TypeEnum ARRAY
  * @method static TypeEnum NULL
  */
 final class TypeEnum extends Enum
@@ -46,6 +47,11 @@ final class TypeEnum extends Enum
      * @const string
      */
     const OBJECT = 'object';
+
+    /**
+     * @const string
+     */
+    const ARRAY = 'array';
 
     /**
      * @const string

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;

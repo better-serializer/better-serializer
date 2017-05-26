@@ -28,7 +28,12 @@ class PropertyTest extends TestCase
     {
         $instance = $this->getMockBuilder(CarInterface::class)->getMock();
         $extractedValue = 5;
+        $outputKey = 'test';
+
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock->expects(self::once())
+                    ->method('write')
+                    ->with($outputKey, $extractedValue);
 
         $extractorMock = $this->getMockBuilder(ExtractorInterface::class)->getMock();
         $extractorMock->expects(self::once())
@@ -36,15 +41,9 @@ class PropertyTest extends TestCase
                       ->with($instance)
                       ->willReturn($extractedValue);
 
-        $writerMock = $this->getMockBuilder(ValueWriterInterface::class)->getMock();
-        $writerMock->expects(self::once())
-                   ->method('writeValue')
-                   ->with($contextMock, $extractedValue);
-
         /* @var $extractorMock ExtractorInterface */
-        /* @var $writerMock ValueWriterInterface */
         /* @var $contextMock ContextInterface */
-        $processor = new Property($extractorMock, $writerMock);
+        $processor = new Property($extractorMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 }

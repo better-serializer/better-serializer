@@ -11,7 +11,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-final class FloatType extends AbstractType
+final class FloatType extends AbstractSimpleType
 {
 
     /**

@@ -22,18 +22,61 @@ final class JsonTest extends TestCase
 {
 
     /**
+     * @dataProvider getTestTuples
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
+     * @param mixed $data
+     * @param string $expectedJson
      */
-    public function testSerialization(): void
+    public function testSerialization($data, string $expectedJson): void
     {
         $builder = new Builder();
         $serializer = $builder->createSerializer();
 
+        $json = $serializer->writeValueAsString($data, SerializationType::JSON());
+        self::assertSame($expectedJson, $json);
+    }
+
+    /**
+     * @return array
+     */
+    public function getTestTuples(): array
+    {
+        return [
+            $this->getNestedObjectTuple(),
+            $this->getObjectsInArrayTuple(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getNestedObjectTuple(): array
+    {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
+        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
 
-        $json = $serializer->writeValueAsString($car, SerializationType::JSON());
-        self::assertSame('{"title":"Honda","color":"white","radio":{"brand":"test station"}}', $json);
+        return [$car, $json];
+    }
+
+    /**
+     * @return array
+     */
+    private function getObjectsInArrayTuple(): array
+    {
+        $radio = new Radio('test station');
+        $car = new Car('Honda', 'white', $radio);
+        $cars = [];
+        $jsonArray = [];
+
+        for ($i = 0; $i < 2; $i++) {
+            $cars[] = $car;
+            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
+        }
+
+        $json = '[' . implode(',', $jsonArray) . ']';
+
+        return [$cars, $json];
     }
 }

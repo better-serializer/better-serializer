@@ -6,7 +6,7 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\Type\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;

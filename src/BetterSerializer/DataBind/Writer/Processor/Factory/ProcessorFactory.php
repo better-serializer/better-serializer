@@ -7,15 +7,12 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetadataInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Property\Factory\AbstractFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
+use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
+use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\Object as ObjectProcessor;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProperty as ObjectPropertyProcessor;
-use BetterSerializer\DataBind\Writer\Processor\Property as PropertyProcessor;
-use BetterSerializer\DataBind\Writer\ValueWriter\Property as PropertyValueWriter;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -29,94 +26,77 @@ final class ProcessorFactory implements ProcessorFactoryInterface
 {
 
     /**
-     * @var ReaderInterface
+     * @var MetaDataMember[]
      */
-    private $metadataReader;
+    private $metaDataChainMembers;
 
     /**
-     * @var AbstractFactoryInterface
+     * @var TypeMember[]
      */
-    private $extractorFactory;
+    private $typeChainMembers;
 
     /**
      * ProcessorFactory constructor.
-     * @param ReaderInterface $metadataReader
-     * @param AbstractFactoryInterface $extractorFactory
+     * @param MetaDataMember[] $metaDataChainMembers
+     * @param TypeMember[] $typeChainMembers
      */
-    public function __construct(ReaderInterface $metadataReader, AbstractFactoryInterface $extractorFactory)
+    public function __construct(array $metaDataChainMembers = [], array $typeChainMembers = [])
     {
-        $this->metadataReader = $metadataReader;
-        $this->extractorFactory = $extractorFactory;
+        $this->metaDataChainMembers = $metaDataChainMembers;
+        $this->typeChainMembers = $typeChainMembers;
     }
 
     /**
-     * @param string $type
+     * @param PropertyMetaDataInterface $metaData
+     * @return ProcessorInterface
+     * @throws LogicException
+     */
+    public function createFromMetaData(PropertyMetaDataInterface $metaData): ProcessorInterface
+    {
+        foreach ($this->metaDataChainMembers as $chainMember) {
+            $processor = $chainMember->create($metaData);
+
+            if ($processor) {
+                return $processor;
+            }
+        }
+
+        throw new LogicException("Unknown type - '" . get_class($metaData->getType()) . "'");
+    }
+
+    /**
+     * @param TypeInterface $type
      * @return ProcessorInterface
      * @throws ReflectionException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function create(string $type): ProcessorInterface
+    public function createFromType(TypeInterface $type): ProcessorInterface
     {
-        return $this->createObjectProcessor($type);
-    }
+        foreach ($this->typeChainMembers as $chainMember) {
+            $processor = $chainMember->create($type);
 
-    /**
-     * @param string $className
-     * @return ObjectProcessor
-     * @throws ReflectionException
-     * @throws LogicException
-     * @throws RuntimeException
-     */
-    private function createObjectProcessor(string $className): ObjectProcessor
-    {
-        $metaData = $this->metadataReader->read($className);
-        $propertiesMetaData = $metaData->getPropertiesMetadata();
-        $propertyProcessors = [];
-
-        foreach ($propertiesMetaData as $propertyMetaData) {
-            $propertyProcessors[] = $this->createPropertyProcessor($propertyMetaData);
+            if ($processor) {
+                return $processor;
+            }
         }
 
-        return new ObjectProcessor($propertyProcessors);
+        throw new LogicException("Unknown type - '" . get_class($type) . "'");
     }
 
     /**
-     * @param PropertyMetaDataInterface $propertyMetaData
-     * @return ProcessorInterface
-     * @throws RuntimeException
+     * @param MetaDataMember $chainMember
      */
-    private function createPropertyProcessor(PropertyMetaDataInterface $propertyMetaData): ProcessorInterface
+    public function addMetaDataChainMember(MetaDataMember $chainMember): void
     {
-        if ($propertyMetaData instanceof ObjectPropertyMetadataInterface) {
-            return $this->createObjectPropertyProcessor($propertyMetaData);
-        }
-
-        return $this->createSimplePropertyProcessor($propertyMetaData);
+        $this->metaDataChainMembers[] = $chainMember;
     }
 
     /**
-     * @param PropertyMetaDataInterface $propertyMetaData
-     * @return PropertyProcessor
+     * @param ChainMemberInterface $chainMember
      */
-    private function createSimplePropertyProcessor(PropertyMetaDataInterface $propertyMetaData): PropertyProcessor
+    public function addTypeChainMember(TypeMember $chainMember): void
     {
-        $extractor = $this->extractorFactory->newExtractor($propertyMetaData);
-        $valueWriter = new PropertyValueWriter($propertyMetaData->getOutputKey());
-
-        return new PropertyProcessor($extractor, $valueWriter);
-    }
-
-    /**
-     * @param ObjectPropertyMetadataInterface $propertyMetaData
-     * @return ObjectPropertyProcessor
-     */
-    private function createObjectPropertyProcessor(
-        ObjectPropertyMetadataInterface $propertyMetaData
-    ): ObjectPropertyProcessor {
-        $extractor = $this->extractorFactory->newExtractor($propertyMetaData);
-        $objectProcessor = $this->createObjectProcessor($propertyMetaData->getObjectClass());
-
-        return new ObjectPropertyProcessor($extractor, $objectProcessor, $propertyMetaData->getOutputKey());
+        $this->typeChainMembers[] = $chainMember;
     }
 }

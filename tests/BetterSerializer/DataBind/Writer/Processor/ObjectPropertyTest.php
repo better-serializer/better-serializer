@@ -13,6 +13,11 @@ use BetterSerializer\Dto\CarInterface;
 use BetterSerializer\Dto\RadioInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class NestedObjectTest
+ * @author mfris
+ * @package BetterSerializer\DataBind\Writer\Processor
+ */
 class ObjectPropertyTest extends TestCase
 {
 

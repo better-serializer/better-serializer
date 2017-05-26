@@ -33,11 +33,11 @@ final class ReflectionExtractor implements ExtractorInterface
     }
 
     /**
-     * @param object $instance
+     * @param object $data
      * @return mixed
      */
-    public function extract($instance)
+    public function extract($data)
     {
-        return $this->reflectionProperty->getValue($instance);
+        return $this->reflectionProperty->getValue($data);
     }
 }

@@ -24,11 +24,11 @@ final class Context implements ContextInterface
     private $data = [];
 
     /**
-     * @param string $key
+     * @param string|int $key
      * @param mixed $value
      * @return void
      */
-    public function write(string $key, $value): void
+    public function write($key, $value): void
     {
         $this->data[$key] = $value;
     }
@@ -42,11 +42,11 @@ final class Context implements ContextInterface
     }
 
     /**
-     * @param string $key
+     * @param mixed $key
      * @param ContextInterface $context
      * @throws RuntimeException
      */
-    public function mergeSubContext(string $key, ContextInterface $context): void
+    public function mergeSubContext($key, ContextInterface $context): void
     {
         if (!$context instanceof Context) {
             throw new RuntimeException(

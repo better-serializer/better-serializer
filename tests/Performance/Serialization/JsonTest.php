@@ -28,7 +28,7 @@ final class JsonTest extends TestCase
      */
     public function testSerialization(): void
     {
-        $this->markTestIncomplete();
+        $this->markTestIncomplete('Implement caching to see difference.');
         $expectedJson = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
 
         $builder = new Builder();
@@ -42,14 +42,54 @@ final class JsonTest extends TestCase
         $jmsSerializer->serialize($car, 'json');
         $serializer->writeValueAsString($car, SerializationType::JSON());
 
-        //$start = microtime(true);
+        $start = microtime(true);
         $json = $serializer->writeValueAsString($car, SerializationType::JSON());
-        //echo (microtime(true) - $start) . ' yyy ';
+        $betterMicro = (microtime(true) - $start);
         self::assertSame($expectedJson, $json);
 
-        //$start = microtime(true);
+        $start = microtime(true);
         $jmsJson = $jmsSerializer->serialize($car, 'json');
-        //echo (microtime(true) - $start) . ' xxx ';
+        $jmsMicro = (microtime(true) - $start);
         self::assertSame($expectedJson, $jmsJson);
+        self::assertGreaterThan($betterMicro, $jmsMicro);
+    }
+
+    /**
+     * @group performance
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function testSerializationBigArray(): void
+    {
+        $builder = new Builder();
+        $serializer = $builder->createSerializer();
+        $jmsSerializer = SerializerBuilder::create()->build();
+
+        $radio = new Radio('test station');
+        $car = new Car('Honda', 'white', $radio);
+
+        $data = [];
+        $json = [];
+
+        for ($i = 0; $i < 2000; $i++) {
+            $data[] = $car;
+            $json[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
+        }
+
+        $expectedJson = '[' . implode(',', $json) . ']';
+
+        // opcache warmup
+        $jmsSerializer->serialize($data, 'json');
+        $serializer->writeValueAsString($data, SerializationType::JSON());
+
+        $start = microtime(true);
+        $jmsJson = $jmsSerializer->serialize($data, 'json');
+        $jmsMicro = (microtime(true) - $start);
+        self::assertSame($expectedJson, $jmsJson);
+
+        $start = microtime(true);
+        $json = $serializer->writeValueAsString($data, SerializationType::JSON());
+        $betterMicro = (microtime(true) - $start);
+        self::assertSame($expectedJson, $json);
+        self::assertGreaterThan(6.6, $jmsMicro / $betterMicro);
     }
 }

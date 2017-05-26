@@ -7,22 +7,13 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetadataInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\MetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Property\Factory\AbstractFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Object as ObjectProcessor;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProperty as ObjectPropertyProcessor;
+use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
+use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\Property as PropertyProcessor;
-use BetterSerializer\DataBind\Writer\ValueWriter\Property as PropertyValueWriter;
-use BetterSerializer\Dto\Car;
-use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
-use Mockery;
-use ReflectionClass;
+use LogicException;
 
 /**
  * Class ProcessorFactoryTest
@@ -36,126 +27,146 @@ class ProcessorFactoryTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
+    public function testCreateFromMetaData(): void
     {
-        Mockery::close();
+        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+
+        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember->expects(self::exactly(2))
+            ->method('create')
+            ->with($metaData)
+            ->willReturnOnConsecutiveCalls(null, $processor);
+
+        $factory = new ProcessorFactory([$chainMember, $chainMember]);
+        /* @var $metaData PropertyMetaDataInterface */
+        $newProcessor = $factory->createFromMetaData($metaData);
+
+        self::assertSame($processor, $newProcessor);
+    }
+
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessageRegExp /Unknown type - '[a-zA-Z0-9_]+'+/
+     */
+    public function testCreateFromMetaDataThrowsException(): void
+    {
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $metaData->expects(self::once())
+            ->method('getType')
+            ->willReturn($type);
+
+        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember->expects(self::once())
+            ->method('create')
+            ->with($metaData)
+            ->willReturn(null);
+
+        $factory = new ProcessorFactory([$chainMember]);
+        /* @var $metaData PropertyMetaDataInterface */
+        $factory->createFromMetaData($metaData);
     }
 
     /**
      *
      */
-    public function testCreate(): void
+    public function testAddMetaDataChainMember(): void
     {
-        $carPropertyTitle = Mockery::mock(PropertyMetaDataInterface::class);
-        $carPropertyTitle->shouldReceive('getOutputKey')
-                     ->once()
-                     ->andReturn('title')
-                     ->getMock();
-        $carPropertyRadio = Mockery::mock(ObjectPropertyMetadataInterface::class);
-        $carPropertyRadio->shouldReceive('getOutputKey')
-                         ->once()
-                         ->andReturn('radio')
-                         ->getMock()
-                         ->shouldReceive('getObjectClass')
-                         ->once()
-                         ->andReturn(Radio::class)
-                         ->getMock();
-        $radioPropertyBrand = Mockery::mock(PropertyMetadataInterface::class);
-        $radioPropertyBrand->shouldReceive('getOutputKey')
-                           ->once()
-                           ->andReturn('brand')
-                           ->getMock();
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $metaData->expects(self::once())
+            ->method('getType')
+            ->willReturn($type);
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
 
-        $carMetaData = Mockery::mock(MetaDataInterface::class);
-        $carMetaData->shouldReceive('getPropertiesMetadata')
-                    ->once()
-                    ->andReturn(['title' => $carPropertyTitle, 'radio' => $carPropertyRadio]);
-        $radioMetaData = Mockery::mock(MetaDataInterface::class);
-        $radioMetaData->shouldReceive('getPropertiesMetadata')
-                      ->once()
-                      ->andReturn(['brand' => $radioPropertyBrand]);
+        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember->expects(self::once())
+            ->method('create')
+            ->with($metaData)
+            ->willReturn($processor);
 
-        $metaDataReader = Mockery::mock(ReaderInterface::class);
-        $metaDataReader->shouldReceive('read')
-                       ->with(Car::class)
-                       ->once()
-                       ->andReturn($carMetaData)
-                       ->getMock()
-                       ->shouldReceive('read')
-                       ->with(Radio::class)
-                       ->once()
-                       ->andReturn($radioMetaData);
+        $factory = new ProcessorFactory();
 
-        $propertyExtractor = Mockery::mock(ExtractorInterface::class);
+        try {
+            /* @var $metaData PropertyMetaDataInterface */
+            $factory->createFromMetaData($metaData);
+        } catch (LogicException $e) {
+        }
 
-        $extractorFactory = Mockery::mock(AbstractFactoryInterface::class);
-        $extractorFactory->shouldReceive('newExtractor')
-                         ->with($carPropertyTitle)
-                         ->once()
-                         ->andReturn($propertyExtractor)
-                         ->getMock()
-                         ->shouldReceive('newExtractor')
-                         ->with($carPropertyRadio)
-                         ->once()
-                         ->andReturn($propertyExtractor)
-                         ->getMock()
-                         ->shouldReceive('newExtractor')
-                         ->with($radioPropertyBrand)
-                         ->once()
-                         ->andReturn($propertyExtractor);
+        /* @var $chainMember MetaDataMember */
+        $factory->addMetaDataChainMember($chainMember);
+        $newProcessor = $factory->createFromMetaData($metaData);
 
-        /* @var $metaDataReader ReaderInterface */
-        /* @var $extractorFactory AbstractFactoryInterface */
-        $processorFactory = new ProcessorFactory($metaDataReader, $extractorFactory);
-        $processor = $processorFactory->create(Car::class);
+        self::assertSame($processor, $newProcessor);
+    }
 
-        self::assertInstanceOf(ProcessorInterface::class, $processor);
-        self::assertInstanceOf(ObjectProcessor::class, $processor);
+    /**
+     *
+     */
+    public function testCreateFromType(): void
+    {
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
 
-        $objectReflClass = new ReflectionClass(ObjectProcessor::class);
-        $processorsProperty = $objectReflClass->getProperty('processors');
-        $processorsProperty->setAccessible(true);
+        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember->expects(self::exactly(2))
+            ->method('create')
+            ->with($type)
+            ->willReturnOnConsecutiveCalls(null, $processor);
 
-        $objectProcessors = $processorsProperty->getValue($processor);
-        self::assertInternalType('array', $objectProcessors);
-        self::assertCount(2, $objectProcessors);
+        $factory = new ProcessorFactory([], [$chainMember, $chainMember]);
+        /* @var $type TypeInterface */
+        $newProcessor = $factory->createFromType($type);
 
-        $propertyReflClass = new ReflectionClass(PropertyProcessor::class);
-        $valueWriterProperty = $propertyReflClass->getProperty('valueWriter');
-        $valueWriterProperty->setAccessible(true);
+        self::assertSame($processor, $newProcessor);
+    }
 
-        $valueWriterReflClass = new ReflectionClass(PropertyValueWriter::class);
-        $outputKeyProperty2 = $valueWriterReflClass->getProperty('outputKey');
-        $outputKeyProperty2->setAccessible(true);
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessageRegExp /Unknown type - '[a-zA-Z0-9_]+'+/
+     */
+    public function testCreateFromTypeThrowsException(): void
+    {
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        $titleProcessor = $objectProcessors[0];
-        $titleValueWriter = $valueWriterProperty->getValue($titleProcessor);
+        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember->expects(self::once())
+            ->method('create')
+            ->with($type)
+            ->willReturn(null);
 
-        self::assertInstanceOf(PropertyProcessor::class, $titleProcessor);
-        self::assertSame('title', $outputKeyProperty2->getValue($titleValueWriter));
+        $factory = new ProcessorFactory([], [$chainMember]);
+        /* @var $type TypeInterface */
+        $factory->createFromType($type);
+    }
 
-        $objectPropertyReflClass = new ReflectionClass(ObjectPropertyProcessor::class);
-        $outputKeyProperty = $objectPropertyReflClass->getProperty('outputKey');
-        $outputKeyProperty->setAccessible(true);
-        $objProcessorProperty = $objectPropertyReflClass->getProperty('objectProcessor');
-        $objProcessorProperty->setAccessible(true);
+    /**
+     *
+     */
+    public function testAddTypeChainMember(): void
+    {
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
 
-        $radioProcessor = $objectProcessors[1];
-        $radioOutputKey = $outputKeyProperty->getValue($radioProcessor);
-        $radioObjProcessor = $objProcessorProperty->getValue($radioProcessor);
+        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember->expects(self::once())
+            ->method('create')
+            ->with($type)
+            ->willReturn($processor);
 
-        self::assertInstanceOf(ObjectPropertyProcessor::class, $radioProcessor);
-        self::assertSame('radio', $radioOutputKey);
-        self::assertInstanceOf(ObjectProcessor::class, $radioObjProcessor);
+        $factory = new ProcessorFactory();
 
-        $radioProcessors = $processorsProperty->getValue($radioObjProcessor);
+        try {
+            /* @var $type TypeInterface */
+            $factory->createFromType($type);
+        } catch (LogicException $e) {
+        }
 
-        self::assertInternalType('array', $radioProcessors);
-        self::assertCount(1, $radioProcessors);
+        /* @var $chainMember TypeMember */
+        $factory->addTypeChainMember($chainMember);
+        $newProcessor = $factory->createFromType($type);
 
-        $brandProcessor = $radioProcessors[0];
-        $brandValueWriter = $valueWriterProperty->getValue($brandProcessor);
-        self::assertInstanceOf(PropertyProcessor::class, $brandProcessor);
-        self::assertSame('brand', $outputKeyProperty2->getValue($brandValueWriter));
+        self::assertSame($processor, $newProcessor);
     }
 }

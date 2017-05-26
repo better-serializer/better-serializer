@@ -21,11 +21,11 @@ interface WriterInterface
 {
     /**
      * @param mixed $data
-     * @param SerializationType $type
+     * @param SerializationType $serializationType
      * @return string
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function writeValueAsString($data, SerializationType $type): string;
+    public function writeValueAsString($data, SerializationType $serializationType): string;
 }
