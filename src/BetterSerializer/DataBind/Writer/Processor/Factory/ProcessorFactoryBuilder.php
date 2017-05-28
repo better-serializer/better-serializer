@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface 
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember;
-use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember as TypeObjectmember;
+use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember;
 
 /**
  * Class ProcessorFactoryBuilder
@@ -52,12 +52,12 @@ final class ProcessorFactoryBuilder
         $metaDataObject = new ComplexNestedMember($factory, $this->extractorFactory);
         $metaDataSimple = new SimpleMember($this->extractorFactory);
         $typeArrayMember = new CollectionMember($factory);
-        $typeObjectMember = new TypeObjectmember($factory, $this->metaDataReader);
+        $objectMember = new Objectmember($factory, $this->metaDataReader);
 
         $factory->addMetaDataChainMember($metaDataSimple);
         $factory->addMetaDataChainMember($metaDataObject);
         $factory->addTypeChainMember($typeArrayMember);
-        $factory->addTypeChainMember($typeObjectMember);
+        $factory->addTypeChainMember($objectMember);
 
         return $factory;
     }

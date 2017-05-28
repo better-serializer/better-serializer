@@ -8,10 +8,12 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
+use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\Collection;
+use BetterSerializer\DataBind\Writer\Processor\ComplexCollection;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\Processor\SimpleCollection;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 
@@ -36,7 +38,7 @@ class CollectionMemberTest extends TestCase
     /**
      *
      */
-    public function testCreate(): void
+    public function testCreateComplex(): void
     {
         $nestedType = Mockery::mock(TypeInterface::class);
         $arrayType = new ArrayType($nestedType);
@@ -53,7 +55,27 @@ class CollectionMemberTest extends TestCase
         $collectionMember = new CollectionMember($processorFactory);
         $collectionProcessor = $collectionMember->create($arrayType);
 
-        self::assertInstanceOf(Collection::class, $collectionProcessor);
+        self::assertInstanceOf(ComplexCollection::class, $collectionProcessor);
+    }
+
+    /**
+     *
+     */
+    public function testCreateSimple(): void
+    {
+        $nestedType = new StringType();
+        $arrayType = new ArrayType($nestedType);
+
+        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
+        $processorFactory->shouldReceive('createFromType')
+            ->times(0)
+            ->getMock();
+
+        /* @var $processorFactory ProcessorFactoryInterface */
+        $collectionMember = new CollectionMember($processorFactory);
+        $collectionProcessor = $collectionMember->create($arrayType);
+
+        self::assertInstanceOf(SimpleCollection::class, $collectionProcessor);
     }
 
     /**

@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
+use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\Collection as CollectionProcessor;
+use BetterSerializer\DataBind\Writer\Processor\ComplexCollection as ComplexCollectionProcessor;
+use BetterSerializer\DataBind\Writer\Processor\SimpleCollection as SimpleCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use LogicException;
 use ReflectionException;
@@ -42,8 +44,14 @@ final class CollectionMember extends ChainMember
     protected function createProcessor(TypeInterface $type): ProcessorInterface
     {
         /* @var $type ArrayType */
-        $nestedProcessor = $this->processorFactory->createFromType($type->getNestedType());
+        $nestedType = $type->getNestedType();
 
-        return new CollectionProcessor($nestedProcessor);
+        if ($nestedType instanceof SimpleTypeInterface) {
+            return new SimpleCollectionProcessor();
+        }
+
+        $nestedProcessor = $this->processorFactory->createFromType($nestedType);
+
+        return new ComplexCollectionProcessor($nestedProcessor);
     }
 }

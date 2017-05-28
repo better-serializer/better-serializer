@@ -48,6 +48,7 @@ final class JsonTest extends TestCase
             $this->getNestedObjectTupleAndArray(),
             $this->getObjectsInArrayTuple(),
             $this->getObjectsInArrayTupleWithInnerArray(),
+            $this->getStringsInArray(),
         ];
     }
 
@@ -119,5 +120,24 @@ final class JsonTest extends TestCase
         $json = '[' . implode(',', $jsonArray) . ']';
 
         return [$cars, $json];
+    }
+
+    /**
+     * @return array
+     */
+    private function getStringsInArray(): array
+    {
+        $string = 'test';
+        $strings = [];
+        $jsonArray = [];
+
+        for ($i = 0; $i < 2; $i++) {
+            $strings[] = $string;
+            $jsonArray[] = '"test"';
+        }
+
+        $json = '[' . implode(',', $jsonArray) . ']';
+
+        return [$strings, $json];
     }
 }

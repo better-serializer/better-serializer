@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-class CollectionTest extends TestCase
+class ComplexCollectionTest extends TestCase
 {
 
     /**
@@ -48,7 +48,29 @@ class CollectionTest extends TestCase
 
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
-        $processor = new Collection($processorMock);
+        $processor = new ComplexCollection($processorMock);
+        $processor->process($contextMock, $arrayData);
+    }
+
+    /**
+     *
+     */
+    public function testProcessEmpty(): void
+    {
+        $arrayData = [];
+
+        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock->expects(self::exactly(0))
+            ->method('createSubContext');
+        $contextMock->expects(self::exactly(0))
+            ->method('mergeSubContext');
+        $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processorMock->expects(self::exactly(0))
+            ->method('process');
+
+        /* @var $contextMock ContextInterface */
+        /* @var $processorMock ProcessorInterface */
+        $processor = new ComplexCollection($processorMock);
         $processor->process($contextMock, $arrayData);
     }
 }
