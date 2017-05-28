@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
@@ -19,20 +20,52 @@ final class ObjectMember extends ChainMember
 {
 
     /**
-     * @param string $stringType
+     * @var string
+     */
+    private $className;
+
+    /**
+     * @param StringTypedPropertyContextInterface $context
      * @return bool
      */
-    protected function isProcessable(string $stringType): bool
+    protected function isProcessable(StringTypedPropertyContextInterface $context): bool
     {
-        return class_exists($stringType);
+        $className = $this->getClassName($context);
+
+        if ($className) {
+            $this->className = $className;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createType(string $stringType): TypeInterface
+    protected function createType(StringTypedPropertyContextInterface $context): TypeInterface
     {
-        return new ObjectType($stringType);
+        return new ObjectType($this->className);
+    }
+
+    /**
+     * @param StringTypedPropertyContextInterface $context
+     * @return string|null
+     */
+    private function getClassName(StringTypedPropertyContextInterface $context): ?string
+    {
+        $stringType = $context->getStringType();
+
+        if (class_exists($stringType)) {
+            return $stringType;
+        }
+
+        $completeClass = $context->getNamespace() . '\\' . $stringType;
+        $completeClass = str_replace('\\\\', '\\', $completeClass);
+
+        return class_exists($completeClass) ? $completeClass : null;
     }
 }

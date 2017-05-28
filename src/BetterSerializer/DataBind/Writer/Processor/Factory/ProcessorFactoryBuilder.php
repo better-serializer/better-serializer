@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ObjectMember as MetaDataObjectMember;
+use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember as TypeObjectmember;
@@ -49,7 +49,7 @@ final class ProcessorFactoryBuilder
     public function build(): ProcessorFactory
     {
         $factory = new ProcessorFactory();
-        $metaDataObject = new MetaDataObjectMember($factory, $this->extractorFactory);
+        $metaDataObject = new ComplexNestedMember($factory, $this->extractorFactory);
         $metaDataSimple = new SimpleMember($this->extractorFactory);
         $typeArrayMember = new CollectionMember($factory);
         $typeObjectMember = new TypeObjectmember($factory, $this->metaDataReader);

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ChainMemberInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use LogicException;
@@ -34,21 +35,21 @@ final class TypeFactory implements TypeFactoryInterface
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
      * @throws LogicException
      */
-    public function getType(string $stringType): TypeInterface
+    public function getType(StringTypedPropertyContextInterface $context): TypeInterface
     {
         foreach ($this->chainMembers as $chainMember) {
-            $type = $chainMember->getType($stringType);
+            $type = $chainMember->getType($context);
 
             if ($type) {
                 return $type;
             }
         }
 
-        throw new LogicException("Unknown type - '{$stringType}'");
+        throw new LogicException("Unknown type - '{$context->getStringType()}'");
     }
 
     /**

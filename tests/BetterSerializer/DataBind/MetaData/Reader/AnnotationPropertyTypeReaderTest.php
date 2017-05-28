@@ -8,11 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
-use RuntimeException;
 
 /**
  * Class AnnotationPropertyTypeReaderTest
@@ -32,20 +29,22 @@ class AnnotationPropertyTypeReaderTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Property annotation missing.
+     *
      */
     public function testGetTypeWithoutAnnotations(): void
     {
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->times(0)
+        /* @var $context Mockery\MockInterface */
+        $context = Mockery::mock(PropertyContextInterface::class);
+        $context->shouldReceive('getPropertyAnnotation')
+            ->once()
+            ->andReturn(null)
             ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
+        /* @var $context PropertyContextInterface */
 
-        $reader = new AnnotationPropertyTypeReader($typeFactoryStub);
-        $reader->getType([]);
+        $reader = new AnnotationPropertyTypeReader();
+        $typedContext = $reader->resolveType($context);
+
+        self::assertNull($typedContext);
     }
 
     /**
@@ -55,17 +54,18 @@ class AnnotationPropertyTypeReaderTest extends TestCase
     {
         $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class, ['getType' => 'string']);
 
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub = $typeFactoryStub->shouldReceive('getType')
+        /* @var $context Mockery\MockInterface */
+        $context = Mockery::mock(PropertyContextInterface::class);
+        $context->shouldReceive('getPropertyAnnotation')
             ->once()
-            ->andReturn(new StringType())
+            ->andReturn($propertyAnnotStub1)
             ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
+        /* @var $context PropertyContextInterface */
 
-        $reader = new AnnotationPropertyTypeReader($typeFactoryStub);
-        $type = $reader->getType([$propertyAnnotStub1]);
+        $reader = new AnnotationPropertyTypeReader();
+        $typedContext = $reader->resolveType($context);
 
-        self::assertInstanceOf(StringType::class, $type);
+        self::assertInstanceOf(StringTypedPropertyContext::class, $typedContext);
+        self::assertSame('string', $typedContext->getStringType());
     }
 }

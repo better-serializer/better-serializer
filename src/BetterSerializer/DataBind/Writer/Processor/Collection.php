@@ -38,6 +38,10 @@ final class Collection implements CollectionProcessorInterface
      */
     public function process(ContextInterface $context, $data): void
     {
+        if (empty($data)) {
+            return;
+        }
+
         /* @var $data Iterator */
         foreach ($data as $key => $value) {
             $subContext = $context->createSubContext();

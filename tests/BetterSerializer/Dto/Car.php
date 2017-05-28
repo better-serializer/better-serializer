@@ -38,16 +38,25 @@ final class Car implements CarInterface
     private $radio;
 
     /**
+     * @var Door[]
+     * @Serializer\Property(type="array<Door>")
+     * @JmsSerializer\Type("array<BetterSerializer\Dto\Door>")
+     */
+    private $doors;
+
+    /**
      * Car constructor.
      * @param string $title
      * @param string $color
      * @param Radio $radio
+     * @param Door[] $doors
      */
-    public function __construct(string $title, string $color, Radio $radio)
+    public function __construct(string $title, string $color, Radio $radio, $doors = [])
     {
         $this->title = $title;
         $this->color = $color;
         $this->radio = $radio;
+        $this->doors = $doors;
     }
 
     /**
@@ -72,5 +81,13 @@ final class Car implements CarInterface
     public function getRadio(): Radio
     {
         return $this->radio;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDoors(): array
+    {
+        return $this->doors;
     }
 }

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
@@ -18,27 +19,27 @@ abstract class ChainMember implements ChainMemberInterface
 {
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface|null
      */
-    public function getType(string $stringType): ?TypeInterface
+    public function getType(StringTypedPropertyContextInterface $context): ?TypeInterface
     {
-        if (!$this->isProcessable($stringType)) {
+        if (!$this->isProcessable($context)) {
             return null;
         }
 
-        return $this->createType($stringType);
+        return $this->createType($context);
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return bool
      */
-    abstract protected function isProcessable(string $stringType): bool;
+    abstract protected function isProcessable(StringTypedPropertyContextInterface $context): bool;
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
      */
-    abstract protected function createType(string $stringType): TypeInterface;
+    abstract protected function createType(StringTypedPropertyContextInterface $context): TypeInterface;
 }

@@ -11,6 +11,6 @@ namespace BetterSerializer\DataBind\Writer\Processor;
  * Interface ObjectProcessorInterface
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-interface ObjectProcessorInterface extends ProcessorInterface
+interface ComplexNestedProcessorInterface extends ProcessorInterface
 {
 }

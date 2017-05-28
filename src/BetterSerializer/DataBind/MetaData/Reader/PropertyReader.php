@@ -6,15 +6,14 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\ObjectPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use ReflectionClass;
-use ReflectionProperty;
 use RuntimeException;
 
 /**
@@ -32,29 +31,35 @@ final class PropertyReader implements PropertyReaderInterface
     private $annotationReader;
 
     /**
-     * @var AnnotationPropertyTypeReaderInterface
+     * @var TypeFactoryInterface
      */
-    private $annotPropTypeReader;
+    private $typeFactory;
 
     /**
-     * @var DocBlockPropertyTypeReaderInterface
+     * @var TypeReaderInterface[]
      */
-    private $docBlkPropTypeReader;
+    private $typeReaders;
 
     /**
      * PropertyReader constructor.
      * @param AnnotationReader $annotationReader
-     * @param AnnotationPropertyTypeReaderInterface $annotPropTypeReader
-     * @param DocBlockPropertyTypeReaderInterface $docBlkPropTypeReader
+     * @param TypeFactoryInterface $typeFactory
+     * @param TypeReaderInterface[] $typeReaders
+     * @throws RuntimeException
      */
     public function __construct(
         AnnotationReader $annotationReader,
-        AnnotationPropertyTypeReaderInterface $annotPropTypeReader,
-        DocBlockPropertyTypeReaderInterface $docBlkPropTypeReader
+        TypeFactoryInterface $typeFactory,
+        array $typeReaders
     ) {
         $this->annotationReader = $annotationReader;
-        $this->annotPropTypeReader = $annotPropTypeReader;
-        $this->docBlkPropTypeReader = $docBlkPropTypeReader;
+        $this->typeFactory = $typeFactory;
+
+        if (empty($typeReaders)) {
+            throw new RuntimeException('Type readers missing.');
+        }
+
+        $this->typeReaders = $typeReaders;
     }
 
     /**
@@ -69,7 +74,8 @@ final class PropertyReader implements PropertyReaderInterface
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
             $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
-            $type = $this->getType($reflectionProperty, $annotations);
+            $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
+            $type = $this->getType($context);
             $propertyClassName = $type instanceof ObjectType ?
                                     ObjectPropertyMetadata::class : ReflectionPropertyMetadata::class;
 
@@ -80,27 +86,25 @@ final class PropertyReader implements PropertyReaderInterface
     }
 
     /**
-     * @param ReflectionProperty    $reflectionProperty
-     * @param AnnotationInterface[] $annotations
+     * @param PropertyContext $context
      * @return TypeInterface
      * @throws RuntimeException
      */
-    private function getType(ReflectionProperty $reflectionProperty, array $annotations): TypeInterface
+    private function getType(PropertyContext $context): TypeInterface
     {
-        try {
-            return $this->annotPropTypeReader->getType($annotations);
-        } catch (RuntimeException $e) {
+        foreach ($this->typeReaders as $typeReader) {
+            $typedContext = $typeReader->resolveType($context);
+
+            if ($typedContext) {
+                return $this->typeFactory->getType($typedContext);
+            }
         }
 
-        try {
-            return $this->docBlkPropTypeReader->getType($reflectionProperty);
-        } catch (RuntimeException $e) {
-        }
+        $reflectionProperty = $context->getReflectionProperty();
 
         throw new RuntimeException(
             sprintf(
-                'Type declaration missing in class: %s, property: %s. Either define a Property annotation'
-                        . ' or define a @var tag in doc block comment.',
+                'Type declaration missing in class: %s, property: %s.',
                 $reflectionProperty->getDeclaringClass()->getName(),
                 $reflectionProperty->getName()
             )

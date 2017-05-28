@@ -12,8 +12,8 @@ use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProperty;
+use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\Dto\Car;
@@ -28,7 +28,7 @@ use LogicException;
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ObjectMemberTest extends TestCase
+class ComplexNestedMemberTest extends TestCase
 {
 
     /**
@@ -55,7 +55,7 @@ class ObjectMemberTest extends TestCase
             ->andReturn('test')
             ->getMock();
 
-        $objProcessor = Mockery::mock(ObjectProcessorInterface::class);
+        $objProcessor = Mockery::mock(ComplexNestedProcessorInterface::class);
 
         $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
         $processorFactory->shouldReceive('createFromType')
@@ -72,10 +72,10 @@ class ObjectMemberTest extends TestCase
             ->andReturn($extractor)
             ->getMock();
 
-        $objectMember = new ObjectMember($processorFactory, $extractorFactory);
-        $processor = $objectMember->create($propertyMetaData);
+        $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
+        $processor = $complexNestedMember->create($propertyMetaData);
 
-        self::assertInstanceOf(ObjectProperty::class, $processor);
+        self::assertInstanceOf(ComplexNested::class, $processor);
     }
 
     /**
@@ -108,8 +108,8 @@ class ObjectMemberTest extends TestCase
             ->andReturn($extractor)
             ->getMock();
 
-        $objectMember = new ObjectMember($processorFactory, $extractorFactory);
-        $objectMember->create($propertyMetaData);
+        $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
+        $complexNestedMember->create($propertyMetaData);
     }
 
     /**
@@ -127,8 +127,8 @@ class ObjectMemberTest extends TestCase
         $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
         $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
 
-        $objectMember = new ObjectMember($processorFactory, $extractorFactory);
-        $shouldBeNull = $objectMember->create($propertyMetaData);
+        $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
+        $shouldBeNull = $complexNestedMember->create($propertyMetaData);
 
         self::assertNull($shouldBeNull);
     }

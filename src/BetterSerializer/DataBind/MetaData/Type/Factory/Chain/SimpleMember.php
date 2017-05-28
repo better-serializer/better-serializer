@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
@@ -35,21 +36,21 @@ final class SimpleMember extends ChainMember
     ];
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return bool
      */
-    protected function isProcessable(string $stringType): bool
+    protected function isProcessable(StringTypedPropertyContextInterface $context): bool
     {
-        return isset(self::$type2Instance[$stringType]);
+        return isset(self::$type2Instance[$context->getStringType()]);
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
      */
-    protected function createType(string $stringType): TypeInterface
+    protected function createType(StringTypedPropertyContextInterface $context): TypeInterface
     {
-        $className = self::$type2Instance[$stringType];
+        $className = self::$type2Instance[$context->getStringType()];
 
         return new $className();
     }

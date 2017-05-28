@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\DerivedStringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -25,6 +27,11 @@ final class ArrayMember extends ChainMember
     private $typeFactory;
 
     /**
+     * @var string
+     */
+    private $stringSubType;
+
+    /**
      * ArrayMember constructor.
      * @param TypeFactoryInterface $typeFactory
      */
@@ -34,23 +41,28 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return bool
      */
-    protected function isProcessable(string $stringType): bool
+    protected function isProcessable(StringTypedPropertyContextInterface $context): bool
     {
-        return preg_match('/array<[^>]+>/', $stringType) ? true : false;
+        if (preg_match('/array<([^>]+)>/', $context->getStringType(), $matches)) {
+            $this->stringSubType = $matches[1];
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
      */
-    protected function createType(string $stringType): TypeInterface
+    protected function createType(StringTypedPropertyContextInterface $context): TypeInterface
     {
-        preg_match('/array<([^>]+)>/', $stringType, $matches);
-        $stringSubType = $matches[1];
-        $subType = $this->typeFactory->getType($stringSubType);
+        $subContect = new DerivedStringTypedPropertyContext($this->stringSubType, $context->getNamespace());
+        $subType = $this->typeFactory->getType($subContect);
 
         return new ArrayType($subType);
     }

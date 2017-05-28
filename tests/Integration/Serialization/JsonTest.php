@@ -10,6 +10,7 @@ namespace Integration\Serialization;
 use BetterSerializer\Builder;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\Door;
 use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +45,9 @@ final class JsonTest extends TestCase
     {
         return [
             $this->getNestedObjectTuple(),
+            $this->getNestedObjectTupleAndArray(),
             $this->getObjectsInArrayTuple(),
+            $this->getObjectsInArrayTupleWithInnerArray(),
         ];
     }
 
@@ -55,7 +58,22 @@ final class JsonTest extends TestCase
     {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
+        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[]}';
+
+        return [$car, $json];
+    }
+
+    /**
+     * @return array
+     */
+    private function getNestedObjectTupleAndArray(): array
+    {
+        $radio = new Radio('test station');
+        $door = new Door();
+        $doors = [$door, $door];
+        $car = new Car('Honda', 'white', $radio, $doors);
+        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},'
+            . '"doors":[{"parentalLock":false},{"parentalLock":false}]}';
 
         return [$car, $json];
     }
@@ -72,7 +90,30 @@ final class JsonTest extends TestCase
 
         for ($i = 0; $i < 2; $i++) {
             $cars[] = $car;
-            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
+            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[]}';
+        }
+
+        $json = '[' . implode(',', $jsonArray) . ']';
+
+        return [$cars, $json];
+    }
+
+    /**
+     * @return array
+     */
+    private function getObjectsInArrayTupleWithInnerArray(): array
+    {
+        $radio = new Radio('test station');
+        $door = new Door();
+        $doors = [$door, $door];
+        $car = new Car('Honda', 'white', $radio, $doors);
+        $cars = [];
+        $jsonArray = [];
+
+        for ($i = 0; $i < 2; $i++) {
+            $cars[] = $car;
+            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"},'
+                . '"doors":[{"parentalLock":false},{"parentalLock":false}]}';
         }
 
         $json = '[' . implode(',', $jsonArray) . ']';

@@ -29,4 +29,9 @@ interface CarInterface
      * @return Radio
      */
     public function getRadio(): Radio;
+
+    /**
+     * @return array
+     */
+    public function getDoors(): array;
 }

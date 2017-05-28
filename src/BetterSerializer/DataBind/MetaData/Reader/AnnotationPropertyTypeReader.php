@@ -7,55 +7,28 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use RuntimeException;
-
 /**
  * Class AnnotationPropertyTypeReader
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader
  */
-final class AnnotationPropertyTypeReader implements AnnotationPropertyTypeReaderInterface
+final class AnnotationPropertyTypeReader implements TypeReaderInterface
 {
 
     /**
-     * @var TypeFactoryInterface
+     * @param PropertyContextInterface $context
+     * @return StringTypedPropertyContextInterface|null
      */
-    private $typeFactory;
-
-    /**
-     * AnnotationPropertyTypeReader constructor.
-     * @param TypeFactoryInterface $typeFactory
-     */
-    public function __construct(TypeFactoryInterface $typeFactory)
+    public function resolveType(PropertyContextInterface $context): ?StringTypedPropertyContextInterface
     {
-        $this->typeFactory = $typeFactory;
-    }
-
-    /**
-     * @param array $annotations
-     * @return TypeInterface
-     * @throws RuntimeException
-     */
-    public function getType(array $annotations): TypeInterface
-    {
-        $propertyAnnotation = null;
-
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof PropertyInterface) {
-                $propertyAnnotation = $annotation;
-                break;
-            }
-        }
+        $propertyAnnotation = $context->getPropertyAnnotation();
 
         if ($propertyAnnotation === null) {
-            throw new RuntimeException('Property annotation missing.');
+            return null;
         }
 
         $propertyType = $propertyAnnotation->getType();
 
-        return $this->typeFactory->getType($propertyType);
+        return new StringTypedPropertyContext($context, $propertyType);
     }
 }

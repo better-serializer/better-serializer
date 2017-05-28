@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
@@ -17,8 +18,8 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 interface ChainMemberInterface
 {
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface|null
      */
-    public function getType(string $stringType): ?TypeInterface;
+    public function getType(StringTypedPropertyContextInterface $context): ?TypeInterface;
 }

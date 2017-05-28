@@ -8,11 +8,12 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
 
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\ObjectProperty;
+use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use LogicException;
 use ReflectionException;
@@ -23,7 +24,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain
  */
-final class ObjectMember extends ExtractingChainMember
+final class ComplexNestedMember extends ExtractingChainMember
 {
 
     /**
@@ -50,7 +51,9 @@ final class ObjectMember extends ExtractingChainMember
      */
     protected function isCreatable(PropertyMetaDataInterface $metaData): bool
     {
-        return $metaData->getType() instanceof ObjectType;
+        $type = $metaData->getType();
+
+        return $type instanceof ObjectType || $type instanceof ArrayType;
     }
 
     /**
@@ -65,10 +68,10 @@ final class ObjectMember extends ExtractingChainMember
         $extractor = $this->extractorFactory->newExtractor($metaData);
         $objectProcessor = $this->processorFactory->createFromType($metaData->getType());
 
-        if (!$objectProcessor instanceof ObjectProcessorInterface) {
+        if (!$objectProcessor instanceof ComplexNestedProcessorInterface) {
             throw new LogicException("Invalid processor type: '" . get_class($objectProcessor) . "'");
         }
 
-        return new ObjectProperty($extractor, $objectProcessor, $metaData->getOutputKey());
+        return new ComplexNested($extractor, $objectProcessor, $metaData->getOutputKey());
     }
 }

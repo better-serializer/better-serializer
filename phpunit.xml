@@ -10,16 +10,21 @@
     syntaxCheck="false">
     <testsuites>
         <testsuite name="BetterSerializer">
-            <directory>tests</directory>
+            <directory phpVersion="7.1.0" phpVersionOperator=">=">tests</directory>
         </testsuite>
     </testsuites>
+
+    <groups>
+        <exclude>
+            <group>performance</group>
+        </exclude>
+    </groups>
 
     <filter>
         <whitelist>
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
-
 
     <logging>
         <log type="coverage-html" target="./log/codeCoverage" charset="UTF-8"

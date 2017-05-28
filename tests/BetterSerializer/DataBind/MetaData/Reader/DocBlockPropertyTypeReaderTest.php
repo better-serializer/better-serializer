@@ -7,16 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
-use ReflectionClass;
 use ReflectionProperty;
-use LogicException;
-use RuntimeException;
 
 /**
  * Class DocBlockPropertyTypeReaderTest
@@ -64,40 +59,29 @@ class DocBlockPropertyTypeReaderTest extends TestCase
             ->getMock();
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
 
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
+        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
+        $reflPropertyStub->shouldReceive('getDocComment')
             ->once()
-            ->andReturnValues([
-                new StringType(),
-            ])
+            ->andReturn('/** @var string  */')
             ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
 
-        $reader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $typeFactoryStub);
+        /* @var $contextStub Mockery\MockInterface */
+        $contextStub = Mockery::mock(PropertyContextInterface::class);
+        $contextStub->shouldReceive('getReflectionProperty')
+            ->once()
+            ->andReturn($reflPropertyStub)
+            ->getMock();
+        /* @var $contextStub PropertyContextInterface */
 
-        $declaringReflClassStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getNamespaceName' => 'TestNamespace']
-        );
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $typedContext = $typeReader->resolveType($contextStub);
 
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            [
-                'getDocComment' => '/** @var string  */',
-                'getDeclaringClass' => $declaringReflClassStub,
-                'setAccessible' => null,
-            ]
-        );
-
-        $type = $reader->getType($reflPropertyStub);
-
-        self::assertInstanceOf(StringType::class, $type);
+        self::assertInstanceOf(StringTypedPropertyContext::class, $typedContext);
+        self::assertSame('string', $typedContext->getStringType());
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp /You need to add a docblock to property "[A-Za-z0-9_]+"/
+     *
      */
     public function testGetTypeWithoutDocBlock(): void
     {
@@ -105,24 +89,28 @@ class DocBlockPropertyTypeReaderTest extends TestCase
         $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class);
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
 
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        /* @var $typeFactoryStub TypeFactoryInterface */
+        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
+        $reflPropertyStub->shouldReceive('getDocComment')
+            ->once()
+            ->andReturn('')
+            ->getMock();
 
-        $reader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $typeFactoryStub);
+        /* @var $contextStub Mockery\MockInterface */
+        $contextStub = Mockery::mock(PropertyContextInterface::class);
+        $contextStub->shouldReceive('getReflectionProperty')
+            ->once()
+            ->andReturn($reflPropertyStub)
+            ->getMock();
+        /* @var $contextStub PropertyContextInterface */
 
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            ['getName' => 'property1', 'getDocComment' => '']
-        );
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $typedContext = $typeReader->resolveType($contextStub);
 
-        /* @var $reflPropertyStub ReflectionProperty */
-        $reader->getType($reflPropertyStub);
+        self::assertNull($typedContext);
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp /You need to add an @var annotation to property "[a-zA-Z0-9]+"/
+     *
      */
     public function testGetTypeWithoutVarTag(): void
     {
@@ -132,72 +120,23 @@ class DocBlockPropertyTypeReaderTest extends TestCase
         $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
 
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->times(0)
-            ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-
-        $reader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $typeFactoryStub);
-
-        $declaringReflClassStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getNamespaceName' => 'TestNamespace', 'getName' => 'TestClass']
-        );
-
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            [
-                'getName' => 'property1',
-                'getDocComment' => '/** @global */',
-                'getDeclaringClass' => $declaringReflClassStub
-            ]
-        );
-
-        $reader->getType($reflPropertyStub);
-    }
-
-    /**
-     * @expectedException LogicException
-     * @expectedExceptionMessageRegExp /Unknown type - 'mixed'/
-     */
-    public function testGetTypeWithMixedVarTag(): void
-    {
-        $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
-            ->shouldReceive('getType')
-            ->andReturn('mixed')
+        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
+        $reflPropertyStub->shouldReceive('getDocComment')
+            ->once()
+            ->andReturn('/** @global */')
             ->getMock();
 
-        $docBlockStub = Mockery::mock(new DocBlock(), ['getTagsByName' => [$varTagStub]]);
-
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        /* @var $typeFactoryStub Mockery\MockInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactoryStub->shouldReceive('getType')
-            ->andThrow(LogicException::class, "Unknown type - 'mixed'")
+        /* @var $contextStub Mockery\MockInterface */
+        $contextStub = Mockery::mock(PropertyContextInterface::class);
+        $contextStub->shouldReceive('getReflectionProperty')
+            ->once()
+            ->andReturn($reflPropertyStub)
             ->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
+        /* @var $contextStub PropertyContextInterface */
 
-        $reader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $typeFactoryStub);
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $typedContext = $typeReader->resolveType($contextStub);
 
-        $reflClassHelperStub = Mockery::mock(
-            ReflectionClass::class,
-            ['getNamespaceName' => 'TestNamespace', 'getName' => 'TestClass']
-        );
-
-        $reflPropertyStub = Mockery::mock(
-            ReflectionProperty::class,
-            [
-                'getName' => 'property1',
-                'getDocComment' => '/** @var mixed */',
-                'getDeclaringClass' => $reflClassHelperStub,
-            ]
-        );
-
-        $reader->getType($reflPropertyStub);
+        self::assertNull($typedContext);
     }
 }

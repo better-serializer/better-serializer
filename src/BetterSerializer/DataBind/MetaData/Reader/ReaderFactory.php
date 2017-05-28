@@ -59,9 +59,10 @@ final class ReaderFactory
 
         $annotationReader = $this->createAnnotationReader();
         $classReader = new ClassReader($annotationReader);
-        $annotationTypeReader = new AnnotationPropertyTypeReader($this->typeFactory);
-        $docBlockTypeReader = new DocBlockPropertyTypeReader($this->docBlockFactory, $this->typeFactory);
-        $propertyReader = new PropertyReader($annotationReader, $annotationTypeReader, $docBlockTypeReader);
+        $typeReaders = [];
+        $typeReaders[] = new AnnotationPropertyTypeReader();
+        $typeReaders[] = new DocBlockPropertyTypeReader($this->docBlockFactory);
+        $propertyReader = new PropertyReader($annotationReader, $this->typeFactory, $typeReaders);
 
         $this->reader = new Reader($classReader, $propertyReader);
 

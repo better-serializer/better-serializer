@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
@@ -37,19 +38,28 @@ class ArrayMemberTest extends TestCase
     public function testGetTypeWithSimpleSubType(): void
     {
         $stringType = 'array<string>';
-        $stringSubType = 'string';
 
         $stringTypeInstance = Mockery::mock(TypeInterface::class);
 
         $typeFactory = Mockery::mock(TypeFactoryInterface::class);
         $typeFactory->shouldReceive('getType')
             ->once()
-            ->with($stringSubType)
             ->andReturn($stringTypeInstance);
+
+        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
+        $context->shouldReceive('getStringType')
+            ->once()
+            ->andReturn($stringType)
+            ->getMock()
+            ->shouldReceive('getNamespace')
+            ->once()
+            ->andReturn('test')
+            ->getMock();
+        /* @var $context StringTypedPropertyContextInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
-        $arrayType = $arrayMember->getType($stringType);
+        $arrayType = $arrayMember->getType($context);
 
         self::assertInstanceOf(ArrayType::class, $arrayType);
         self::assertSame($arrayType->getNestedType(), $stringTypeInstance);
@@ -61,19 +71,27 @@ class ArrayMemberTest extends TestCase
     public function testGetTypeWithObjectSubType(): void
     {
         $stringType = 'array<Car>';
-        $stringSubType = 'Car';
-
         $objectTypeInstance = Mockery::mock(TypeInterface::class);
 
         $typeFactory = Mockery::mock(TypeFactoryInterface::class);
         $typeFactory->shouldReceive('getType')
             ->once()
-            ->with($stringSubType)
             ->andReturn($objectTypeInstance);
+
+        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
+        $context->shouldReceive('getStringType')
+            ->once()
+            ->andReturn($stringType)
+            ->getMock()
+            ->shouldReceive('getNamespace')
+            ->once()
+            ->andReturn('test')
+            ->getMock();
+        /* @var $context StringTypedPropertyContextInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
-        $arrayType = $arrayMember->getType($stringType);
+        $arrayType = $arrayMember->getType($context);
 
         self::assertInstanceOf(ArrayType::class, $arrayType);
         self::assertSame($arrayType->getNestedType(), $objectTypeInstance);
@@ -86,8 +104,15 @@ class ArrayMemberTest extends TestCase
     {
         $typeFactory = Mockery::mock(TypeFactoryInterface::class);
 
+        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
+        $context->shouldReceive('getStringType')
+            ->once()
+            ->andReturn(TypeEnum::STRING)
+            ->getMock();
+        /* @var $context StringTypedPropertyContextInterface */
+
         $arrayMember = new ArrayMember($typeFactory);
-        $shouldBeNull = $arrayMember->getType(TypeEnum::STRING);
+        $shouldBeNull = $arrayMember->getType($context);
 
         self::assertNull($shouldBeNull);
     }

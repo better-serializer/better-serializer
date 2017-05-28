@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-class ObjectPropertyTest extends TestCase
+class ComplexNestedTest extends TestCase
 {
 
     /**
@@ -44,15 +44,15 @@ class ObjectPropertyTest extends TestCase
             ->with($instance)
             ->willReturn($subInstance);
 
-        $objectProcessorMock = $this->getMockBuilder(ObjectProcessorInterface::class)->getMock();
-        $objectProcessorMock->expects(self::once())
+        $complexNestedMock = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $complexNestedMock->expects(self::once())
             ->method('process')
             ->with($subContextMock, $subInstance);
 
         /* @var $extractorMock ExtractorInterface */
-        /* @var $objectProcessorMock ObjectProcessorInterface */
+        /* @var $complexNestedMock ComplexNestedProcessorInterface */
         /* @var $contextMock ContextInterface */
-        $processor = new ObjectProperty($extractorMock, $objectProcessorMock, $outputKey);
+        $processor = new ComplexNested($extractorMock, $complexNestedMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 
@@ -70,14 +70,14 @@ class ObjectPropertyTest extends TestCase
 
         $extractorMock = $this->getMockBuilder(ExtractorInterface::class)->getMock();
 
-        $objectProcessorMock = $this->getMockBuilder(ObjectProcessorInterface::class)->getMock();
-        $objectProcessorMock->expects(self::exactly(0))
+        $complexNestedMock = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $complexNestedMock->expects(self::exactly(0))
             ->method('process');
 
         /* @var $extractorMock ExtractorInterface */
-        /* @var $objectProcessorMock ObjectProcessorInterface */
+        /* @var $complexNestedMock ComplexNestedProcessorInterface */
         /* @var $contextMock ContextInterface */
-        $processor = new ObjectProperty($extractorMock, $objectProcessorMock, $outputKey);
+        $processor = new ComplexNested($extractorMock, $complexNestedMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 }

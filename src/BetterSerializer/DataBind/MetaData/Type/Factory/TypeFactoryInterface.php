@@ -6,6 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
+use BetterSerializer\DataBind\MetaData\Reader\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
@@ -16,8 +17,8 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 interface TypeFactoryInterface
 {
     /**
-     * @param string $stringType
+     * @param StringTypedPropertyContextInterface $context
      * @return TypeInterface
      */
-    public function getType(string $stringType): TypeInterface;
+    public function getType(StringTypedPropertyContextInterface $context): TypeInterface;
 }

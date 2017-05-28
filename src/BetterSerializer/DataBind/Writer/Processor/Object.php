@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\Writer\Context\ContextInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class Object implements ObjectProcessorInterface
+final class Object implements ComplexNestedProcessorInterface
 {
 
     /**
