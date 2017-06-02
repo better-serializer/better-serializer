@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetadataInterface;
+use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\MetaData;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +28,7 @@ class ReaderTest extends TestCase
      */
     public function testRead(): void
     {
-        $classMetadata = Mockery::mock(ClassMetadataInterface::class);
+        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
 
         /* @var $classReader ClassReader */
         $classReader = Mockery::mock(ClassReaderInterface::class, ['getClassMetadata' => $classMetadata]);
@@ -48,7 +48,7 @@ class ReaderTest extends TestCase
      */
     public function testReadSystemClassThrowsException(): void
     {
-        $classMetadata = Mockery::mock(ClassMetadataInterface::class);
+        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
 
         /* @var $classReader ClassReader */
         $classReader = Mockery::mock(ClassReaderInterface::class, ['getClassMetadata' => $classMetadata]);

@@ -12,6 +12,16 @@ namespace BetterSerializer\DataBind\MetaData;
  * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-interface ClassMetadataInterface
+interface ClassMetaDataInterface
 {
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string;
+
+    /**
+     * @return array
+     */
+    public function getAnnotations(): array;
 }

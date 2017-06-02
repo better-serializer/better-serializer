@@ -16,7 +16,7 @@ final class MetaData implements MetaDataInterface
 {
 
     /**
-     * @var ClassMetadataInterface
+     * @var ClassMetaDataInterface
      */
     private $classMetadata;
 
@@ -28,19 +28,19 @@ final class MetaData implements MetaDataInterface
     /**
      * MetaData constructor.
      *
-     * @param ClassMetadataInterface      $classMetadata
+     * @param ClassMetaDataInterface      $classMetadata
      * @param PropertyMetaDataInterface[] $propertiesMetadata
      */
-    public function __construct(ClassMetadataInterface $classMetadata, array $propertiesMetadata)
+    public function __construct(ClassMetaDataInterface $classMetadata, array $propertiesMetadata)
     {
         $this->classMetadata = $classMetadata;
         $this->propertiesMetadata = $propertiesMetadata;
     }
 
     /**
-     * @return ClassMetadataInterface
+     * @return ClassMetaDataInterface
      */
-    public function getClassMetadata(): ClassMetadataInterface
+    public function getClassMetadata(): ClassMetaDataInterface
     {
         return $this->classMetadata;
     }

@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetadataInterface;
+use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
 use ReflectionClass;
 
 /**
@@ -19,7 +19,7 @@ interface ClassReaderInterface
 {
     /**
      * @param ReflectionClass $reflectionClass
-     * @return ClassMetadataInterface
+     * @return ClassMetaDataInterface
      */
-    public function getClassMetadata(ReflectionClass $reflectionClass): ClassMetadataInterface;
+    public function getClassMetadata(ReflectionClass $reflectionClass): ClassMetaDataInterface;
 }

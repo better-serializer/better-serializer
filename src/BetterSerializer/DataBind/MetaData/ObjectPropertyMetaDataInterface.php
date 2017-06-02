@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData;
 
 /**
- * Interface ObjectPropertyMetadataInterface
+ * Interface ObjectPropertyMetaDataInterface
  * @package BetterSerializer\DataBind\MetaData
  */
-interface ObjectPropertyMetadataInterface extends ReflectionPropertyMetaDataInterface
+interface ObjectPropertyMetaDataInterface extends ReflectionPropertyMetaDataInterface
 {
 
     /**

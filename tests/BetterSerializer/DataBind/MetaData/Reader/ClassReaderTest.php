@@ -6,10 +6,9 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetadata;
+use BetterSerializer\DataBind\MetaData\ClassMetaData;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionClass;
 
 /**
@@ -26,13 +25,26 @@ class ClassReaderTest extends TestCase
      */
     public function testGetClassMetadata(): void
     {
-        $annotationReaderStub = Mockery::mock(AnnotationReader::class, ['getClassAnnotations' => []]);
+        $annotationReaderStub = $this->getMockBuilder(AnnotationReader::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
+        $annotationReaderStub->expects(self::once())
+            ->method('getClassAnnotations')
+            ->willReturn([]);
+        $reflectionClassStub = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
+        $reflectionClassStub->expects(self::once())
+            ->method('getName')
+            ->willReturn('test');
+
         /* @var $annotationReaderStub AnnotationReader */
-        $reader = new ClassReader($annotationReaderStub);
-        $reflectionClassStub = Mockery::mock(ReflectionClass::class, ['getProperties' => []]);
         /* @var $reflectionClassStub ReflectionClass */
+        $reader = new ClassReader($annotationReaderStub);
         $classMetaData = $reader->getClassMetadata($reflectionClassStub);
 
-        self::assertInstanceOf(ClassMetadata::class, $classMetaData);
+        self::assertInstanceOf(ClassMetaData::class, $classMetaData);
     }
 }

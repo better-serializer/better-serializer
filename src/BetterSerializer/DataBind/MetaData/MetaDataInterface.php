@@ -16,9 +16,9 @@ namespace BetterSerializer\DataBind\MetaData;
 interface MetaDataInterface
 {
     /**
-     * @return ClassMetadataInterface
+     * @return ClassMetaDataInterface
      */
-    public function getClassMetadata(): ClassMetadataInterface;
+    public function getClassMetadata(): ClassMetaDataInterface;
 
     /**
      * @return PropertyMetaDataInterface[]

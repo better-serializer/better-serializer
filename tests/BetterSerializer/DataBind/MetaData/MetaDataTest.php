@@ -24,16 +24,16 @@ class MetaDataTest extends TestCase
      */
     public function testInstantiation(): void
     {
-        $classMetadata = Mockery::mock(ClassMetadataInterface::class);
+        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
         $propertiesMetaData = [
             Mockery::mock(PropertyMetaDataInterface::class),
             Mockery::mock(PropertyMetaDataInterface::class),
         ];
 
-        /* @var $classMetadata ClassMetadataInterface */
+        /* @var $classMetadata ClassMetaDataInterface */
         $metaData = new MetaData($classMetadata, $propertiesMetaData);
 
-        self::assertInstanceOf(ClassMetadataInterface::class, $metaData->getClassMetadata());
+        self::assertInstanceOf(ClassMetaDataInterface::class, $metaData->getClassMetadata());
         self::assertSame($classMetadata, $metaData->getClassMetadata());
         self::assertInternalType('array', $metaData->getPropertiesMetadata());
         self::assertCount(2, $metaData->getPropertiesMetadata());

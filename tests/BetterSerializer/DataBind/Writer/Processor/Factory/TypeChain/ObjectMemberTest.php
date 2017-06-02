@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\MetaDataInterface;
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetadataInterface;
+use BetterSerializer\DataBind\MetaData\ObjectPropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
@@ -45,7 +45,7 @@ class ObjectMemberTest extends TestCase
     {
         $objectType = new ObjectType(Car::class);
         $property1 = Mockery::mock(PropertyMetaDataInterface::class);
-        $property2 = Mockery::mock(ObjectPropertyMetadataInterface::class);
+        $property2 = Mockery::mock(ObjectPropertyMetaDataInterface::class);
         $metaData = Mockery::mock(MetaDataInterface::class);
         $metaData->shouldReceive('getPropertiesMetadata')
             ->once()

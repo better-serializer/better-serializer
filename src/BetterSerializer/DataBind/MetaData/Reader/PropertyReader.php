@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetadata;
+use BetterSerializer\DataBind\MetaData\ObjectPropertyMetaData;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
@@ -77,7 +77,7 @@ final class PropertyReader implements PropertyReaderInterface
             $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
             $type = $this->getType($context);
             $propertyClassName = $type instanceof ObjectType ?
-                                    ObjectPropertyMetadata::class : ReflectionPropertyMetadata::class;
+                                    ObjectPropertyMetaData::class : ReflectionPropertyMetadata::class;
 
             $metaData[$propertyName] = new $propertyClassName($reflectionProperty, $annotations, $type);
         }

@@ -20,7 +20,7 @@ use ReflectionProperty;
  * @package BetterSerializer\DataBind\MetaData
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class ObjectPropertyMetadataTest extends TestCase
+class ObjectPropertyMetaDataTest extends TestCase
 {
 
     /**
@@ -32,7 +32,7 @@ class ObjectPropertyMetadataTest extends TestCase
         $reflProperty = Mockery::mock(ReflectionProperty::class, ['setAccessible' => null]);
         $type = new ObjectType(Car::class);
 
-        $metaData = new ObjectPropertyMetadata($reflProperty, [], $type);
+        $metaData = new ObjectPropertyMetaData($reflProperty, [], $type);
         self::assertSame($type, $metaData->getType());
         self::assertInstanceOf(ObjectType::class, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());

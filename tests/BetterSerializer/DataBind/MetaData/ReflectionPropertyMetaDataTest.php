@@ -18,7 +18,7 @@ use ReflectionProperty;
  * @package BetterSerializer\DataBind\MetaData
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class ReflectionPropertyMetadataTest extends TestCase
+class ReflectionPropertyMetaDataTest extends TestCase
 {
 
     /**

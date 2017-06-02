@@ -17,7 +17,7 @@ use ReflectionProperty;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-final class ObjectPropertyMetadata extends AbstractReflectionPropertyMetaData implements ObjectPropertyMetadataInterface
+final class ObjectPropertyMetaData extends AbstractReflectionPropertyMetaData implements ObjectPropertyMetaDataInterface
 {
 
     /**
