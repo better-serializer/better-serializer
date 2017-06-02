@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\Context\Json;
 
 use BetterSerializer\DataBind\Context\ContextInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use RuntimeException;
 
 /**
@@ -27,6 +26,9 @@ class ContextTest extends TestCase
     {
         $context = new Context();
         $context->write('key', 'value');
+
+        self::assertSame('value', $context->read('key'));
+
         $data = $context->getRawData();
 
         self::assertInternalType('array', $data);
@@ -57,7 +59,6 @@ class ContextTest extends TestCase
 
     /**
      * @expectedException RuntimeException
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function testMergeSubContextThrowsException(): void
     {
@@ -65,7 +66,17 @@ class ContextTest extends TestCase
         $this->expectExceptionMessageRegExp($msg);
         $context = new Context();
         /* @var $subContext ContextInterface */
-        $subContext = Mockery::mock(ContextInterface::class);
+        $subContext = $this->getMockBuilder(ContextInterface::class)->getMock();
         $context->mergeSubContext('test', $subContext);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp /Key does not exist: [a-zA-Z0-9_]+/
+     */
+    public function testReadThrowsException(): void
+    {
+        $context = new Context();
+        $context->read('test');
     }
 }
