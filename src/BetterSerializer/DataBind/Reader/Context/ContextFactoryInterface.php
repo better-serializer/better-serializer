@@ -13,7 +13,7 @@ use RuntimeException;
 /**
  * Class ContextFactory
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Context
+ * @package BetterSerializer\DataBind\Context
  */
 interface ContextFactoryInterface
 {

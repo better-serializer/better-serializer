@@ -5,9 +5,9 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Writer\Context\Json;
+namespace BetterSerializer\DataBind\Context\Json;
 
-use BetterSerializer\DataBind\Writer\Context\ContextInterface;
+use BetterSerializer\DataBind\Context\ContextInterface;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use RuntimeException;
@@ -15,7 +15,7 @@ use RuntimeException;
 /**
  * Class ContextTest
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Context\Json
+ * @package BetterSerializer\DataBind\Context\Json
  */
 class ContextTest extends TestCase
 {

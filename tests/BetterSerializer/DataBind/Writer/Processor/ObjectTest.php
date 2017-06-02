@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor;
 
-use BetterSerializer\DataBind\Writer\Context\ContextInterface;
+use BetterSerializer\DataBind\Context\ContextInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
 

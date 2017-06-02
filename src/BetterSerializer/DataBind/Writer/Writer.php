@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer;
 
 use BetterSerializer\Common\SerializationType;
-use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
+use BetterSerializer\DataBind\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Type\ExtractorInterface;
 use LogicException;
