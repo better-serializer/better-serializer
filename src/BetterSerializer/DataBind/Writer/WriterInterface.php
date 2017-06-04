@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer;
 
-use BetterSerializer\Common\SerializationType;
+use BetterSerializer\Common\SerializationTypeInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -21,11 +21,11 @@ interface WriterInterface
 {
     /**
      * @param mixed $data
-     * @param SerializationType $serializationType
+     * @param SerializationTypeInterface $serializationType
      * @return string
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function writeValueAsString($data, SerializationType $serializationType): string;
+    public function writeValueAsString($data, SerializationTypeInterface $serializationType): string;
 }

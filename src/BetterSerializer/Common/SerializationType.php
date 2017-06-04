@@ -17,9 +17,8 @@ use MabeEnum\Enum;
  * @method  static SerializationType NONE
  * @method string getType
  */
-final class SerializationType extends Enum
+final class SerializationType extends Enum implements SerializationTypeInterface
 {
-
     /**
      * @const string
      */

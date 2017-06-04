@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader;
 
-use BetterSerializer\Common\SerializationType;
+use BetterSerializer\Common\SerializationTypeInterface;
 
 /**
  * Interface ReaderInterface
@@ -19,8 +19,8 @@ interface ReaderInterface
     /**
      * @param string $serialized
      * @param string $stringType
-     * @param SerializationType $serializationType
+     * @param SerializationTypeInterface $serializationType
      * @return mixed
      */
-    public function readValue(string $serialized, string $stringType, SerializationType $serializationType);
+    public function readValue(string $serialized, string $stringType, SerializationTypeInterface $serializationType);
 }

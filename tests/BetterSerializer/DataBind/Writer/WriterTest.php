@@ -8,8 +8,6 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer;
 
 use BetterSerializer\Common\SerializationType;
-use BetterSerializer\DataBind\MetaData\Type\NullType;
-use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface;

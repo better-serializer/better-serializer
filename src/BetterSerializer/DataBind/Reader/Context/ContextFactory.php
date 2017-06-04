@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Context;
 
 use BetterSerializer\Common\SerializationType;
+use BetterSerializer\Common\SerializationTypeInterface;
 use BetterSerializer\DataBind\Reader\Context\Json\Context as JsonContext;
 use RuntimeException;
 
@@ -28,11 +29,11 @@ final class ContextFactory implements ContextFactoryInterface
 
     /**
      * @param string $serialized
-     * @param SerializationType $serializationType
+     * @param SerializationTypeInterface $serializationType
      * @return ContextInterface
      * @throws RuntimeException
      */
-    public function createContext(string $serialized, SerializationType $serializationType): ContextInterface
+    public function createContext(string $serialized, SerializationTypeInterface $serializationType): ContextInterface
     {
         /* @var $serialization string */
         $serialization = $serializationType->getValue();
