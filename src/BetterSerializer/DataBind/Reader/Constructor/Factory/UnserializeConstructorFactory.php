@@ -19,7 +19,7 @@ use Doctrine\Instantiator\Exception\ExceptionInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Constructor
  */
-final class UnserializeFactory implements FactoryInterface
+final class UnserializeConstructorFactory implements ConstructorFactoryInterface
 {
 
     /**

@@ -15,14 +15,29 @@ interface ContextInterface
 {
 
     /**
+     * @return mixed
+     */
+    public function getCurrentValue();
+
+    /**
      * @param string|int $key
      * @return mixed
      */
-    public function readValue($key);
+    public function getValue($key);
 
     /**
-     * @param mixed $key
-     * @return ContextInterface
+     * @param mixed $deserialized
      */
-    public function readSubContext($key): ContextInterface;
+    public function setDeserialized($deserialized): void;
+
+    /**
+     * @return mixed
+     */
+    public function getDeserialized();
+
+        /**
+     * @param mixed $key
+     * @return ContextInterface|null
+     */
+    public function readSubContext($key): ?ContextInterface;
 }

@@ -5,16 +5,16 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Context\Json;
+namespace BetterSerializer\DataBind\Writer\Context\Json;
 
-use BetterSerializer\DataBind\Context\ContextInterface;
+use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
  * Class ContextTest
  * @author mfris
- * @package BetterSerializer\DataBind\Context\Json
+ * @package BetterSerializer\DataBind\Writer\Context\Json
  */
 class ContextTest extends TestCase
 {
@@ -26,9 +26,6 @@ class ContextTest extends TestCase
     {
         $context = new Context();
         $context->write('key', 'value');
-
-        self::assertSame('value', $context->read('key'));
-
         $data = $context->getRawData();
 
         self::assertInternalType('array', $data);
@@ -68,15 +65,5 @@ class ContextTest extends TestCase
         /* @var $subContext ContextInterface */
         $subContext = $this->getMockBuilder(ContextInterface::class)->getMock();
         $context->mergeSubContext('test', $subContext);
-    }
-
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp /Key does not exist: [a-zA-Z0-9_]+/
-     */
-    public function testReadThrowsException(): void
-    {
-        $context = new Context();
-        $context->read('test');
     }
 }

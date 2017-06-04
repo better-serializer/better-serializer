@@ -2,7 +2,6 @@ parameters:
     git_dir: .
     bin_dir: vendor/bin
     tasks:
-      phpcpd: ~
       phpcs:
         standard: PSR2
         show_warnings: true

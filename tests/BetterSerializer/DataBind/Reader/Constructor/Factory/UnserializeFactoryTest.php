@@ -29,7 +29,7 @@ class UnserializeFactoryTest extends TestCase
             ->method('getClassName');
 
         /* @var $metaData ClassMetaDataInterface */
-        $factory = new UnserializeFactory();
+        $factory = new UnserializeConstructorFactory();
         $constructor = $factory->newConstructor($metaData);
 
         self::assertInstanceOf(UnserializeConstructor::class, $constructor);

@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
  * Interface FactoryInterface
  * @package BetterSerializer\DataBind\Reader\Constructor\Factory
  */
-interface FactoryInterface
+interface ConstructorFactoryInterface
 {
 
     /**

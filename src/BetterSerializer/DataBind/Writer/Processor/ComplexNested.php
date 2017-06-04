@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor;
 
-use BetterSerializer\DataBind\Context\ContextInterface;
+use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 
 /**
@@ -24,24 +24,24 @@ final class ComplexNested extends NestedProcessor
     private $extractor;
 
     /**
-     * @var Object
+     * @var ComplexNestedProcessorInterface
      */
-    private $objectProcessor;
+    private $complexNestedProcessor;
 
     /**
      * Property constructor.
      * @param ExtractorInterface $extractor
-     * @param ComplexNestedProcessorInterface $objectProcessor
+     * @param ComplexNestedProcessorInterface $complNestedProcessor
      * @param string $outputKey
      */
     public function __construct(
         ExtractorInterface $extractor,
-        ComplexNestedProcessorInterface $objectProcessor,
+        ComplexNestedProcessorInterface $complNestedProcessor,
         string $outputKey
     ) {
         parent::__construct($outputKey);
         $this->extractor = $extractor;
-        $this->objectProcessor = $objectProcessor;
+        $this->complexNestedProcessor = $complNestedProcessor;
     }
 
     /**
@@ -58,7 +58,7 @@ final class ComplexNested extends NestedProcessor
 
         $subContext = $context->createSubContext();
         $value = $this->extractor->extract($data);
-        $this->objectProcessor->process($subContext, $value);
+        $this->complexNestedProcessor->process($subContext, $value);
 
         $context->mergeSubContext($this->outputKey, $subContext);
     }

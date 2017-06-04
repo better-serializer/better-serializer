@@ -5,15 +5,15 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Writer\Processor;
+namespace BetterSerializer\DataBind\Reader\Processor;
 
-use BetterSerializer\DataBind\Writer\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class SimpleCollectionTest
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor
+ * @package BetterSerializer\DataBind\Reader\Processor
  */
 class SimpleCollectionTest extends TestCase
 {
@@ -32,14 +32,17 @@ class SimpleCollectionTest extends TestCase
         ];
 
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $contextMock->expects(self::exactly(2))
-            ->method('write')
-            ->withConsecutive([$key1, $arrayData[$key1]], [$key2, $arrayData[$key2]]);
+        $contextMock->expects(self::once())
+            ->method('getCurrentValue')
+            ->willReturn($arrayData);
+        $contextMock->expects(self::once())
+            ->method('setDeserialized')
+            ->with($arrayData);
 
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
         $processor = new SimpleCollection();
-        $processor->process($contextMock, $arrayData);
+        $processor->process($contextMock);
     }
 
     /**
@@ -50,12 +53,16 @@ class SimpleCollectionTest extends TestCase
         $arrayData = [];
 
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $contextMock->expects(self::exactly(0))
-            ->method('write');
+        $contextMock->expects(self::once())
+            ->method('getCurrentValue')
+            ->willReturn($arrayData);
+        $contextMock->expects(self::once())
+            ->method('setDeserialized')
+            ->with($arrayData);
 
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
         $processor = new SimpleCollection();
-        $processor->process($contextMock, $arrayData);
+        $processor->process($contextMock);
     }
 }

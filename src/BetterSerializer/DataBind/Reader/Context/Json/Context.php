@@ -24,6 +24,11 @@ final class Context implements ContextInterface
     private $data = [];
 
     /**
+     * @var mixed
+     */
+    private $deserialized;
+
+    /**
      * Context constructor.
      * @param string $json
      */
@@ -35,11 +40,19 @@ final class Context implements ContextInterface
     }
 
     /**
+     * @return array|mixed
+     */
+    public function getCurrentValue()
+    {
+        return $this->data;
+    }
+
+    /**
      * @param string|int $key
      * @return mixed
      * @throws RuntimeException
      */
-    public function readValue($key)
+    public function getValue($key)
     {
         if (!array_key_exists($key, $this->data)) {
             throw new RuntimeException(sprintf('Invalid key: %s', $key));
@@ -49,14 +62,33 @@ final class Context implements ContextInterface
     }
 
     /**
-     * @param mixed $key
-     * @return ContextInterface
+     * @param mixed $deserialized
+     */
+    public function setDeserialized($deserialized): void
+    {
+        $this->deserialized = $deserialized;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeserialized()
+    {
+        return $this->deserialized;
+    }
+
+    /**
+     * @return ContextInterface|null
      * @throws RuntimeException
      */
-    public function readSubContext($key): ContextInterface
+    public function readSubContext($key): ?ContextInterface
     {
         if (!array_key_exists($key, $this->data)) {
             throw new RuntimeException(sprintf('Invalid key: %s', $key));
+        }
+
+        if ($this->data[$key] === null) {
+            return null;
         }
 
         $subContext = new self();

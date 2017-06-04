@@ -5,15 +5,15 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Writer\Processor;
+namespace BetterSerializer\DataBind\Reader\Processor;
 
-use BetterSerializer\DataBind\Writer\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use Iterator;
 
 /**
  * Class Object
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor
+ * @package BetterSerializer\DataBind\Reader\Processor
  */
 final class ComplexCollection implements CollectionProcessorInterface
 {
@@ -34,19 +34,25 @@ final class ComplexCollection implements CollectionProcessorInterface
 
     /**
      * @param ContextInterface $context
-     * @param mixed $data
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function process(ContextInterface $context, $data): void
+    public function process(ContextInterface $context): void
     {
+        $data = $context->getCurrentValue();
+        $deserialized = [];
+
         if (empty($data)) {
+            $context->setDeserialized($deserialized);
             return;
         }
 
         /* @var $data Iterator */
         foreach ($data as $key => $value) {
-            $subContext = $context->createSubContext();
-            $this->processor->process($subContext, $value);
-            $context->mergeSubContext($key, $subContext);
+            $subContext = $context->readSubContext($key);
+            $this->processor->process($subContext);
+            $deserialized[$key] = $subContext->getDeserialized();
         }
+
+        $context->setDeserialized($deserialized);
     }
 }

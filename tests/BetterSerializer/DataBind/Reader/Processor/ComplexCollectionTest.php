@@ -5,16 +5,16 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Writer\Processor;
+namespace BetterSerializer\DataBind\Reader\Processor;
 
-use BetterSerializer\DataBind\Writer\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class CollectionTest
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor
+ * @package BetterSerializer\DataBind\Reader\Processor
  */
 class ComplexCollectionTest extends TestCase
 {
@@ -29,27 +29,34 @@ class ComplexCollectionTest extends TestCase
         $key2 = 1;
 
         $arrayData = [
-            $key1 => $instance,
-            $key2 => $instance,
+            $key1 => [],
+            $key2 => [],
         ];
 
         $subContextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $subContextMock->expects(self::exactly(2))
+            ->method('getDeserialized')
+            ->willReturn($instance);
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock->expects(self::once())
+            ->method('getCurrentValue')
+            ->willReturn($arrayData);
         $contextMock->expects(self::exactly(2))
-            ->method('createSubContext')
+            ->method('readSubContext')
+            ->withConsecutive([$key1], [$key2])
             ->willReturn($subContextMock);
-        $contextMock->expects(self::exactly(2))
-            ->method('mergeSubContext')
-            ->withConsecutive([0, $subContextMock], [1, $subContextMock]);
+        $contextMock->expects(self::once())
+            ->method('setDeserialized')
+            ->with([$instance, $instance]);
         $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
         $processorMock->expects(self::exactly(2))
             ->method('process')
-            ->withConsecutive([$subContextMock, $instance], [$subContextMock, $instance]);
+            ->withConsecutive([$subContextMock], [$subContextMock]);
 
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
         $processor = new ComplexCollection($processorMock);
-        $processor->process($contextMock, $arrayData);
+        $processor->process($contextMock);
     }
 
     /**
@@ -60,10 +67,14 @@ class ComplexCollectionTest extends TestCase
         $arrayData = [];
 
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock->expects(self::once())
+            ->method('getCurrentValue')
+            ->willReturn($arrayData);
         $contextMock->expects(self::exactly(0))
-            ->method('createSubContext');
-        $contextMock->expects(self::exactly(0))
-            ->method('mergeSubContext');
+            ->method('readSubContext');
+        $contextMock->expects(self::once())
+            ->method('setDeserialized')
+        ->with([]);
         $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
         $processorMock->expects(self::exactly(0))
             ->method('process');
@@ -71,6 +82,6 @@ class ComplexCollectionTest extends TestCase
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
         $processor = new ComplexCollection($processorMock);
-        $processor->process($contextMock, $arrayData);
+        $processor->process($contextMock);
     }
 }

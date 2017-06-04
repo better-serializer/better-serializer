@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
-namespace BetterSerializer\DataBind\Context;
+namespace BetterSerializer\DataBind\Writer\Context;
 
 /**
  * Class ContextInterface
@@ -20,12 +20,6 @@ interface ContextInterface
      * @return void
      */
     public function write($key, $value): void;
-
-    /**
-     * @param string|int $key
-     * @return mixed
-     */
-    public function read($key);
 
     /**
      * @return ContextInterface

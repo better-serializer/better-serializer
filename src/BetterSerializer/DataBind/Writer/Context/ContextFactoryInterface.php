@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Context;
+namespace BetterSerializer\DataBind\Writer\Context;
 
 use BetterSerializer\Common\SerializationType;
 use RuntimeException;
@@ -13,7 +13,7 @@ use RuntimeException;
 /**
  * Class ContextFactory
  * @author mfris
- * @package BetterSerializer\DataBind\Context
+ * @package BetterSerializer\DataBind\Writer\Context
  */
 interface ContextFactoryInterface
 {

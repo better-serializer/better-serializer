@@ -24,12 +24,38 @@ class ContextTest extends TestCase
     public function testEverything(): void
     {
         $json = '{"a":"a","b":{"c":"c"}}';
+        $deserialized = 'test';
         $context = new Context($json);
         $subContext = $context->readSubContext('b');
 
-        self::assertSame('a', $context->readValue('a'));
+        self::assertSame('a', $context->getValue('a'));
         self::assertInstanceOf(Context::class, $subContext);
-        self::assertSame('c', $subContext->readValue('c'));
+        self::assertSame('c', $subContext->getValue('c'));
+
+        $current = $context->getCurrentValue();
+
+        self::assertInternalType('array', $current);
+        self::assertArrayHasKey('a', $current);
+        self::assertSame('a', $current['a']);
+        self::assertArrayHasKey('b', $current);
+        self::assertInternalType('array', $current['b']);
+        self::assertArrayHasKey('c', $current['b']);
+        self::assertSame('c', $current['b']['c']);
+
+        $context->setDeserialized($deserialized);
+        self::assertSame($deserialized, $context->getDeserialized());
+    }
+
+    /**
+     *
+     */
+    public function testReadSubContextReturnsNull(): void
+    {
+        $json = '{"a":null}';
+        $context = new Context($json);
+        $shouldBeNull = $context->readSubContext('a');
+
+        self::assertNull($shouldBeNull);
     }
 
     /**
@@ -40,7 +66,7 @@ class ContextTest extends TestCase
     {
         $json = '{"a":"a"}';
         $context = new Context($json);
-        $context->readValue('b');
+        $context->getValue('b');
     }
 
     /**

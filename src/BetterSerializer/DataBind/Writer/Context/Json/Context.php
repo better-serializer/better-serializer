@@ -5,9 +5,9 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Context\Json;
+namespace BetterSerializer\DataBind\Writer\Context\Json;
 
-use BetterSerializer\DataBind\Context\ContextInterface;
+use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use RuntimeException;
 
 /**
@@ -31,20 +31,6 @@ final class Context implements ContextInterface
     public function write($key, $value): void
     {
         $this->data[$key] = $value;
-    }
-
-    /**
-     * @param int|string $key
-     * @return mixed
-     * @throws RuntimeException
-     */
-    public function read($key)
-    {
-        if (!array_key_exists($key, $this->data)) {
-            throw new RuntimeException(sprintf('Key does not exist: %s', $key));
-        }
-
-        return $this->data[$key];
     }
 
     /**
