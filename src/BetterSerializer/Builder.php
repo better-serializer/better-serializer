@@ -7,17 +7,10 @@ declare(strict_types=1);
 namespace BetterSerializer;
 
 use BetterSerializer\DataBind\MetaData\Reader\ReaderFactory;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\Writer\Context\ContextFactory;
-use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactory;
-use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder;
-use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Type\ExtractorBuilder;
-use BetterSerializer\DataBind\Writer\Type\ExtractorInterface;
+use BetterSerializer\DataBind\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\WriterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
@@ -39,37 +32,27 @@ final class Builder
     private $serializer;
 
     /**
+     * @var ReaderInterface
+     */
+    private $reader;
+
+    /**
+     * @var ReaderBuilder
+     */
+    private $readerBuilder;
+
+    /**
      * @var WriterInterface
      */
     private $writer;
 
     /**
-     * @var ExtractorBuilder
+     * @var WriterBuilder
      */
-    private $typeExtractorBuilder;
+    private $writerBuilder;
 
     /**
-     * @var ExtractorInterface
-     */
-    private $typeExtractor;
-
-    /**
-     * @var ContextFactoryInterface
-     */
-    private $contextFactory;
-
-    /**
-     * @var ProcessorFactoryInterface
-     */
-    private $processorFactory;
-
-    /**
-     * @var ProcessorFactoryBuilder
-     */
-    private $processorFactoryBuilder;
-
-    /**
-     * @var ReaderInterface
+     * @var MetaDataReaderInterface
      */
     private $metaDataReader;
 
@@ -77,16 +60,6 @@ final class Builder
      * @var ReaderFactory
      */
     private $metaDataReaderFactory;
-
-    /**
-     * @var AbstractFactoryInterface
-     */
-    private $extractorFactory;
-
-    /**
-     * @var DocBlockFactoryInterface
-     */
-    private $docBlockFactory;
 
     /**
      * @var TypeFactoryInterface
@@ -99,16 +72,46 @@ final class Builder
     private $typeFactoryBuilder;
 
     /**
+     * @var DocBlockFactoryInterface
+     */
+    private $docBlockFactory;
+
+    /**
      * @return Serializer
      * @throws InvalidArgumentException
      */
     public function createSerializer(): Serializer
     {
         if ($this->serializer === null) {
-            $this->serializer = new Serializer($this->getWriter());
+            $this->serializer = new Serializer($this->getReader(), $this->getWriter());
         }
 
         return $this->serializer;
+    }
+
+    /**
+     * @return ReaderInterface
+     */
+    private function getReader(): ReaderInterface
+    {
+        if ($this->reader === null) {
+            $this->reader = $this->getReaderBuilder()->getReader();
+        }
+
+        return $this->reader;
+    }
+
+    /**
+     * @return ReaderBuilder
+     * @throws InvalidArgumentException
+     */
+    private function getReaderBuilder(): ReaderBuilder
+    {
+        if ($this->readerBuilder === null) {
+            $this->readerBuilder = new ReaderBuilder($this->getTypeFactory(), $this->getMetaDataReader());
+        }
+
+        return $this->readerBuilder;
     }
 
     /**
@@ -118,104 +121,36 @@ final class Builder
     private function getWriter(): WriterInterface
     {
         if ($this->writer === null) {
-            $this->writer = new DataBind\Writer\Writer(
-                $this->getTypeExtractor(),
-                $this->getProcessorFactory(),
-                $this->getContextFactory()
-            );
+            $this->writer = $this->getWriterBuilder()->getWriter();
         }
 
         return $this->writer;
     }
 
     /**
-     * @return ExtractorInterface
-     */
-    private function getTypeExtractor(): ExtractorInterface
-    {
-        if ($this->typeExtractor === null) {
-            $this->typeExtractor = $this->getTypeExtractorBuilder()->build();
-        }
-
-        return $this->typeExtractor;
-    }
-
-    /**
-     * @return ExtractorBuilder
-     */
-    private function getTypeExtractorBuilder(): ExtractorBuilder
-    {
-        if ($this->typeExtractorBuilder === null) {
-            $this->typeExtractorBuilder = new ExtractorBuilder();
-        }
-
-        return $this->typeExtractorBuilder;
-    }
-
-    /**
-     * @return ContextFactoryInterface
-     */
-    private function getContextFactory(): ContextFactoryInterface
-    {
-        if ($this->contextFactory === null) {
-            $this->contextFactory = new ContextFactory();
-        }
-
-        return $this->contextFactory;
-    }
-
-    /**
-     * @return ProcessorFactoryInterface
+     * @return WriterBuilder
      * @throws InvalidArgumentException
      */
-    private function getProcessorFactory(): ProcessorFactoryInterface
+    private function getWriterBuilder(): WriterBuilder
     {
-        if ($this->processorFactory === null) {
-            $this->processorFactory = $this->getProcessorFactoryBuilder()->build();
+        if ($this->writerBuilder === null) {
+            $this->writerBuilder = new WriterBuilder($this->getMetaDataReader());
         }
 
-        return $this->processorFactory;
+        return $this->writerBuilder;
     }
 
     /**
-     * @return ProcessorFactoryBuilder
+     * @return MetaDataReaderInterface
      * @throws InvalidArgumentException
      */
-    private function getProcessorFactoryBuilder(): ProcessorFactoryBuilder
-    {
-        if ($this->processorFactoryBuilder === null) {
-            $this->processorFactoryBuilder = new ProcessorFactoryBuilder(
-                $this->getExtractorFactory(),
-                $this->getMetaDataReader()
-            );
-        }
-
-        return $this->processorFactoryBuilder;
-    }
-
-    /**
-     * @return ReaderInterface
-     * @throws InvalidArgumentException
-     */
-    private function getMetaDataReader(): ReaderInterface
+    private function getMetaDataReader(): MetaDataReaderInterface
     {
         if ($this->metaDataReader === null) {
             $this->metaDataReader = $this->getMetaDataReaderFactory()->createReader();
         }
 
         return $this->metaDataReader;
-    }
-
-    /**
-     * @return AbstractFactoryInterface
-     */
-    private function getExtractorFactory(): AbstractFactoryInterface
-    {
-        if ($this->extractorFactory === null) {
-            $this->extractorFactory = new AbstractFactory();
-        }
-
-        return $this->extractorFactory;
     }
 
     /**
