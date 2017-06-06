@@ -21,6 +21,7 @@ final class Door
     /**
      * @var bool
      * @JmsSerializer\SerializedName("parentalLock")
+     * @JmsSerializer\Type("boolean")
      */
     private $parentalLock;
 
