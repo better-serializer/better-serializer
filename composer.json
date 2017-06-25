@@ -1,5 +1,5 @@
 {
-    "name": "rastusik/better-serializer",
+    "name": "better-serializer/better-serializer",
     "description": "General de/serializer for vatious serialization formats.",
     "type": "library",
     "license": "BSD-3-Clause",
