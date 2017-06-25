@@ -43,7 +43,7 @@ Regarding class annotations, check these [example DTOs](tests/BetterSerializer/D
 - metadata caching
 - XML and YAML support
 - various collection classes support (Doctrine collections, internal PHP collections like SplStack)
-- data injection using class constructors (internal and static), which should improve performance even more.
+- data injection using class constructors (internal and static), which should improve performance even more
 - various features import from JmsSerializer and Jackson
 - framework integrations
 
