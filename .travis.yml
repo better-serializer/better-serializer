@@ -11,4 +11,4 @@ script:
   - php coverage-checker.php log/clover.xml 100
 
 after_success:
-  - travis_retry php vendor/bin/coveralls -v --coverage_clover log/clover.xml
+  - travis_retry php vendor/bin/coveralls -v
