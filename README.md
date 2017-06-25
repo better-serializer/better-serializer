@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/better-serializer/better-serializer.svg?branch=master)](https://travis-ci.org/better-serializer/better-serializer)
 [![Coverage Status](https://coveralls.io/repos/github/better-serializer/better-serializer/badge.svg?branch=master)](https://coveralls.io/github/better-serializer/better-serializer?branch=master)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+[![Latest Stable Version](https://poser.pugx.org/better-serializer/better-serializer/version)](https://packagist.org/packages/better-serializer/better-serializer)
+[![Total Downloads](https://poser.pugx.org/better-serializer/better-serializer/downloads)](https://packagist.org/packages/better-serializer/better-serializer)
+[![Latest Unstable Version](https://poser.pugx.org/better-serializer/better-serializer/v/unstable)](//packagist.org/packages/better-serializer/better-serializer)
+[![License](https://poser.pugx.org/better-serializer/better-serializer/license)](https://packagist.org/packages/better-serializer/better-serializer)
+[![composer.lock available](https://poser.pugx.org/better-serializer/better-serializer/composerlock)](https://packagist.org/packages/better-serializer/better-serializer)
 
 This library provides a general serializer for PHP. Currently only JSON serialization format is supported.
 The project aims to be an alternative to [JmsSerializer](https://github.com/schmittjoh/serializer). It tries
