@@ -2,7 +2,7 @@
     "name": "better-serializer/better-serializer",
     "description": "General de/serializer for vatious serialization formats.",
     "type": "library",
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "Rastusik",
