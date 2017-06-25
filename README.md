@@ -1,5 +1,7 @@
 # BetterSerializer (PHP)
 
+[![Build Status](https://travis-ci.org/better-serializer/better-serializer.svg?branch=master)](https://travis-ci.org/better-serializer/better-serializer)
+
 This library provides a general serializer for PHP. Currently only JSON serialization format is supported.
 The project aims to be an alternative to [JmsSerializer](https://github.com/schmittjoh/serializer). It tries
 to be faster then JmsSerializer and it also tries to sustain a better maintainable and understandable code base.
