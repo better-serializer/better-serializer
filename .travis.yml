@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - 7.1
+
+before_script:
+  - composer install -o
+
+script:
+  - ./vendor/bin/phpunit
+  - php coverage-checker.php log/clover.xml 100

@@ -31,5 +31,6 @@
              yui="true" highlight="true"
              lowUpperBound="50" highLowerBound="80"/>
         <log type="coverage-text" target="php://stdout" />
+        <log type="coverage-clover" target="./log/clover.xml"/>
     </logging>
 </phpunit>
