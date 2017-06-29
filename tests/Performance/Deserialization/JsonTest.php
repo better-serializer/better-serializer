@@ -90,7 +90,7 @@ final class JsonTest extends TestCase
 
         $json = '[' . implode(',', $json) . ']';
 
-        return [$json, 'array<' . Car::class .'>', 3.1];
+        return [$json, 'array<' . Car::class .'>', 2.8];
     }
 
     /**

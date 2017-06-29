@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
@@ -33,7 +35,7 @@ class SimpleMemberTest extends TestCase
     {
         $type = new StringType();
         $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
-        $propertyMetaData->expects(self::once())
+        $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
         $propertyMetaData->expects(self::once())
@@ -47,9 +49,17 @@ class SimpleMemberTest extends TestCase
             ->method('newInjector')
             ->willReturn($injector);
 
+        $converter = $this->getMockBuilder(ConverterInterface::class)->getMock();
+
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $converterFactory->expects(self::once())
+            ->method('newConverter')
+            ->willReturn($converter);
+
         /* @var $injectorFactory InjectorFactoryInterface */
+        /* @var $converterFactory ConverterFactoryInterface */
         /* @var $propertyMetaData PropertyMetaDataInterface */
-        $simpleMember = new SimpleMember($injectorFactory);
+        $simpleMember = new SimpleMember($converterFactory, $injectorFactory);
         $processor = $simpleMember->create($propertyMetaData);
 
         self::assertInstanceOf(Property::class, $processor);
@@ -67,10 +77,12 @@ class SimpleMemberTest extends TestCase
             ->willReturn($type);
 
         $injectorFactory = Mockery::mock(InjectorFactoryInterface::class);
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
 
         /* @var $injectorFactory InjectorFactoryInterface */
+        /* @var $converterFactory ConverterFactoryInterface */
         /* @var $propertyMetaData PropertyMetaDataInterface */
-        $simpleMember = new SimpleMember($injectorFactory);
+        $simpleMember = new SimpleMember($converterFactory, $injectorFactory);
         $shouldBeNull = $simpleMember->create($propertyMetaData);
 
         self::assertNull($shouldBeNull);

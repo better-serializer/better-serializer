@@ -6,6 +6,8 @@ declare(strict_types=1);
  */
 namespace BetterSerializer;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactory;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderFactory;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder;
@@ -77,6 +79,11 @@ final class Builder
     private $docBlockFactory;
 
     /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
      * @return Serializer
      * @throws InvalidArgumentException
      */
@@ -91,6 +98,7 @@ final class Builder
 
     /**
      * @return ReaderInterface
+     * @throws InvalidArgumentException
      */
     private function getReader(): ReaderInterface
     {
@@ -108,7 +116,11 @@ final class Builder
     private function getReaderBuilder(): ReaderBuilder
     {
         if ($this->readerBuilder === null) {
-            $this->readerBuilder = new ReaderBuilder($this->getTypeFactory(), $this->getMetaDataReader());
+            $this->readerBuilder = new ReaderBuilder(
+                $this->getTypeFactory(),
+                $this->getMetaDataReader(),
+                $this->getConverterFactory()
+            );
         }
 
         return $this->readerBuilder;
@@ -134,7 +146,7 @@ final class Builder
     private function getWriterBuilder(): WriterBuilder
     {
         if ($this->writerBuilder === null) {
-            $this->writerBuilder = new WriterBuilder($this->getMetaDataReader());
+            $this->writerBuilder = new WriterBuilder($this->getMetaDataReader(), $this->getConverterFactory());
         }
 
         return $this->writerBuilder;
@@ -200,5 +212,17 @@ final class Builder
         }
 
         return $this->typeFactoryBuilder;
+    }
+
+    /**
+     * @return ConverterFactoryInterface
+     */
+    private function getConverterFactory(): ConverterFactoryInterface
+    {
+        if ($this->converterFactory === null) {
+            $this->converterFactory = new ConverterFactory();
+        }
+
+        return $this->converterFactory;
     }
 }

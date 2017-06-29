@@ -92,7 +92,7 @@ final class JsonTest extends TestCase
             $data[] = $car;
         }
 
-        return [$data, 5.5];
+        return [$data, 5.1];
     }
 
     /**
@@ -111,6 +111,6 @@ final class JsonTest extends TestCase
             $data[] = $car;
         }
 
-        return [$data, 6.0];
+        return [$data, 5.8];
     }
 }

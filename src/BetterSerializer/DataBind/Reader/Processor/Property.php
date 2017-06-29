@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 
@@ -24,13 +25,20 @@ final class Property extends NestedProcessor
     private $injector;
 
     /**
+     * @var ConverterInterface
+     */
+    private $converter;
+
+    /**
      * Property constructor.
      * @param InjectorInterface $injector
+     * @param ConverterInterface $converter
      * @param string $inputKey
      */
-    public function __construct(InjectorInterface $injector, string $inputKey)
+    public function __construct(InjectorInterface $injector, ConverterInterface $converter, string $inputKey)
     {
         $this->injector = $injector;
+        $this->converter = $converter;
         parent::__construct($inputKey);
     }
 
@@ -40,6 +48,7 @@ final class Property extends NestedProcessor
     public function process(ContextInterface $context): void
     {
         $value = $context->getValue($this->inputKey);
-        $this->injector->inject($context->getDeserialized(), $value);
+        $convertedValue = $this->converter->convert($value);
+        $this->injector->inject($context->getDeserialized(), $convertedValue);
     }
 }

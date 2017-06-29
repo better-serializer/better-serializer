@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\ComplexCollection as ComplexCollectionProcessor;
+use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\SimpleCollection as SimpleCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use LogicException;
@@ -24,6 +26,26 @@ use RuntimeException;
  */
 final class CollectionMember extends ChainMember
 {
+
+    /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
+     * CollectionMember constructor.
+     * @param ConverterFactoryInterface $converterFactory
+     * @param $converterFactory
+     * @param ProcessorFactoryInterface $processorFactory
+     */
+    public function __construct(
+        ConverterFactoryInterface $converterFactory,
+        ProcessorFactoryInterface $processorFactory
+    ) {
+        $this->converterFactory = $converterFactory;
+        parent::__construct($processorFactory);
+    }
+
 
     /**
      * @param TypeInterface $type
@@ -47,7 +69,9 @@ final class CollectionMember extends ChainMember
         $nestedType = $type->getNestedType();
 
         if ($nestedType instanceof SimpleTypeInterface) {
-            return new SimpleCollectionProcessor();
+            $converter = $this->converterFactory->newConverter($nestedType);
+
+            return new SimpleCollectionProcessor($converter);
         }
 
         $nestedProcessor = $this->processorFactory->createFromType($nestedType);

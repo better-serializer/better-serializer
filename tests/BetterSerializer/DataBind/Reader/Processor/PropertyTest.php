@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use BetterSerializer\Dto\CarInterface;
@@ -43,9 +44,16 @@ class PropertyTest extends TestCase
                       ->method('inject')
                       ->with($instance, $injectedValue);
 
+        $converterMock = $this->getMockBuilder(ConverterInterface::class)->getMock();
+        $converterMock->expects(self::once())
+                      ->method('convert')
+                      ->with($injectedValue)
+                      ->willReturn($injectedValue);
+
         /* @var $injectorMock InjectorInterface */
+        /* @var $converterMock ConverterInterface */
         /* @var $contextMock ContextInterface */
-        $processor = new Property($injectorMock, $inputKey);
+        $processor = new Property($injectorMock, $converterMock, $inputKey);
         $processor->process($contextMock);
     }
 }

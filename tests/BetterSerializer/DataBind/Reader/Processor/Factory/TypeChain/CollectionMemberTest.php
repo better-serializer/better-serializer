@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -15,7 +17,6 @@ use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\SimpleCollection;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class ArrayMemberTest
@@ -30,29 +31,27 @@ class CollectionMemberTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testCreateComplex(): void
     {
-        $nestedType = Mockery::mock(TypeInterface::class);
+        $nestedType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        /* @var $nestedType TypeInterface */
         $arrayType = new ArrayType($nestedType);
-        $processor = Mockery::mock(ProcessorInterface::class);
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromType')
-            ->once()
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $converterFactory->expects(self::exactly(0))
+            ->method('newConverter');
+
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::once())
+            ->method('createFromType')
             ->with($nestedType)
-            ->andReturn($processor)
-            ->getMock();
+            ->willReturn($processor);
 
+        /* @var $converterFactory ConverterFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */
-        $collectionMember = new CollectionMember($processorFactory);
+        $collectionMember = new CollectionMember($converterFactory, $processorFactory);
         $collectionProcessor = $collectionMember->create($arrayType);
 
         self::assertInstanceOf(ComplexCollection::class, $collectionProcessor);
@@ -66,13 +65,21 @@ class CollectionMemberTest extends TestCase
         $nestedType = new StringType();
         $arrayType = new ArrayType($nestedType);
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromType')
-            ->times(0)
-            ->getMock();
+        $converter = $this->getMockBuilder(ConverterInterface::class)->getMock();
 
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $converterFactory->expects(self::once())
+            ->method('newConverter')
+            ->with($nestedType)
+            ->willReturn($converter);
+
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::exactly(0))
+            ->method('createFromType');
+
+        /* @var $converterFactory ConverterFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */
-        $collectionMember = new CollectionMember($processorFactory);
+        $collectionMember = new CollectionMember($converterFactory, $processorFactory);
         $collectionProcessor = $collectionMember->create($arrayType);
 
         self::assertInstanceOf(SimpleCollection::class, $collectionProcessor);
@@ -83,11 +90,13 @@ class CollectionMemberTest extends TestCase
      */
     public function testCreateReturnsNull(): void
     {
-        $nonArrayType = Mockery::mock(TypeInterface::class);
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
+        $nonArrayType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
 
+        /* @var $converterFactory ConverterFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */
-        $collectionMember = new CollectionMember($processorFactory);
+        $collectionMember = new CollectionMember($converterFactory, $processorFactory);
         /* @var  $nonArrayType TypeInterface */
         $shouldBeNull = $collectionMember->create($nonArrayType);
 

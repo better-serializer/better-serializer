@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
+use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Property;
 
@@ -19,6 +21,24 @@ use BetterSerializer\DataBind\Writer\Processor\Property;
  */
 final class SimpleMember extends ExtractingChainMember
 {
+
+    /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
+     * SimpleMember constructor.
+     * @param ConverterFactoryInterface $converterFactory
+     * @param ExtractorFactoryInterface $extractorFactory
+     */
+    public function __construct(
+        ConverterFactoryInterface $converterFactory,
+        ExtractorFactoryInterface $extractorFactory
+    ) {
+        $this->converterFactory = $converterFactory;
+        parent::__construct($extractorFactory);
+    }
 
     /**
      * @param PropertyMetaDataInterface $metaData
@@ -35,8 +55,9 @@ final class SimpleMember extends ExtractingChainMember
      */
     protected function createProcessor(PropertyMetaDataInterface $metaData): ProcessorInterface
     {
+        $converter = $this->converterFactory->newConverter($metaData->getType());
         $extractor = $this->extractorFactory->newExtractor($metaData);
 
-        return new Property($extractor, $metaData->getOutputKey());
+        return new Property($extractor, $converter, $metaData->getOutputKey());
     }
 }

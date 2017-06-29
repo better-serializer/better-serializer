@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -36,9 +37,16 @@ class SimpleCollectionTest extends TestCase
             ->method('write')
             ->withConsecutive([$key1, $arrayData[$key1]], [$key2, $arrayData[$key2]]);
 
+        $converterMock = $this->getMockBuilder(ConverterInterface::class)->getMock();
+        $converterMock->expects(self::exactly(2))
+            ->method('convert')
+            ->withConsecutive([$arrayData[$key1]], [$arrayData[$key2]])
+            ->willReturnOnConsecutiveCalls($arrayData[$key1], $arrayData[$key2]);
+
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
-        $processor = new SimpleCollection();
+        /* @var $converterMock ConverterInterface */
+        $processor = new SimpleCollection($converterMock);
         $processor->process($contextMock, $arrayData);
     }
 
@@ -53,9 +61,12 @@ class SimpleCollectionTest extends TestCase
         $contextMock->expects(self::exactly(0))
             ->method('write');
 
+        $converterMock = $this->getMockBuilder(ConverterInterface::class)->getMock();
+
         /* @var $contextMock ContextInterface */
         /* @var $processorMock ProcessorInterface */
-        $processor = new SimpleCollection();
+        /* @var $converterMock ConverterInterface */
+        $processor = new SimpleCollection($converterMock);
         $processor->process($contextMock, $arrayData);
     }
 }

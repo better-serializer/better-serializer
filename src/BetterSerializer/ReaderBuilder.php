@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface;
@@ -66,6 +67,11 @@ final class ReaderBuilder
     private $injectorFactory;
 
     /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
      * @var ContextFactoryInterface
      */
     private $contextFactory;
@@ -74,11 +80,16 @@ final class ReaderBuilder
      * ReaderBuilder constructor.
      * @param TypeFactoryInterface $typeFactory
      * @param MetaDataReaderInterface $metaDataReader
+     * @param ConverterFactoryInterface $converterFactory
      */
-    public function __construct(TypeFactoryInterface $typeFactory, MetaDataReaderInterface $metaDataReader)
-    {
+    public function __construct(
+        TypeFactoryInterface $typeFactory,
+        MetaDataReaderInterface $metaDataReader,
+        ConverterFactoryInterface $converterFactory
+    ) {
         $this->typeFactory = $typeFactory;
         $this->metaDataReader = $metaDataReader;
+        $this->converterFactory = $converterFactory;
     }
 
     /**
@@ -113,6 +124,7 @@ final class ReaderBuilder
         if ($this->processorFactoryBuilder === null) {
             $this->processorFactoryBuilder = new ProcessorFactoryBuilder(
                 $this->getConstructor(),
+                $this->converterFactory,
                 $this->getInjectorFactory(),
                 $this->metaDataReader
             );

@@ -48,7 +48,6 @@ and for [deserialization](tests/Integration/Serialization/JsonTest.php) usage.
 Regarding class annotations, check these [example DTOs](tests/BetterSerializer/Dto).
 
 ## Future Plans
-- primitive type conversion (currently there is no conversion of primitive types)
 - metadata caching
 - XML and YAML support
 - various collection classes support (Doctrine collections, internal PHP collections like SplStack)

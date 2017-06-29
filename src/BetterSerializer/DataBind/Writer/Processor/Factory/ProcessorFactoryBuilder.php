@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
@@ -23,6 +24,11 @@ final class ProcessorFactoryBuilder
 {
 
     /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
      * @var ExtractorFactoryInterface
      */
     private $extractorFactory;
@@ -34,11 +40,16 @@ final class ProcessorFactoryBuilder
 
     /**
      * ProcessorFactoryBuilder constructor.
+     * @param ConverterFactoryInterface $converterFactory
      * @param ExtractorFactoryInterface $extractorFactory
      * @param ReaderInterface $metaDataReader
      */
-    public function __construct(ExtractorFactoryInterface $extractorFactory, ReaderInterface $metaDataReader)
-    {
+    public function __construct(
+        ConverterFactoryInterface $converterFactory,
+        ExtractorFactoryInterface $extractorFactory,
+        ReaderInterface $metaDataReader
+    ) {
+        $this->converterFactory = $converterFactory;
         $this->extractorFactory = $extractorFactory;
         $this->metaDataReader = $metaDataReader;
     }
@@ -50,8 +61,8 @@ final class ProcessorFactoryBuilder
     {
         $factory = new ProcessorFactory();
         $metaDataObject = new ComplexNestedMember($factory, $this->extractorFactory);
-        $metaDataSimple = new SimpleMember($this->extractorFactory);
-        $typeArrayMember = new CollectionMember($factory);
+        $metaDataSimple = new SimpleMember($this->converterFactory, $this->extractorFactory);
+        $typeArrayMember = new CollectionMember($this->converterFactory, $factory);
         $objectMember = new Objectmember($factory, $this->metaDataReader);
 
         $factory->addMetaDataChainMember($metaDataSimple);

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use Iterator;
 
@@ -17,6 +18,20 @@ use Iterator;
  */
 final class SimpleCollection implements CollectionProcessorInterface
 {
+
+    /**
+     * @var ConverterInterface
+     */
+    private $converter;
+
+    /**
+     * SimpleCollection constructor.
+     * @param ConverterInterface $converter
+     */
+    public function __construct(ConverterInterface $converter)
+    {
+        $this->converter = $converter;
+    }
 
     /**
      * @param ContextInterface $context
@@ -34,7 +49,8 @@ final class SimpleCollection implements CollectionProcessorInterface
 
         /* @var $data Iterator */
         foreach ($data as $key => $value) {
-            $deserialized[$key] = $value;
+            $convertedValue = $this->converter->convert($value);
+            $deserialized[$key] = $convertedValue;
         }
 
         $context->setDeserialized($deserialized);

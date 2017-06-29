@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 
@@ -24,13 +25,20 @@ final class Property extends NestedProcessor
     private $extractor;
 
     /**
+     * @var ConverterInterface
+     */
+    private $converter;
+
+    /**
      * Property constructor.
      * @param ExtractorInterface $extractor
+     * @param ConverterInterface $converter
      * @param string $outputKey
      */
-    public function __construct(ExtractorInterface $extractor, string $outputKey)
+    public function __construct(ExtractorInterface $extractor, ConverterInterface $converter, string $outputKey)
     {
         $this->extractor = $extractor;
+        $this->converter = $converter;
         parent::__construct($outputKey);
     }
 
@@ -41,6 +49,7 @@ final class Property extends NestedProcessor
     public function process(ContextInterface $context, $data): void
     {
         $value = $this->extractor->extract($data);
-        $context->write($this->outputKey, $value);
+        $convertedValue = $this->converter->convert($value);
+        $context->write($this->outputKey, $convertedValue);
     }
 }

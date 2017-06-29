@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer;
 
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\Writer\Context\ContextFactory;
 use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface;
@@ -23,6 +24,7 @@ use InvalidArgumentException;
  * Class WriterBuilder
  * @author mfris
  * @package BetterSerializer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class WriterBuilder
 {
@@ -63,6 +65,11 @@ final class WriterBuilder
     private $processorFactoryBuilder;
 
     /**
+     * @var ConverterFactoryInterface
+     */
+    private $converterFactory;
+
+    /**
      * @var AbstractFactoryInterface
      */
     private $extractorFactory;
@@ -70,9 +77,11 @@ final class WriterBuilder
     /**
      * WriterBuilder constructor.
      * @param MetaDataReaderInterface $metaDataReader
+     * @param ConverterFactoryInterface $converterFactory
      */
-    public function __construct(MetaDataReaderInterface $metaDataReader)
+    public function __construct(MetaDataReaderInterface $metaDataReader, ConverterFactoryInterface $converterFactory)
     {
+        $this->converterFactory = $converterFactory;
         $this->metaDataReader = $metaDataReader;
     }
 
@@ -150,6 +159,7 @@ final class WriterBuilder
     {
         if ($this->processorFactoryBuilder === null) {
             $this->processorFactoryBuilder = new ProcessorFactoryBuilder(
+                $this->converterFactory,
                 $this->getExtractorFactory(),
                 $this->metaDataReader
             );

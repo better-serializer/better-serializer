@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Converter\ConverterInterface;
+use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
@@ -15,7 +17,6 @@ use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface 
 use BetterSerializer\DataBind\Writer\Processor\Property;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class SimpleMemberTest
@@ -29,36 +30,35 @@ class SimpleMemberTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testCreate(): void
     {
         $type = new StringType();
-        $propertyMetaData = Mockery::mock(PropertyMetaDataInterface::class);
-        $propertyMetaData->shouldReceive('getType')
-            ->once()
-            ->andReturn($type)
-            ->getMock()
-            ->shouldReceive('getOutputKey')
-            ->once()
-            ->andReturn('test')
-            ->getMock();
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData->expects(self::exactly(2))
+            ->method('getType')
+            ->willReturn($type);
+        $propertyMetaData->expects(self::once())
+            ->method('getOutputKey')
+            ->willReturn('test');
 
-        $extractor = Mockery::mock(ExtractorInterface::class);
+        $converter = $this->getMockBuilder(ConverterInterface::class)->getMock();
 
-        $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
-        $extractorFactory->shouldReceive('newExtractor')
-            ->once()
-            ->andReturn($extractor)
-            ->getMock();
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $converterFactory->expects(self::once())
+            ->method('newConverter')
+            ->willReturn($converter);
 
-        $simpleMember = new SimpleMember($extractorFactory);
+        $extractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
+
+        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
+        $extractorFactory->expects(self::once())
+            ->method('newExtractor')
+            ->willReturn($extractor);
+
+        /* @var $converterFactory ConverterFactoryInterface */
+        /* @var $extractorFactory ExtractorFactoryInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
+        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
         $processor = $simpleMember->create($propertyMetaData);
 
         self::assertInstanceOf(Property::class, $processor);
@@ -70,15 +70,18 @@ class SimpleMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $type = new ObjectType(Car::class);
-        $propertyMetaData = Mockery::mock(PropertyMetaDataInterface::class);
-        $propertyMetaData->shouldReceive('getType')
-            ->once()
-            ->andReturn($type)
-            ->getMock();
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData->expects(self::once())
+            ->method('getType')
+            ->willReturn($type);
 
-        $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
+        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
 
-        $simpleMember = new SimpleMember($extractorFactory);
+        /* @var $converterFactory ConverterFactoryInterface */
+        /* @var $extractorFactory ExtractorFactoryInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
+        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
         $shouldBeNull = $simpleMember->create($propertyMetaData);
 
         self::assertNull($shouldBeNull);
