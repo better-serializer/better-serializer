@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JmsSerializer;
  * @package BetterSerializer\Dto
  * @Serializer\RootName(value="car")
  */
-final class Car implements CarInterface
+class Car implements CarInterface
 {
 
     /**

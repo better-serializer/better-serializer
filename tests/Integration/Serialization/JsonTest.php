@@ -12,6 +12,7 @@ use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Door;
 use BetterSerializer\Dto\Radio;
+use BetterSerializer\Dto\SpecialCar;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,6 +50,7 @@ final class JsonTest extends TestCase
             $this->getObjectsInArrayTuple(),
             $this->getObjectsInArrayTupleWithInnerArray(),
             $this->getStringsInArray(),
+            $this->getInheritedObjectTuple(),
         ];
     }
 
@@ -139,5 +141,17 @@ final class JsonTest extends TestCase
         $json = '[' . implode(',', $jsonArray) . ']';
 
         return [$strings, $json];
+    }
+
+    /**
+     * @return array
+     */
+    private function getInheritedObjectTuple(): array
+    {
+        $radio = new Radio('test station');
+        $car = new SpecialCar('Honda', 'white', $radio, 'special');
+        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[],"special":"special"}';
+
+        return [$car, $json];
     }
 }

@@ -70,6 +70,11 @@ final class PropertyReader implements PropertyReaderInterface
     public function getPropertyMetadata(ReflectionClass $reflectionClass): array
     {
         $metaData = [];
+        $parentClass = $reflectionClass->getParentClass();
+
+        if ($parentClass) {
+            $metaData = $this->getPropertyMetadata($parentClass);
+        }
 
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
