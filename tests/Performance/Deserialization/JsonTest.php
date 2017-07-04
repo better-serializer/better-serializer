@@ -41,10 +41,10 @@ final class JsonTest extends TestCase
 
         // opcache warmup
         $jmsSerializer->deserialize($json, $stringType, 'json');
-        $serializer->readValueFromString($json, $stringType, SerializationType::JSON());
+        $serializer->deserialize($json, $stringType, SerializationType::JSON());
 
         $start = microtime(true);
-        $serializer->readValueFromString($json, $stringType, SerializationType::JSON());
+        $serializer->deserialize($json, $stringType, SerializationType::JSON());
         $betterMicro = (microtime(true) - $start);
 
         $start = microtime(true);

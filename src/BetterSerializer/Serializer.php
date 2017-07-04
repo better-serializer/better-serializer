@@ -50,7 +50,7 @@ final class Serializer
      * @param SerializationTypeInterface $serializationType
      * @return mixed
      */
-    public function readValueFromString(
+    public function deserialize(
         string $serialized,
         string $stringType,
         SerializationTypeInterface $serializationType
@@ -66,7 +66,7 @@ final class Serializer
      * @throws ReflectionException
      * @throws RuntimeException
      */
-    public function writeValueAsString($data, SerializationTypeInterface $type): string
+    public function serialize($data, SerializationTypeInterface $type): string
     {
         return $this->writer->writeValueAsString($data, $type);
     }

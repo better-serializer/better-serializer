@@ -32,8 +32,8 @@ final class JsonTest extends TestCase
         $builder = new Builder();
         $serializer = $builder->createSerializer();
 
-        $data = $serializer->readValueFromString($expectedJson, $stringType, SerializationType::JSON());
-        $json = $serializer->writeValueAsString($data, SerializationType::JSON());
+        $data = $serializer->deserialize($expectedJson, $stringType, SerializationType::JSON());
+        $json = $serializer->serialize($data, SerializationType::JSON());
 
         self::assertSame($expectedJson, $json);
     }

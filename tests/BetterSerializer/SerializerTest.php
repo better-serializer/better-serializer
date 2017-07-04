@@ -43,7 +43,7 @@ class SerializerTest extends TestCase
         /* @var $writer WriterInterface */
         /* @var $serializationType SerializationTypeInterface */
         $serializer = new Serializer($reader, $writer);
-        $output = $serializer->readValueFromString($toDeserialize, $stringType, $serializationType);
+        $output = $serializer->deserialize($toDeserialize, $stringType, $serializationType);
 
         self::assertSame($desertializedData, $output);
     }
@@ -69,7 +69,7 @@ class SerializerTest extends TestCase
         /* @var $writer WriterInterface */
         /* @var $serializationType SerializationTypeInterface */
         $serializer = new Serializer($reader, $writer);
-        $output = $serializer->writeValueAsString($toSerialize, $serializationType);
+        $output = $serializer->serialize($toSerialize, $serializationType);
 
         self::assertSame($serializedData, $output);
     }
