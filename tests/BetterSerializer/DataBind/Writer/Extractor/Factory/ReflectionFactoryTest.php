@@ -10,7 +10,6 @@ namespace BetterSerializer\DataBind\Writer\Extractor\Factory;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
-use Mockery;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use RuntimeException;
@@ -29,14 +28,16 @@ class ReflectionFactoryTest extends TestCase
      */
     public function testNewExtractor(): void
     {
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         /* @var $reflPropertyStub ReflectionProperty */
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
 
+        $propertyMetadataStub = $this->getMockBuilder(ReflectionPropertyMetaDataInterface::class)->getMock();
+        $propertyMetadataStub->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
         /* @var $propertyMetadataStub PropertyMetaDataInterface */
-        $propertyMetadataStub = Mockery::mock(
-            ReflectionPropertyMetaDataInterface::class,
-            ['getReflectionProperty' => $reflPropertyStub]
-        );
 
         $factory = new ReflectionFactory();
         $extractor = $factory->newExtractor($propertyMetadataStub);
@@ -51,7 +52,7 @@ class ReflectionFactoryTest extends TestCase
     public function testNewExtractorThrowsException(): void
     {
         /* @var $propertyMetadataStub PropertyMetaDataInterface */
-        $propertyMetadataStub = Mockery::mock(PropertyMetaDataInterface::class);
+        $propertyMetadataStub = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
 
         $factory = new ReflectionFactory();
         $factory->newExtractor($propertyMetadataStub);

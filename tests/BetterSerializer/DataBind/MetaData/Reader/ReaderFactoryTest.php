@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class ReaderFactoryTest
@@ -25,11 +24,11 @@ class ReaderFactoryTest extends TestCase
      */
     public function testCreateReader(): void
     {
+        $docBlockFactoryStub = $this->getMockBuilder(DocBlockFactoryInterface::class)->getMock();
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class);
 
+        $typeFactoryStub = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
         /* @var $typeFactoryStub TypeFactoryInterface */
-        $typeFactoryStub = Mockery::mock(TypeFactoryInterface::class);
 
         $readerFactory = new ReaderFactory($docBlockFactoryStub, $typeFactoryStub);
         $reader = $readerFactory->createReader();

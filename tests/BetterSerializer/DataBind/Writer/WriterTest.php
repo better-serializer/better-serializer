@@ -16,7 +16,6 @@ use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\Type\ExtractorInterface;
 use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class WriterTest
@@ -30,55 +29,41 @@ class WriterTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testWriteValueAsString(): void
     {
         $toSerialize = new Radio('test');
         $serializationType = SerializationType::NONE();
         $serializedData = 'serialized';
 
-        $type = Mockery::mock(TypeInterface::class);
-        $type->shouldReceive('getType');
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        $typeExtractor = Mockery::mock(ExtractorInterface::class);
-        $typeExtractor->shouldReceive('extract')
-            ->once()
+        $typeExtractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
+        $typeExtractor->expects(self::once())
+            ->method('extract')
             ->with($toSerialize)
-            ->andReturn($type)
-            ->getMock();
+            ->willReturn($type);
 
-        $context = Mockery::mock(ContextInterface::class);
-        $context->shouldReceive('getData')
-            ->once()
-            ->andReturn($serializedData)
-            ->getMock();
+        $context = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getData')
+            ->willReturn($serializedData);
 
-        $processor = Mockery::mock(ProcessorInterface::class);
-        $processor->shouldReceive('process')
-                  ->with($context, $toSerialize)
-                  ->once()
-                  ->getMock();
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processor->expects(self::once())
+            ->method('process')
+            ->with($context, $toSerialize);
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromType')
-                         ->once()
-                         ->with($type)
-                         ->andReturn($processor)
-                         ->getMock();
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::once())
+            ->method('createFromType')
+            ->with($type)
+            ->willReturn($processor);
 
-
-        $contextFactory = Mockery::mock(ContextFactoryInterface::class);
-        $contextFactory->shouldReceive('createContext')
-                       ->with($serializationType)
-                       ->andReturn($context)
-                       ->getMock();
+        $contextFactory = $this->getMockBuilder(ContextFactoryInterface::class)->getMock();
+        $contextFactory->expects(self::once())
+            ->method('createContext')
+            ->with($serializationType)
+            ->willReturn($context);
 
         /* @var $typeExtractor ExtractorInterface */
         /* @var $processorFactory ProcessorFactoryInterface */

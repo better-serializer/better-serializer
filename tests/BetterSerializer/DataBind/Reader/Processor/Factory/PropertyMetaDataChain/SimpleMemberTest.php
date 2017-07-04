@@ -17,7 +17,6 @@ use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface a
 use BetterSerializer\DataBind\Reader\Processor\Property;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class SimpleMemberTest
@@ -76,7 +75,7 @@ class SimpleMemberTest extends TestCase
             ->method('getType')
             ->willReturn($type);
 
-        $injectorFactory = Mockery::mock(InjectorFactoryInterface::class);
+        $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
         $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
 
         /* @var $injectorFactory InjectorFactoryInterface */

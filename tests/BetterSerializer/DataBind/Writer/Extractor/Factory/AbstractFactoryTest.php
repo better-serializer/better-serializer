@@ -12,7 +12,6 @@ use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
 use BetterSerializer\Helper\DataBind\MetaData\FakePropertyMetaData;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionProperty;
 use RuntimeException;
 
@@ -53,11 +52,13 @@ class AbstractFactoryTest extends TestCase
      */
     public function classMappingProvider(): array
     {
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
-        $reflPropertyMetadata = Mockery::mock(
-            ReflectionPropertyMetaDataInterface::class,
-            ['getReflectionProperty' => $reflPropertyStub]
-        );
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflPropertyMetadata = $this->getMockBuilder(ReflectionPropertyMetaDataInterface::class)->getMock();
+        $reflPropertyMetadata->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
 
         return [
             [$reflPropertyMetadata, ReflectionExtractor::class]

@@ -18,7 +18,6 @@ use BetterSerializer\DataBind\Writer\Processor\Object;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class ObjectMemberTest
@@ -33,43 +32,29 @@ class ObjectMemberTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testCreate(): void
     {
         $objectType = new ObjectType(Car::class);
-        $property1 = Mockery::mock(PropertyMetaDataInterface::class);
-        $property2 = Mockery::mock(ObjectPropertyMetaDataInterface::class);
-        $metaData = Mockery::mock(MetaDataInterface::class);
-        $metaData->shouldReceive('getPropertiesMetadata')
-            ->once()
-            ->andReturn(['title' => $property1, 'radio' => $property2]);
+        $property1 = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $property2 = $this->getMockBuilder(ObjectPropertyMetaDataInterface::class)->getMock();
+        $metaData = $this->getMockBuilder(MetaDataInterface::class)->getMock();
+        $metaData->expects(self::once())
+            ->method('getPropertiesMetadata')
+            ->willReturn(['title' => $property1, 'radio' => $property2]);
 
-        $metaDataReader = Mockery::mock(ReaderInterface::class);
-        $metaDataReader->shouldReceive('read')
+        $metaDataReader = $this->getMockBuilder(ReaderInterface::class)->getMock();
+        $metaDataReader->expects(self::once())
+            ->method('read')
             ->with(Car::class)
-            ->once()
-            ->andReturn($metaData)
-            ->getMock();
+            ->willReturn($metaData);
 
-        $processor = Mockery::mock(ProcessorInterface::class);
+        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromMetaData')
-            ->once()
-            ->with($property1)
-            ->andReturn($processor)
-            ->getMock()
-            ->shouldReceive('createFromMetaData')
-            ->with($property2)
-            ->andReturn($processor)
-            ->getMock();
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::exactly(2))
+            ->method('createFromMetaData')
+            ->withConsecutive($property1, $property2)
+            ->willReturn($processor);
 
         /* @var $processorFactory ProcessorFactoryInterface */
         /* @var $metaDataReader ReaderInterface */
@@ -84,9 +69,9 @@ class ObjectMemberTest extends TestCase
      */
     public function testCreateReturnsNull(): void
     {
-        $nonObjectType = Mockery::mock(TypeInterface::class);
-        $metaDataReader = Mockery::mock(ReaderInterface::class);
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
+        $nonObjectType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $metaDataReader = $this->getMockBuilder(ReaderInterface::class)->getMock();
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
 
         /* @var $processorFactory ProcessorFactoryInterface */
         /* @var $metaDataReader ReaderInterface */

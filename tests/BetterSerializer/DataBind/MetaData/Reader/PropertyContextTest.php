@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -25,23 +24,19 @@ class PropertyContextTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testEverything(): void
     {
-        $reflClass = Mockery::mock(ReflectionClass::class);
-        $reflClass->shouldReceive('getNamespaceName')
-            ->once()
-            ->andReturn('test');
+        $reflClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflClass->expects(self::once())
+            ->method('getNamespaceName')
+            ->willReturn('test');
 
-        $reflProperty = Mockery::mock(ReflectionProperty::class);
-        $propertyAnnotation = Mockery::mock(PropertyInterface::class);
+        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $propertyAnnotation = $this->getMockBuilder(PropertyInterface::class)->getMock();
         $annotations = [$propertyAnnotation];
 
         /* @var $reflClass ReflectionClass */

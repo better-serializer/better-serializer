@@ -10,7 +10,6 @@ namespace BetterSerializer\DataBind\Reader\Injector\Factory;
 use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Reader\Injector\Property\ReflectionInjector;
-use Mockery;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use RuntimeException;
@@ -30,14 +29,16 @@ class ReflectionFactoryTest extends TestCase
     public function testNewInjector(): void
     {
         /* @var $reflPropertyStub ReflectionProperty */
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $propertyMetadataStub = $this->getMockBuilder(ReflectionPropertyMetaDataInterface::class)->getMock();
+        $propertyMetadataStub->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
 
         /* @var $propertyMetadataStub PropertyMetaDataInterface */
-        $propertyMetadataStub = Mockery::mock(
-            ReflectionPropertyMetaDataInterface::class,
-            ['getReflectionProperty' => $reflPropertyStub]
-        );
-
         $factory = new ReflectionFactory();
         $injector = $factory->newInjector($propertyMetadataStub);
 
@@ -51,7 +52,7 @@ class ReflectionFactoryTest extends TestCase
     public function testNewInjectorThrowsException(): void
     {
         /* @var $propertyMetadataStub PropertyMetaDataInterface */
-        $propertyMetadataStub = Mockery::mock(PropertyMetaDataInterface::class);
+        $propertyMetadataStub = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
 
         $factory = new ReflectionFactory();
         $factory->newInjector($propertyMetadataStub);

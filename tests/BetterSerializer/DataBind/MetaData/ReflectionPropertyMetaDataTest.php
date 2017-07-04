@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\MetaData;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionProperty;
 
 /**
@@ -26,11 +25,15 @@ class ReflectionPropertyMetaDataTest extends TestCase
      */
     public function testGetType(): void
     {
-        /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['setAccessible' => null]);
-        /* @var $type TypeInterface */
-        $type = Mockery::mock(TypeInterface::class);
+        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflProperty->expects(self::once())
+            ->method('setAccessible');
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
+        /* @var $reflProperty ReflectionProperty */
+        /* @var $type TypeInterface */
         $metaData = new ReflectionPropertyMetadata($reflProperty, [], $type);
         self::assertSame($type, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());
@@ -41,11 +44,18 @@ class ReflectionPropertyMetaDataTest extends TestCase
      */
     public function testGetOutputKeyFromReflProperty(): void
     {
-        /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
-        /* @var $type TypeInterface */
-        $type = Mockery::mock(TypeInterface::class);
+        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflProperty->expects(self::once())
+            ->method('getName')
+            ->willReturn('test');
+        $reflProperty->expects(self::once())
+            ->method('setAccessible');
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
+        /* @var $reflProperty ReflectionProperty */
+        /* @var $type TypeInterface */
         $metaData = new ReflectionPropertyMetadata($reflProperty, [], $type);
         self::assertSame('test', $metaData->getOutputKey());
     }
@@ -55,12 +65,22 @@ class ReflectionPropertyMetaDataTest extends TestCase
      */
     public function testGetOutputKeyFromReflPropertyWhenInvalidPropertyAnnotationProvided(): void
     {
-        /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
-        /* @var $type TypeInterface */
-        $type = Mockery::mock(TypeInterface::class);
-        $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => '']);
+        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflProperty->expects(self::once())
+            ->method('getName')
+            ->willReturn('test');
+        $reflProperty->expects(self::once())
+            ->method('setAccessible');
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $propertyAnnotation = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $propertyAnnotation->expects(self::once())
+            ->method('getName')
+            ->willReturn('');
 
+        /* @var $reflProperty ReflectionProperty */
+        /* @var $type TypeInterface */
         $metaData = new ReflectionPropertyMetadata($reflProperty, [$propertyAnnotation], $type);
         self::assertSame('test', $metaData->getOutputKey());
     }
@@ -70,12 +90,21 @@ class ReflectionPropertyMetaDataTest extends TestCase
      */
     public function testGetOutputKeyFromPropertyAnnotation(): void
     {
-        /* @var $reflProperty ReflectionProperty */
-        $reflProperty = Mockery::mock(ReflectionProperty::class, ['getName' => 'test', 'setAccessible' => null]);
-        /* @var $type TypeInterface */
-        $type = Mockery::mock(TypeInterface::class);
-        $propertyAnnotation = Mockery::mock(PropertyInterface::class, ['getName' => 'test2']);
+        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflProperty->expects(self::exactly(0))
+            ->method('getName');
+        $reflProperty->expects(self::once())
+            ->method('setAccessible');
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $propertyAnnotation = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $propertyAnnotation->expects(self::once())
+            ->method('getName')
+            ->willReturn('test2');
 
+        /* @var $reflProperty ReflectionProperty */
+        /* @var $type TypeInterface */
         $metaData = new ReflectionPropertyMetadata($reflProperty, [$propertyAnnotation], $type);
         self::assertSame('test2', $metaData->getOutputKey());
     }

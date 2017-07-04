@@ -18,7 +18,6 @@ use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use LogicException;
 
 /**
@@ -34,44 +33,35 @@ class ComplexNestedMemberTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testCreate(): void
     {
         $type = new ObjectType(Car::class);
-        $propertyMetaData = Mockery::mock(PropertyMetaDataInterface::class);
-        $propertyMetaData->shouldReceive('getType')
-            ->twice()
-            ->andReturn($type)
-            ->getMock()
-            ->shouldReceive('getOutputKey')
-            ->once()
-            ->andReturn('test')
-            ->getMock();
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData->expects(self::exactly(2))
+            ->method('getType')
+            ->willReturn($type);
+        $propertyMetaData->expects(self::once())
+            ->method('getOutputKey')
+            ->willReturn('test');
 
-        $objProcessor = Mockery::mock(ComplexNestedProcessorInterface::class);
+        $objProcessor = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromType')
-            ->once()
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::once())
+            ->method('createFromType')
             ->with($type)
-            ->andReturn($objProcessor)
-            ->getMock();
+            ->willReturn($objProcessor);
 
-        $extractor = Mockery::mock(ExtractorInterface::class);
+        $extractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
 
-        $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
-        $extractorFactory->shouldReceive('newExtractor')
-            ->once()
-            ->andReturn($extractor)
-            ->getMock();
+        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
+        $extractorFactory->expects(self::once())
+            ->method('newExtractor')
+            ->willReturn($extractor);
 
+        /* @var $processorFactory ProcessorFactoryInterface */
+        /* @var $extractorFactory ExtractorFactoryInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
         $processor = $complexNestedMember->create($propertyMetaData);
 
@@ -85,29 +75,29 @@ class ComplexNestedMemberTest extends TestCase
     public function testCreateThrowsException(): void
     {
         $type = new ObjectType(Car::class);
-        $propertyMetaData = Mockery::mock(PropertyMetaDataInterface::class);
-        $propertyMetaData->shouldReceive('getType')
-            ->twice()
-            ->andReturn($type)
-            ->getMock();
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData->expects(self::exactly(2))
+            ->method('getType')
+            ->willReturn($type);
 
-        $objProcessor = Mockery::mock(ProcessorInterface::class);
+        $objProcessor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $processorFactory->shouldReceive('createFromType')
-            ->once()
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory->expects(self::once())
+            ->method('createFromType')
             ->with($type)
-            ->andReturn($objProcessor)
-            ->getMock();
+            ->willReturn($objProcessor);
 
-        $extractor = Mockery::mock(ExtractorInterface::class);
+        $extractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
 
-        $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
-        $extractorFactory->shouldReceive('newExtractor')
-            ->once()
-            ->andReturn($extractor)
-            ->getMock();
+        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
+        $extractorFactory->expects(self::once())
+            ->method('newExtractor')
+            ->willReturn($extractor);
 
+        /* @var $processorFactory ProcessorFactoryInterface */
+        /* @var $extractorFactory ExtractorFactoryInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
         $complexNestedMember->create($propertyMetaData);
     }
@@ -118,15 +108,17 @@ class ComplexNestedMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $type = new StringType();
-        $propertyMetaData = Mockery::mock(PropertyMetaDataInterface::class);
-        $propertyMetaData->shouldReceive('getType')
-            ->once()
-            ->andReturn($type)
-            ->getMock();
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData->expects(self::once())
+            ->method('getType')
+            ->willReturn($type);
 
-        $processorFactory = Mockery::mock(ProcessorFactoryInterface::class);
-        $extractorFactory = Mockery::mock(ExtractorFactoryInterface::class);
+        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
 
+        /* @var $processorFactory ProcessorFactoryInterface */
+        /* @var $extractorFactory ExtractorFactoryInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
         $shouldBeNull = $complexNestedMember->create($propertyMetaData);
 

@@ -10,7 +10,6 @@ use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\MetaData;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use LogicException;
 use ReflectionClass;
 
@@ -28,13 +27,19 @@ class ReaderTest extends TestCase
      */
     public function testRead(): void
     {
-        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
+        $classMetadata = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
 
+        $classReader = $this->getMockBuilder(ClassReaderInterface::class)->getMock();
+        $classReader->expects(self::once())
+            ->method('getClassMetadata')
+            ->willReturn($classMetadata);
         /* @var $classReader ClassReader */
-        $classReader = Mockery::mock(ClassReaderInterface::class, ['getClassMetadata' => $classMetadata]);
 
+        $propertyReader = $this->getMockBuilder(PropertyReaderInterface::class)->getMock();
+        $propertyReader->expects(self::once())
+            ->method('getPropertyMetadata')
+            ->willReturn([]);
         /* @var $propertyReader PropertyReader */
-        $propertyReader = Mockery::mock(PropertyReaderInterface::class, ['getPropertyMetadata' => []]);
 
         $reader = new Reader($classReader, $propertyReader);
         $metaData = $reader->read(Car::class);
@@ -48,13 +53,11 @@ class ReaderTest extends TestCase
      */
     public function testReadSystemClassThrowsException(): void
     {
-        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
-
+        $classReader = $this->getMockBuilder(ClassReaderInterface::class)->getMock();
         /* @var $classReader ClassReader */
-        $classReader = Mockery::mock(ClassReaderInterface::class, ['getClassMetadata' => $classMetadata]);
 
+        $propertyReader = $this->getMockBuilder(PropertyReaderInterface::class)->getMock();
         /* @var $propertyReader PropertyReader */
-        $propertyReader = Mockery::mock(PropertyReaderInterface::class, ['getPropertyMetadata' => []]);
 
         $reader = new Reader($classReader, $propertyReader);
         $reader->read(ReflectionClass::class);

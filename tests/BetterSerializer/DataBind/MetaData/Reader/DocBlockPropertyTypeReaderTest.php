@@ -7,10 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionProperty;
 
 /**
@@ -26,54 +25,24 @@ class DocBlockPropertyTypeReaderTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testGetTypeFromVarDocBlock(): void
     {
-        $varTagStub = Mockery::mock(DocBlock\Tags\Var_::class)
-            ->shouldReceive('getType')
-            ->once()
-            ->andReturn('string')
-            ->getMock();
+        $docBlockFactory = DocBlockFactory::createInstance(); // final
 
-        $docBlockStub = Mockery::mock(new DocBlock())
-            ->shouldReceive('getTagsByName')
-            ->once()
-            ->andReturn([$varTagStub])
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
             ->getMock();
+        $reflPropertyStub->expects(self::once())
+            ->method('getDocComment')
+            ->willReturn('/** @var string  */');
 
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class)
-            ->shouldReceive('create')
-            ->once()
-            ->andReturnValues([
-                $docBlockStub,
-                $docBlockStub
-            ])
-            ->getMock();
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
-        $reflPropertyStub->shouldReceive('getDocComment')
-            ->once()
-            ->andReturn('/** @var string  */')
-            ->getMock();
-
-        /* @var $contextStub Mockery\MockInterface */
-        $contextStub = Mockery::mock(PropertyContextInterface::class);
-        $contextStub->shouldReceive('getReflectionProperty')
-            ->once()
-            ->andReturn($reflPropertyStub)
-            ->getMock();
+        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
         /* @var $contextStub PropertyContextInterface */
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertInstanceOf(StringTypedPropertyContext::class, $typedContext);
@@ -85,22 +54,20 @@ class DocBlockPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithoutDocBlock(): void
     {
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class);
+        $docBlockFactoryStub = $this->getMockBuilder(DocBlockFactoryInterface::class)->getMock();
         /* @var $docBlockFactoryStub DocBlockFactoryInterface */
 
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
-        $reflPropertyStub->shouldReceive('getDocComment')
-            ->once()
-            ->andReturn('')
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
             ->getMock();
+        $reflPropertyStub->expects(self::once())
+            ->method('getDocComment')
+            ->willReturn('');
 
-        /* @var $contextStub Mockery\MockInterface */
-        $contextStub = Mockery::mock(PropertyContextInterface::class);
-        $contextStub->shouldReceive('getReflectionProperty')
-            ->once()
-            ->andReturn($reflPropertyStub)
-            ->getMock();
+        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
         /* @var $contextStub PropertyContextInterface */
 
         $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
@@ -114,27 +81,22 @@ class DocBlockPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithoutVarTag(): void
     {
-        $docBlockStub = Mockery::mock(new DocBlock(), ['getTagsByName' => []]);
+        $docBlockFactory = DocBlockFactory::createInstance(); // final
 
-        /* @var $docBlockFactoryStub Mockery\MockInterface */
-        $docBlockFactoryStub = Mockery::mock(DocBlockFactoryInterface::class, ['create' => $docBlockStub]);
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
-
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class);
-        $reflPropertyStub->shouldReceive('getDocComment')
-            ->once()
-            ->andReturn('/** @global */')
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
             ->getMock();
+        $reflPropertyStub->expects(self::once())
+            ->method('getDocComment')
+            ->willReturn('/** @global */');
 
-        /* @var $contextStub Mockery\MockInterface */
-        $contextStub = Mockery::mock(PropertyContextInterface::class);
-        $contextStub->shouldReceive('getReflectionProperty')
-            ->once()
-            ->andReturn($reflPropertyStub)
-            ->getMock();
+        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub->expects(self::once())
+            ->method('getReflectionProperty')
+            ->willReturn($reflPropertyStub);
         /* @var $contextStub PropertyContextInterface */
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertNull($typedContext);

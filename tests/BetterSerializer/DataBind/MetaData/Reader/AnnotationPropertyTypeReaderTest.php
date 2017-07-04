@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class AnnotationPropertyTypeReaderTest
@@ -23,22 +22,12 @@ class AnnotationPropertyTypeReaderTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testGetTypeWithoutAnnotations(): void
     {
-        /* @var $context Mockery\MockInterface */
-        $context = Mockery::mock(PropertyContextInterface::class);
-        $context->shouldReceive('getPropertyAnnotation')
-            ->once()
-            ->andReturn(null)
-            ->getMock();
+        $context = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getPropertyAnnotation')
+            ->willReturn(null);
         /* @var $context PropertyContextInterface */
 
         $reader = new AnnotationPropertyTypeReader();
@@ -52,14 +41,15 @@ class AnnotationPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithAnnotations(): void
     {
-        $propertyAnnotStub1 = Mockery::mock(PropertyInterface::class, ['getType' => 'string']);
+        $propertyAnnotStub1 = $this->getMockBuilder(PropertyInterface::class, ['getType' => 'string'])->getMock();
+        $propertyAnnotStub1->expects(self::once())
+            ->method('getType')
+            ->willReturn('string');
 
-        /* @var $context Mockery\MockInterface */
-        $context = Mockery::mock(PropertyContextInterface::class);
-        $context->shouldReceive('getPropertyAnnotation')
-            ->once()
-            ->andReturn($propertyAnnotStub1)
-            ->getMock();
+        $context = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getPropertyAnnotation')
+            ->willReturn($propertyAnnotStub1);
         /* @var $context PropertyContextInterface */
 
         $reader = new AnnotationPropertyTypeReader();

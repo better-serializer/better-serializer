@@ -13,7 +13,6 @@ use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class ArrayMemberTest
@@ -27,34 +26,25 @@ class ArrayMemberTest extends TestCase
     /**
      *
      */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
-     *
-     */
     public function testGetTypeWithSimpleSubType(): void
     {
         $stringType = 'array<string>';
 
-        $stringTypeInstance = Mockery::mock(TypeInterface::class);
+        $stringTypeInstance = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        $typeFactory = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactory->shouldReceive('getType')
-            ->once()
-            ->andReturn($stringTypeInstance);
+        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory->expects(self::once())
+            ->method('getType')
+            ->willReturn($stringTypeInstance);
+        /* @var $typeFactory TypeFactoryInterface */
 
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn($stringType)
-            ->getMock()
-            ->shouldReceive('getNamespace')
-            ->once()
-            ->andReturn('test')
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn($stringType);
+        $context->expects(self::once())
+            ->method('getNamespace')
+            ->willReturn('test');
         /* @var $context StringTypedPropertyContextInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
@@ -71,22 +61,21 @@ class ArrayMemberTest extends TestCase
     public function testGetTypeWithObjectSubType(): void
     {
         $stringType = 'array<Car>';
-        $objectTypeInstance = Mockery::mock(TypeInterface::class);
+        $objectTypeInstance = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        $typeFactory = Mockery::mock(TypeFactoryInterface::class);
-        $typeFactory->shouldReceive('getType')
-            ->once()
-            ->andReturn($objectTypeInstance);
+        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory->expects(self::once())
+            ->method('getType')
+            ->willReturn($objectTypeInstance);
+        /* @var $typeFactory TypeFactoryInterface */
 
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn($stringType)
-            ->getMock()
-            ->shouldReceive('getNamespace')
-            ->once()
-            ->andReturn('test')
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn($stringType);
+        $context->expects(self::once())
+            ->method('getNamespace')
+            ->willReturn('test');
         /* @var $context StringTypedPropertyContextInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
@@ -102,13 +91,13 @@ class ArrayMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $typeFactory = Mockery::mock(TypeFactoryInterface::class);
+        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        /* @var $typeFactory TypeFactoryInterface */
 
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn(TypeEnum::STRING)
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn(TypeEnum::STRING);
         /* @var $context StringTypedPropertyContextInterface */
 
         $arrayMember = new ArrayMember($typeFactory);

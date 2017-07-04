@@ -9,7 +9,6 @@ namespace BetterSerializer\DataBind\Writer\Extractor\Property;
 
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use ReflectionProperty;
 
 /**
@@ -27,9 +26,14 @@ class ReflectionExtractorTest extends TestCase
     {
         $value = 5;
 
+        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflPropertyStub->expects(self::once())
+            ->method('getValue')
+            ->willReturn($value);
         /* @var $reflPropertyStub ReflectionProperty */
-        $reflPropertyStub = Mockery::mock(ReflectionProperty::class, ['getValue' => $value]);
-        $objectStub = Mockery::mock(CarInterface::class);
+        $objectStub = $this->getMockBuilder(CarInterface::class)->getMock();
 
         $extractor = new ReflectionExtractor($reflPropertyStub);
         $extracted = $extractor->extract($objectStub);

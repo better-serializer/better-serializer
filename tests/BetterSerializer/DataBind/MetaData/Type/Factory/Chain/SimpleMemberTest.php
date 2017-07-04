@@ -16,7 +16,6 @@ use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class SimpleMemberTest
@@ -28,25 +27,16 @@ class SimpleMemberTest extends TestCase
 {
 
     /**
-     *
-     */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
      * @dataProvider typeMappingProvider
      * @param string $stringType
      * @param string $typeClassName
      */
     public function testGetType(string $stringType, string $typeClassName): void
     {
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->twice()
-            ->andReturn($stringType)
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::exactly(2))
+            ->method('getStringType')
+            ->willReturn($stringType);
         /* @var $context StringTypedPropertyContextInterface */
 
         $simpleMember = new SimpleMember();
@@ -60,11 +50,10 @@ class SimpleMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn(Car::class)
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn(Car::class);
         /* @var $context StringTypedPropertyContextInterface */
 
         $simpleMember = new SimpleMember();

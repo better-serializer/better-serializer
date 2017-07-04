@@ -13,7 +13,6 @@ use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class ObjectMemberTest
@@ -25,14 +24,6 @@ class ObjectMemberTest extends TestCase
 {
 
     /**
-     *
-     */
-    protected function tearDown()
-    {
-        Mockery::close();
-    }
-
-    /**
      * @dataProvider classNameProvider
      * @param string $stringType
      * @param string $className
@@ -41,15 +32,13 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetType(string $stringType, string $className, string $namespace, int $nsCalls): void
     {
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn($stringType)
-            ->getMock()
-            ->shouldReceive('getNamespace')
-            ->times($nsCalls)
-            ->andReturn($namespace)
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn($stringType);
+        $context->expects(self::exactly($nsCalls))
+            ->method('getNamespace')
+            ->willReturn($namespace);
         /* @var $context StringTypedPropertyContextInterface */
 
         $objectMember = new ObjectMember();
@@ -76,15 +65,13 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $context = Mockery::mock(StringTypedPropertyContextInterface::class);
-        $context->shouldReceive('getStringType')
-            ->once()
-            ->andReturn(TypeEnum::STRING)
-            ->getMock()
-            ->shouldReceive('getNamespace')
-            ->once()
-            ->andReturn('')
-            ->getMock();
+        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $context->expects(self::once())
+            ->method('getStringType')
+            ->willReturn(TypeEnum::STRING);
+        $context->expects(self::once())
+            ->method('getNamespace')
+            ->willReturn('');
         /* @var $context StringTypedPropertyContextInterface */
 
         $objectMember = new ObjectMember();

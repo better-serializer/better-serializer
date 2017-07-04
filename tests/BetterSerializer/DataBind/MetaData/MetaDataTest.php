@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData;
 
 use PHPUnit\Framework\TestCase;
-use Mockery;
 
 /**
  * Class MetaDataTest
@@ -24,10 +23,10 @@ class MetaDataTest extends TestCase
      */
     public function testInstantiation(): void
     {
-        $classMetadata = Mockery::mock(ClassMetaDataInterface::class);
+        $classMetadata = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
         $propertiesMetaData = [
-            Mockery::mock(PropertyMetaDataInterface::class),
-            Mockery::mock(PropertyMetaDataInterface::class),
+            $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock(),
+            $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock(),
         ];
 
         /* @var $classMetadata ClassMetaDataInterface */
