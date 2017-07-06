@@ -6,8 +6,8 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\MetaData;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaData;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 use LogicException;

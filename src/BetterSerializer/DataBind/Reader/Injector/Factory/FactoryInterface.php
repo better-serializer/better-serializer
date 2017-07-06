@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Injector\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 
 /**

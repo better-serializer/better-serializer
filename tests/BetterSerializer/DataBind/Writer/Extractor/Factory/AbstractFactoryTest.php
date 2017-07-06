@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Extractor\Factory;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
 use BetterSerializer\Helper\DataBind\MetaData\FakePropertyMetaData;
 use PHPUnit\Framework\TestCase;

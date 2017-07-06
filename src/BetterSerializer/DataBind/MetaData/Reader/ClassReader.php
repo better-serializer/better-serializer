@@ -6,11 +6,10 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaData;
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaData;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use ReflectionClass;
-use ReflectionException;
 
 /**
  * Class ClassReader

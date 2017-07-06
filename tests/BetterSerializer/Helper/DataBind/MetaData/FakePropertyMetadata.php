@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Helper\DataBind\MetaData;
 
-use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\Dto\Car;

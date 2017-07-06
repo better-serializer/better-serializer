@@ -6,8 +6,8 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\MetaData;
-use BetterSerializer\DataBind\MetaData\MetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaData;
+use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use ReflectionClass;
 use ReflectionException;
 use LogicException;

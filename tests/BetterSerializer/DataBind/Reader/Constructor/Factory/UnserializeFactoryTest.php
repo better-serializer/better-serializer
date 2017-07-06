@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor\Factory;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\Reader\Constructor\UnserializeConstructor;
 use PHPUnit\Framework\TestCase;
 

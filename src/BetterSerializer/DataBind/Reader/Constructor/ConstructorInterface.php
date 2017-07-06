@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 
 /**
  * Interface ConstructorInterface

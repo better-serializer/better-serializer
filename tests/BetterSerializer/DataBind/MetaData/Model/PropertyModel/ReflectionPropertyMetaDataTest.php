@@ -4,7 +4,7 @@ declare(strict_types = 1);
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
-namespace BetterSerializer\DataBind\MetaData;
+namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
 /**
- * Class PropertyMetadataTest
+ * ClassModel PropertyMetadataTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData
  * @SuppressWarnings(PHPMD.StaticAccess)

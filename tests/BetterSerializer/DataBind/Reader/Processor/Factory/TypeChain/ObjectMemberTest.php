@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\MetaDataInterface;
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ObjectPropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;

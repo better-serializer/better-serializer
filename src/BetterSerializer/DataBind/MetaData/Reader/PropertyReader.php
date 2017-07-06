@@ -6,9 +6,9 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ObjectPropertyMetaData;
-use BetterSerializer\DataBind\MetaData\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\ReflectionPropertyMetadata;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ObjectPropertyMetaData;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;

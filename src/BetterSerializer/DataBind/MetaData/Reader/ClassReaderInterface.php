@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
-use BetterSerializer\DataBind\MetaData\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use ReflectionClass;
 
 /**
