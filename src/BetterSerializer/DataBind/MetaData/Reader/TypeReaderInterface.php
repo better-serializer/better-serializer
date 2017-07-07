@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContextInterface;
+
 /**
  * Class AnnotationPropertyTypeReader
  * @author mfris

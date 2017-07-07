@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -41,7 +43,7 @@ class AnnotationPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithAnnotations(): void
     {
-        $propertyAnnotStub1 = $this->getMockBuilder(PropertyInterface::class, ['getType' => 'string'])->getMock();
+        $propertyAnnotStub1 = $this->getMockBuilder(PropertyInterface::class)->getMock();
         $propertyAnnotStub1->expects(self::once())
             ->method('getType')
             ->willReturn('string');

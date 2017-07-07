@@ -11,6 +11,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class ReaderFactory
@@ -49,6 +50,7 @@ final class ReaderFactory
     /**
      * @return Reader
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function createReader(): Reader

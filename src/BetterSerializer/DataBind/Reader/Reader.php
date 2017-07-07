@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader;
 
 use BetterSerializer\Common\SerializationTypeInterface;
-use BetterSerializer\DataBind\MetaData\Reader\DerivedStringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\DerivedStringTypedPropertyContext;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;

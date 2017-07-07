@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContextInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
-use phpDocumentor\Reflection\Types\Context;
 use RuntimeException;
 
 /**
