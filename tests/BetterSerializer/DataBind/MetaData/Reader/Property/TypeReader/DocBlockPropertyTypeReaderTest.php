@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader;
+namespace BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContext;

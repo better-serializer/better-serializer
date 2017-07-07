@@ -10,6 +10,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ObjectPropertyMetaDat
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
