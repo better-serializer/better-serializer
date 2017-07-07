@@ -6,6 +6,7 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
+use BetterSerializer\DataBind\MetaData\Reader\Property\PropertyReader;
 use BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader\AnnotationPropertyTypeReader;
 use BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader\DocBlockPropertyTypeReader;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;

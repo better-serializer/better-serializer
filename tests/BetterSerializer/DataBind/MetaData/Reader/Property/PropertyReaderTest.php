@@ -4,7 +4,7 @@ declare(strict_types = 1);
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
-namespace BetterSerializer\DataBind\MetaData\Reader;
+namespace BetterSerializer\DataBind\MetaData\Reader\Property;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
