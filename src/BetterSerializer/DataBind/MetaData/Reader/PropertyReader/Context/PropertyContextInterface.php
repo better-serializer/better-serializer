@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\Property\Context;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;

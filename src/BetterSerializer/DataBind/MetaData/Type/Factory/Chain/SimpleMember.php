@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;

@@ -5,10 +5,10 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
 
 /**
  * Class AnnotationPropertyTypeReader

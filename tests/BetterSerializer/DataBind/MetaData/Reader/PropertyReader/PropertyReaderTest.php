@@ -4,12 +4,12 @@ declare(strict_types = 1);
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
-namespace BetterSerializer\DataBind\MetaData\Reader\Property;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader\TypeReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;

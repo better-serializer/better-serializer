@@ -8,7 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Model\MetaData;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Reader\Property\PropertyReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReaderInterface;
 use ReflectionClass;
 use ReflectionException;
 use LogicException;

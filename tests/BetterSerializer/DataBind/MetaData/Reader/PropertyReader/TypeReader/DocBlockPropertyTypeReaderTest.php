@@ -5,10 +5,10 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\Property\TypeReader;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\Property\Context\StringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
