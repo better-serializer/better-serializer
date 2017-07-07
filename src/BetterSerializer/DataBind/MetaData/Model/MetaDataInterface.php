@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Model;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaData;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 
 /**
@@ -27,4 +28,9 @@ interface MetaDataInterface
      * @return PropertyMetaDataInterface[]
      */
     public function getPropertiesMetadata(): array;
+
+    /**
+     * @return ConstructorParamMetaData[]
+     */
+    public function getConstructorParamsMetaData(): array;
 }
