@@ -8,6 +8,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaData;
+use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader;
+use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReader;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReaderInterface;
 use BetterSerializer\Dto\Car;
