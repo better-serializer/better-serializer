@@ -51,7 +51,7 @@ class Car implements CarInterface
      * @param Radio $radio
      * @param Door[] $doors
      */
-    public function __construct(string $title, string $color, Radio $radio, $doors = [])
+    public function __construct(string $title, string $color, Radio $radio, array $doors = [])
     {
         $this->title = $title;
         $this->color = $color;

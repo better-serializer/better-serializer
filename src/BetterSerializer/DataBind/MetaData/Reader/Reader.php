@@ -9,7 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 use BetterSerializer\DataBind\MetaData\Model\MetaData;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
 use ReflectionClass;
 use ReflectionException;
 use LogicException;
@@ -27,21 +28,29 @@ final class Reader implements ReaderInterface
     private $classReader;
 
     /**
-     * @var PropertyReaderInterface
+     * @var PropertiesReaderInterface
      */
-    private $propertyReader;
+    private $propertiesReader;
+
+    /**
+     * @var ConstructorParamsReaderInterface
+     */
+    private $constrParamsReader;
 
     /**
      * Reader constructor.
      * @param ClassReaderInterface $classReader
-     * @param PropertyReaderInterface $propertyReader
+     * @param PropertiesReaderInterface $propertyReader
+     * @param ConstructorParamsReaderInterface $constrParamsReader
      */
     public function __construct(
         ClassReaderInterface $classReader,
-        PropertyReaderInterface $propertyReader
+        PropertiesReaderInterface $propertyReader,
+        ConstructorParamsReaderInterface $constrParamsReader
     ) {
         $this->classReader = $classReader;
-        $this->propertyReader = $propertyReader;
+        $this->propertiesReader = $propertyReader;
+        $this->constrParamsReader = $constrParamsReader;
     }
 
     /**
@@ -54,9 +63,11 @@ final class Reader implements ReaderInterface
     {
         $reflectionClass = $this->getReflectionClass($className);
         $classMetadata = $this->classReader->getClassMetadata($reflectionClass);
-        $propertyMetadata = $this->propertyReader->getPropertyMetadata($reflectionClass);
+        $propertyMetadata = $this->propertiesReader->getPropertiesMetadata($reflectionClass);
+        $constrParamsMetaData =
+            $this->constrParamsReader->getConstructorParamsMetadata($reflectionClass, $propertyMetadata);
 
-        return new MetaData($classMetadata, $propertyMetadata);
+        return new MetaData($classMetadata, $propertyMetadata, $constrParamsMetaData);
     }
 
     /**

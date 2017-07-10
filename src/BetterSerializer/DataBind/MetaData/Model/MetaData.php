@@ -7,7 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Model;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaData;
+use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 
 /**
@@ -30,7 +30,7 @@ final class MetaData implements MetaDataInterface
     private $propertiesMetadata;
 
     /**
-     * @var ConstructorParamMetaData[]
+     * @var ConstructorParamMetaDataInterface[]
      */
     private $constructorParams;
 
@@ -39,7 +39,7 @@ final class MetaData implements MetaDataInterface
      *
      * @param ClassMetaDataInterface      $classMetadata
      * @param PropertyMetaDataInterface[] $propertiesMetadata
-     * @param ConstructorParamMetaData[] $constructorParams
+     * @param ConstructorParamMetaDataInterface[] $constructorParams
      */
     public function __construct(
         ClassMetaDataInterface $classMetadata,
@@ -68,7 +68,7 @@ final class MetaData implements MetaDataInterface
     }
 
     /**
-     * @return ConstructorParamMetaData[]
+     * @return ConstructorParamMetaDataInterface[]
      */
     public function getConstructorParamsMetaData(): array
     {

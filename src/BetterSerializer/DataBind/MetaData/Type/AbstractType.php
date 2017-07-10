@@ -26,4 +26,17 @@ abstract class AbstractType implements TypeInterface
     {
         return $this->type;
     }
+
+    /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function equals(TypeInterface $type): bool
+    {
+        if (static::class !== get_class($type)) {
+            return false;
+        }
+
+        return $this->type->is($type->getType());
+    }
 }

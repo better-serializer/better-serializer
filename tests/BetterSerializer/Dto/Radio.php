@@ -27,7 +27,7 @@ final class Radio implements RadioInterface
      * Radio constructor.
      * @param string $brand
      */
-    public function __construct($brand)
+    public function __construct(string $brand)
     {
         $this->brand = $brand;
     }

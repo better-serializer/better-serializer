@@ -6,6 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
+use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,5 +24,33 @@ class NullTypeTest extends TestCase
     {
         $null = new NullType();
         self::assertInstanceOf(get_class(TypeEnum::NULL()), $null->getType());
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProvider
+     */
+    public function testEquals(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new NullType();
+
+        self::assertSame($expectedResult, $type->equals($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProvider(): array
+    {
+        return [
+            [new ArrayType(new StringType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), false],
+            [new IntegerType(), false],
+            [new NullType(), true],
+            [new ObjectType(Car::class), false],
+            [new StringType(), false],
+        ];
     }
 }

@@ -24,4 +24,14 @@ final class ArrayType extends AbstractCollectionType
         $this->type = TypeEnum::ARRAY();
         parent::__construct($nestedType);
     }
+
+    /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function equals(TypeInterface $type): bool
+    {
+        /* @var $type ArrayType */
+        return parent::equals($type) && $this->getNestedType()->equals($type->getNestedType());
+    }
 }
