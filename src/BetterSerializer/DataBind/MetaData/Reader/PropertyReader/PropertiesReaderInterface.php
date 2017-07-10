@@ -14,11 +14,11 @@ use ReflectionClass;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-interface PropertyReaderInterface
+interface PropertiesReaderInterface
 {
     /**
      * @param ReflectionClass $reflectionClass
      * @return PropertyMetaDataInterface[]
      */
-    public function getPropertyMetadata(ReflectionClass $reflectionClass): array;
+    public function getPropertiesMetadata(ReflectionClass $reflectionClass): array;
 }

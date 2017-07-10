@@ -17,4 +17,10 @@ interface TypeInterface
      * @return TypeEnum
      */
     public function getType(): TypeEnum;
+
+    /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function equals(TypeInterface $type): bool;
 }

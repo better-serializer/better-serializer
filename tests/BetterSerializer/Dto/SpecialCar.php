@@ -28,7 +28,7 @@ final class SpecialCar extends Car
      * @param string $special
      * @param Door[] $doors
      */
-    public function __construct(string $title, string $color, Radio $radio, string $special, $doors = [])
+    public function __construct(string $title, string $color, Radio $radio, string $special, array $doors = [])
     {
         parent::__construct($title, $color, $radio, $doors);
         $this->special = $special;

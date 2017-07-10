@@ -11,6 +11,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContext;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -24,8 +25,13 @@ use RuntimeException;
  * @author  mfris
  * @package BetterSerializer\DataBind\MetaData
  */
-final class PropertyReader implements PropertyReaderInterface
+final class PropertiesReader implements PropertiesReaderInterface
 {
+
+    /**
+     * @var ReflectionClassHelperInterface
+     */
+    private $reflClassHelper;
 
     /**
      * @var AnnotationReader
@@ -44,16 +50,19 @@ final class PropertyReader implements PropertyReaderInterface
 
     /**
      * PropertyReader constructor.
+     * @param ReflectionClassHelperInterface $reflClassHelper
      * @param AnnotationReader $annotationReader
      * @param TypeFactoryInterface $typeFactory
      * @param TypeReaderInterface[] $typeReaders
      * @throws RuntimeException
      */
     public function __construct(
+        ReflectionClassHelperInterface $reflClassHelper,
         AnnotationReader $annotationReader,
         TypeFactoryInterface $typeFactory,
         array $typeReaders
     ) {
+        $this->reflClassHelper = $reflClassHelper;
         $this->annotationReader = $annotationReader;
         $this->typeFactory = $typeFactory;
 
@@ -69,16 +78,11 @@ final class PropertyReader implements PropertyReaderInterface
      * @return PropertyMetaDataInterface[]
      * @throws RuntimeException
      */
-    public function getPropertyMetadata(ReflectionClass $reflectionClass): array
+    public function getPropertiesMetadata(ReflectionClass $reflectionClass): array
     {
         $metaData = [];
-        $parentClass = $reflectionClass->getParentClass();
 
-        if ($parentClass) {
-            $metaData = $this->getPropertyMetadata($parentClass);
-        }
-
-        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+        foreach ($this->reflClassHelper->getProperties($reflectionClass) as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
             $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
             $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);

@@ -8,8 +8,19 @@ namespace BetterSerializer;
 
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactory;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderFactory;
+use BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory;
+use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader;
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReader;
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReader;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\AnnotationPropertyTypeReader;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\DocBlockPropertyTypeReader;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\Reader;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelper;
+use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\Reader\ReaderInterface;
@@ -17,6 +28,7 @@ use BetterSerializer\DataBind\Writer\WriterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class Builder
@@ -24,6 +36,7 @@ use InvalidArgumentException;
  * @author  mfris
  * @package BetterSerializer\DataBind\ObjectMapper
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 final class Builder
 {
@@ -59,9 +72,34 @@ final class Builder
     private $metaDataReader;
 
     /**
-     * @var ReaderFactory
+     * @var ClassReader
      */
-    private $metaDataReaderFactory;
+    private $classMetaDataReader;
+
+    /**
+     * @var PropertiesReaderInterface
+     */
+    private $propertiesMetaDataReader;
+
+    /**
+     * @var TypeReaderInterface[]
+     */
+    private $propertyTypeReaders;
+
+    /**
+     * @var ConstructorParamsReaderInterface
+     */
+    private $constrParamsMetaDataReader;
+
+    /**
+     * @var AnnotationReaderFactory
+     */
+    private $annotationReaderFactory;
+
+    /**
+     * @var ReflectionClassHelperInterface
+     */
+    private $reflClassHelper;
 
     /**
      * @var TypeFactoryInterface
@@ -86,6 +124,7 @@ final class Builder
     /**
      * @return Serializer
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function createSerializer(): Serializer
     {
@@ -99,6 +138,7 @@ final class Builder
     /**
      * @return ReaderInterface
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     private function getReader(): ReaderInterface
     {
@@ -112,6 +152,7 @@ final class Builder
     /**
      * @return ReaderBuilder
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     private function getReaderBuilder(): ReaderBuilder
     {
@@ -129,6 +170,7 @@ final class Builder
     /**
      * @return WriterInterface
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     private function getWriter(): WriterInterface
     {
@@ -142,6 +184,7 @@ final class Builder
     /**
      * @return WriterBuilder
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     private function getWriterBuilder(): WriterBuilder
     {
@@ -155,26 +198,92 @@ final class Builder
     /**
      * @return MetaDataReaderInterface
      * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     private function getMetaDataReader(): MetaDataReaderInterface
     {
         if ($this->metaDataReader === null) {
-            $this->metaDataReader = $this->getMetaDataReaderFactory()->createReader();
+            $this->metaDataReader = new Reader(
+                $this->getClassMetaDataReader(),
+                $this->getPropertiesMetaDataReader(),
+                $this->getConstrParamsMetaDataReader()
+            );
         }
 
         return $this->metaDataReader;
     }
 
     /**
-     * @return ReaderFactory
+     * @return ClassReader
+     * @throws InvalidArgumentException
      */
-    private function getMetaDataReaderFactory(): ReaderFactory
+    private function getClassMetaDataReader(): ClassReader
     {
-        if ($this->metaDataReaderFactory === null) {
-            $this->metaDataReaderFactory = new ReaderFactory($this->getDocBlockFactory(), $this->getTypeFactory());
+        if ($this->classMetaDataReader === null) {
+            $this->classMetaDataReader = new ClassReader($this->getAnnotationReaderFactory()->newAnnotationReader());
         }
 
-        return $this->metaDataReaderFactory;
+        return $this->classMetaDataReader;
+    }
+
+    /**
+     * @return PropertiesReaderInterface
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     */
+    private function getPropertiesMetaDataReader(): PropertiesReaderInterface
+    {
+        if ($this->propertiesMetaDataReader === null) {
+            $this->propertiesMetaDataReader = new PropertiesReader(
+                $this->getReflectionClassHelper(),
+                $this->getAnnotationReaderFactory()->newAnnotationReader(),
+                $this->getTypeFactory(),
+                $this->getPropertyTypeReaders()
+            );
+        }
+
+        return $this->propertiesMetaDataReader;
+    }
+
+    /**
+     * @return array TypeReaderInterface[]
+     */
+    private function getPropertyTypeReaders(): array
+    {
+        if ($this->propertyTypeReaders === null) {
+            $this->propertyTypeReaders = [];
+            $this->propertyTypeReaders[] = new AnnotationPropertyTypeReader();
+            $this->propertyTypeReaders[] = new DocBlockPropertyTypeReader($this->getDocBlockFactory());
+        }
+
+        return $this->propertyTypeReaders;
+    }
+
+    /**
+     * @return ConstructorParamsReaderInterface
+     */
+    private function getConstrParamsMetaDataReader(): ConstructorParamsReaderInterface
+    {
+        if ($this->constrParamsMetaDataReader === null) {
+            $this->constrParamsMetaDataReader = new ConstructorParamsReader(
+                $this->getReflectionClassHelper(),
+                $this->getTypeFactory()
+            );
+        }
+
+        return $this->constrParamsMetaDataReader;
+    }
+
+    /**
+     * @return AnnotationReaderFactory
+     */
+    private function getAnnotationReaderFactory(): AnnotationReaderFactory
+    {
+        if ($this->annotationReaderFactory === null) {
+            $this->annotationReaderFactory = new AnnotationReaderFactory();
+        }
+
+        return $this->annotationReaderFactory;
     }
 
     /**
@@ -188,6 +297,18 @@ final class Builder
         }
 
         return $this->docBlockFactory;
+    }
+
+    /**
+     * @return ReflectionClassHelperInterface
+     */
+    private function getReflectionClassHelper(): ReflectionClassHelperInterface
+    {
+        if ($this->reflClassHelper === null) {
+            $this->reflClassHelper = new ReflectionClassHelper();
+        }
+
+        return $this->reflClassHelper;
     }
 
     /**

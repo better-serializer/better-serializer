@@ -7,11 +7,14 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaData;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader;
 use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReader;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertyReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReader;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 use LogicException;
@@ -39,13 +42,19 @@ class ReaderTest extends TestCase
             ->willReturn($classMetadata);
         /* @var $classReader ClassReader */
 
-        $propertyReader = $this->getMockBuilder(PropertyReaderInterface::class)->getMock();
+        $propertyReader = $this->getMockBuilder(PropertiesReaderInterface::class)->getMock();
         $propertyReader->expects(self::once())
-            ->method('getPropertyMetadata')
+            ->method('getPropertiesMetadata')
             ->willReturn([]);
-        /* @var $propertyReader PropertyReader */
+        /* @var $propertyReader PropertiesReader */
 
-        $reader = new Reader($classReader, $propertyReader);
+        $constrParamsReader = $this->getMockBuilder(ConstructorParamsReaderInterface::class)->getMock();
+        $constrParamsReader->expects(self::once())
+            ->method('getConstructorParamsMetadata')
+            ->willReturn([]);
+        /* @var $constrParamsReader ConstructorParamsReaderInterface */
+
+        $reader = new Reader($classReader, $propertyReader, $constrParamsReader);
         $metaData = $reader->read(Car::class);
 
         self::assertInstanceOf(MetaData::class, $metaData);
@@ -60,10 +69,13 @@ class ReaderTest extends TestCase
         $classReader = $this->getMockBuilder(ClassReaderInterface::class)->getMock();
         /* @var $classReader ClassReader */
 
-        $propertyReader = $this->getMockBuilder(PropertyReaderInterface::class)->getMock();
-        /* @var $propertyReader PropertyReader */
+        $propertyReader = $this->getMockBuilder(PropertiesReaderInterface::class)->getMock();
+        /* @var $propertyReader PropertiesReader */
 
-        $reader = new Reader($classReader, $propertyReader);
+        $constrParamsReader = $this->getMockBuilder(ConstructorParamsReaderInterface::class)->getMock();
+        /* @var $constrParamsReader ConstructorParamsReaderInterface */
+
+        $reader = new Reader($classReader, $propertyReader, $constrParamsReader);
         $reader->read(ReflectionClass::class);
     }
 }

@@ -37,4 +37,14 @@ final class ObjectType extends AbstractType
     {
         return $this->className;
     }
+
+    /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function equals(TypeInterface $type): bool
+    {
+        /* @var $type ObjectType */
+        return parent::equals($type) && $this->className === $type->getClassName();
+    }
 }

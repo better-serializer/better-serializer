@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel
  */
-final class ConstructorParamMetaData implements ConstructorParamInterface
+final class ConstructorParamMetaData implements ConstructorParamMetaDataInterface
 {
 
     /**
