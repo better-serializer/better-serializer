@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor\Factory;
 
-use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
 use BetterSerializer\DataBind\Reader\Constructor\UnserializeConstructor;
 use Doctrine\Instantiator\Instantiator;
 use Doctrine\Instantiator\InstantiatorInterface;
-use Doctrine\Instantiator\Exception\ExceptionInterface;
 
 /**
  * Class ReflectionFactory
@@ -28,13 +27,12 @@ final class UnserializeConstructorFactory implements ConstructorFactoryInterface
     private $instantiator;
 
     /**
-     * @param ClassMetaDataInterface $metaData
+     * @param MetaDataInterface $metaData
      * @return ConstructorInterface
-     * @throws ExceptionInterface
      */
-    public function newConstructor(ClassMetaDataInterface $metaData): ConstructorInterface
+    public function newConstructor(MetaDataInterface $metaData): ConstructorInterface
     {
-        $className = $metaData->getClassName();
+        $className = $metaData->getClassMetadata()->getClassName();
 
         return new UnserializeConstructor($this->getInstantiatorInterface(), $className);
     }

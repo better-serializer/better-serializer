@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Constructor\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\Reader\Constructor\UnserializeConstructor;
 use PHPUnit\Framework\TestCase;
 
@@ -24,11 +25,16 @@ class UnserializeFactoryTest extends TestCase
      */
     public function testNewConstructor(): void
     {
-        $metaData = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
-        $metaData->expects(self::once())
+        $classMetaData = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
+        $classMetaData->expects(self::once())
             ->method('getClassName');
 
-        /* @var $metaData ClassMetaDataInterface */
+        $metaData = $this->getMockBuilder(MetaDataInterface::class)->getMock();
+        $metaData->expects(self::once())
+            ->method('getClassMetaData')
+            ->willReturn($classMetaData);
+
+        /* @var $metaData MetaDataInterface */
         $factory = new UnserializeConstructorFactory();
         $constructor = $factory->newConstructor($metaData);
 

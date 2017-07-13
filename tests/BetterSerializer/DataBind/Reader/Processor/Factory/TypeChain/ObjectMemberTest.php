@@ -40,14 +40,10 @@ class ObjectMemberTest extends TestCase
         $objectType = new ObjectType(Car::class);
         $property1 = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
         $property2 = $this->getMockBuilder(ObjectPropertyMetaDataInterface::class)->getMock();
-        $classMetaData = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
         $metaData = $this->getMockBuilder(MetaDataInterface::class)->getMock();
         $metaData->expects(self::once())
             ->method('getPropertiesMetadata')
             ->willReturn(['title' => $property1, 'radio' => $property2]);
-        $metaData->expects(self::once())
-            ->method('getClassMetaData')
-            ->willReturn($classMetaData);
 
         $metaDataReader = $this->getMockBuilder(ReaderInterface::class)->getMock();
         $metaDataReader->expects(self::once())
@@ -68,7 +64,7 @@ class ObjectMemberTest extends TestCase
         $constructorFactory = $this->getMockBuilder(ConstructorFactoryInterface::class)->getMock();
         $constructorFactory->expects(self::once())
             ->method('newConstructor')
-            ->with($classMetaData)
+            ->with($metaData)
             ->willReturn($constructor);
 
         /* @var $constructorFactory ConstructorFactoryInterface */
