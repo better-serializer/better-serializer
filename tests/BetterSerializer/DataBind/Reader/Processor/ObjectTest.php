@@ -26,14 +26,15 @@ class ObjectTest extends TestCase
     public function testProcess(): void
     {
         $instance = $this->getMockBuilder(CarInterface::class)->getMock();
-        $constructorMock = $this->getMockBuilder(ConstructorInterface::class)->getMock();
-        $constructorMock->expects(self::once())
-            ->method('construct')
-            ->willReturn($instance);
         $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
         $contextMock->expects(self::once())
             ->method('setDeserialized')
             ->with($instance);
+        $constructorMock = $this->getMockBuilder(ConstructorInterface::class)->getMock();
+        $constructorMock->expects(self::once())
+            ->method('construct')
+            ->with($contextMock)
+            ->willReturn($instance);
         $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
         $processorMock->expects(self::exactly(2))
                       ->method('process')

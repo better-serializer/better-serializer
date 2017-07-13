@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor;
 
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use Doctrine\Instantiator\InstantiatorInterface;
 use Doctrine\Instantiator\Exception\ExceptionInterface;
 
@@ -40,9 +41,12 @@ final class UnserializeConstructor implements ConstructorInterface
     }
 
     /**
+     * @param ContextInterface $context
+     * @return mixed
      * @throws ExceptionInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function construct()
+    public function construct(ContextInterface $context)
     {
         return $this->instantiator->instantiate($this->className);
     }

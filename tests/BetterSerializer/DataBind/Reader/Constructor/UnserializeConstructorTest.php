@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor;
 
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\Dto\Door;
 use Doctrine\Instantiator\InstantiatorInterface;
 use PHPUnit\Framework\TestCase;
@@ -32,10 +33,12 @@ class UnserializeConstructorTest extends TestCase
             ->method('instantiate')
             ->with($className)
             ->willReturn(new Door());
+        $context = $this->getMockBuilder(ContextInterface::class)->getMock();
 
         /* @var $instantiator InstantiatorInterface */
+        /* @var $context ContextInterface */
         $constructor = new UnserializeConstructor($instantiator, $className);
-        $object = $constructor->construct();
+        $object = $constructor->construct($context);
 
         self::assertInstanceOf($className, $object);
     }
