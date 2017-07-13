@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor\Factory;
 
-use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
 
 /**
@@ -18,8 +18,8 @@ interface ConstructorFactoryInterface
 {
 
     /**
-     * @param ClassMetaDataInterface $metaData
+     * @param MetaDataInterface $metaData
      * @return ConstructorInterface
      */
-    public function newConstructor(ClassMetaDataInterface $metaData): ConstructorInterface;
+    public function newConstructor(MetaDataInterface $metaData): ConstructorInterface;
 }
