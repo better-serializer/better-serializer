@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Constructor;
 
-use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 
 /**
  * Interface ConstructorInterface
@@ -18,7 +18,8 @@ interface ConstructorInterface
 {
 
     /**
+     * @param ContextInterface $context
      * @return mixed
      */
-    public function construct();
+    public function construct(ContextInterface $context);
 }
