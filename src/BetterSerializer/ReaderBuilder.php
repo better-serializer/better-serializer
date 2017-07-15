@@ -59,7 +59,7 @@ final class ReaderBuilder
     /**
      * @var InstantiatorFactoryInterface
      */
-    private $constructorFactoryInterface;
+    private $instantiatorFactory;
 
     /**
      * @var InjectorFactoryInterface
@@ -123,7 +123,7 @@ final class ReaderBuilder
     {
         if ($this->processorFactoryBuilder === null) {
             $this->processorFactoryBuilder = new ProcessorFactoryBuilder(
-                $this->getConstructor(),
+                $this->getInstantiator(),
                 $this->converterFactory,
                 $this->getInjectorFactory(),
                 $this->metaDataReader
@@ -136,13 +136,13 @@ final class ReaderBuilder
     /**
      * @return InstantiatorFactoryInterface
      */
-    private function getConstructor(): InstantiatorFactoryInterface
+    private function getInstantiator(): InstantiatorFactoryInterface
     {
-        if ($this->constructorFactoryInterface === null) {
-            $this->constructorFactoryInterface = new DeserializeInstantiatorFactory();
+        if ($this->instantiatorFactory === null) {
+            $this->instantiatorFactory = new DeserializeInstantiatorFactory();
         }
 
-        return $this->constructorFactoryInterface;
+        return $this->instantiatorFactory;
     }
 
     /**
