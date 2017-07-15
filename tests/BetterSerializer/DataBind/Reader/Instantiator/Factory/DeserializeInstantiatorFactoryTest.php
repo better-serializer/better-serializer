@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Instantiator\Factory
  */
-class DeserializeFactoryTest extends TestCase
+class DeserializeInstantiatorFactoryTest extends TestCase
 {
 
     /**
@@ -39,5 +39,6 @@ class DeserializeFactoryTest extends TestCase
         $constructor = $factory->newConstructor($metaData);
 
         self::assertInstanceOf(DeserializeInstantiator::class, $constructor);
+        self::assertTrue($factory->isApplicable($metaData));
     }
 }
