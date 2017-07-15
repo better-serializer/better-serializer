@@ -5,9 +5,10 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Constructor;
+namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -15,9 +16,9 @@ use ReflectionException;
 /**
  * Class UnserializeConstructor
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Constructor
+ * @package BetterSerializer\DataBind\Reader\Instantiator
  */
-final class StandardConstructor implements ConstructorInterface
+final class StandardInstantiator implements InstantiatorInterface
 {
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Constructor;
+namespace BetterSerializer\DataBind\Reader\Instantiator\Deserialize;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\Dto\Door;
@@ -15,9 +15,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class UnserializeConstructorTest
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Constructor
+ * @package BetterSerializer\DataBind\Reader\Instantiator
  */
-class UnserializeConstructorTest extends TestCase
+class DeserializeInstantiatorTest extends TestCase
 {
 
     /**
@@ -37,7 +37,7 @@ class UnserializeConstructorTest extends TestCase
 
         /* @var $instantiator InstantiatorInterface */
         /* @var $context ContextInterface */
-        $constructor = new UnserializeConstructor($instantiator, $className);
+        $constructor = new DeserializeInstantiator($instantiator, $className);
         $object = $constructor->construct($context);
 
         self::assertInstanceOf($className, $object);

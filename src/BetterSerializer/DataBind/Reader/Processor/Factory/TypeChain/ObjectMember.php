@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface as ConstructorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Object as ObjectProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -26,9 +26,9 @@ final class ObjectMember extends ChainMember
 {
 
     /**
-     * @var ConstructorFactoryInterface
+     * @var InstantiatorFactoryInterface
      */
-    private $constructorFactory;
+    private $instantiatorFactory;
 
     /**
      * @var ReaderInterface
@@ -38,16 +38,16 @@ final class ObjectMember extends ChainMember
     /**
      * ObjectMember constructor.
      * @param ProcessorFactoryInterface $processorFactory
-     * @param ConstructorFactoryInterface $constructorFactory
+     * @param InstantiatorFactoryInterface $instantiatorFactory
      * @param ReaderInterface $metadataReader
      */
     public function __construct(
         ProcessorFactoryInterface $processorFactory,
-        ConstructorFactoryInterface $constructorFactory,
+        InstantiatorFactoryInterface $instantiatorFactory,
         ReaderInterface $metadataReader
     ) {
         parent::__construct($processorFactory);
-        $this->constructorFactory = $constructorFactory;
+        $this->instantiatorFactory = $instantiatorFactory;
         $this->metadataReader = $metadataReader;
     }
 
@@ -70,7 +70,7 @@ final class ObjectMember extends ChainMember
     {
         /* @var $type ObjectType */
         $metaData = $this->metadataReader->read($type->getClassName());
-        $constructor = $this->constructorFactory->newConstructor($metaData);
+        $constructor = $this->instantiatorFactory->newConstructor($metaData);
         $propertiesMetaData = $metaData->getPropertiesMetadata();
         $propertyProcessors = [];
 

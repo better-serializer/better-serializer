@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor;
 
-use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
@@ -30,8 +30,8 @@ class ObjectTest extends TestCase
         $contextMock->expects(self::once())
             ->method('setDeserialized')
             ->with($instance);
-        $constructorMock = $this->getMockBuilder(ConstructorInterface::class)->getMock();
-        $constructorMock->expects(self::once())
+        $instantiatorMock = $this->getMockBuilder(InstantiatorInterface::class)->getMock();
+        $instantiatorMock->expects(self::once())
             ->method('construct')
             ->with($contextMock)
             ->willReturn($instance);
@@ -41,8 +41,8 @@ class ObjectTest extends TestCase
                       ->with($contextMock);
 
         /* @var $contextMock ContextInterface */
-        /* @var $constructorMock ConstructorInterface */
-        $processor = new Object($constructorMock, [$processorMock, $processorMock]);
+        /* @var $instantiatorMock InstantiatorInterface */
+        $processor = new Object($instantiatorMock, [$processorMock, $processorMock]);
         $processor->process($contextMock);
     }
 }

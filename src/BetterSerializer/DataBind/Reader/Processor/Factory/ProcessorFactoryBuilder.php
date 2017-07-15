@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory;
 
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
 use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\SimpleMember;
@@ -25,9 +25,9 @@ final class ProcessorFactoryBuilder
 {
 
     /**
-     * @var ConstructorFactoryInterface
+     * @var InstantiatorFactoryInterface
      */
-    private $constructorFactory;
+    private $instantiatorFactory;
 
     /**
      * @var ConverterFactoryInterface
@@ -46,18 +46,18 @@ final class ProcessorFactoryBuilder
 
     /**
      * ProcessorFactoryBuilder constructor.
-     * @param ConstructorFactoryInterface $constructorFactory
+     * @param InstantiatorFactoryInterface $instantiatorFactory
      * @param ConverterFactoryInterface $converterFactory
      * @param InjectorFactoryInterface $injectorFactory
      * @param ReaderInterface $metaDataReader
      */
     public function __construct(
-        ConstructorFactoryInterface $constructorFactory,
+        InstantiatorFactoryInterface $instantiatorFactory,
         ConverterFactoryInterface $converterFactory,
         InjectorFactoryInterface $injectorFactory,
         ReaderInterface $metaDataReader
     ) {
-        $this->constructorFactory = $constructorFactory;
+        $this->instantiatorFactory = $instantiatorFactory;
         $this->injectorFactory = $injectorFactory;
         $this->converterFactory = $converterFactory;
         $this->metaDataReader = $metaDataReader;
@@ -72,7 +72,7 @@ final class ProcessorFactoryBuilder
         $metaDataObject = new ComplexNestedMember($factory, $this->injectorFactory);
         $metaDataSimple = new SimpleMember($this->converterFactory, $this->injectorFactory);
         $typeArrayMember = new CollectionMember($this->converterFactory, $factory);
-        $objectMember = new Objectmember($factory, $this->constructorFactory, $this->metaDataReader);
+        $objectMember = new Objectmember($factory, $this->instantiatorFactory, $this->metaDataReader);
 
         $factory->addMetaDataChainMember($metaDataSimple);
         $factory->addMetaDataChainMember($metaDataObject);

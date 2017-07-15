@@ -14,8 +14,8 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Object;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -59,18 +59,18 @@ class ObjectMemberTest extends TestCase
             ->withConsecutive([$property1], [$property2])
             ->willReturn($processor);
 
-        $constructor = $this->getMockBuilder(ConstructorInterface::class)->getMock();
+        $constructor = $this->getMockBuilder(InstantiatorInterface::class)->getMock();
 
-        $constructorFactory = $this->getMockBuilder(ConstructorFactoryInterface::class)->getMock();
-        $constructorFactory->expects(self::once())
+        $instantiatorFactory = $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock();
+        $instantiatorFactory->expects(self::once())
             ->method('newConstructor')
             ->with($metaData)
             ->willReturn($constructor);
 
-        /* @var $constructorFactory ConstructorFactoryInterface */
+        /* @var $instantiatorFactory InstantiatorFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */
         /* @var $metaDataReader ReaderInterface */
-        $objectMember = new ObjectMember($processorFactory, $constructorFactory, $metaDataReader);
+        $objectMember = new ObjectMember($processorFactory, $instantiatorFactory, $metaDataReader);
         $objProcessor = $objectMember->create($objectType);
 
         self::assertInstanceOf(Object::class, $objProcessor);
@@ -82,14 +82,14 @@ class ObjectMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $nonObjectType = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $constructorFactory = $this->getMockBuilder(ConstructorFactoryInterface::class)->getMock();
+        $instantiatorFactory = $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock();
         $metaDataReader = $this->getMockBuilder(ReaderInterface::class)->getMock();
         $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
 
-        /* @var $constructorFactory ConstructorFactoryInterface */
+        /* @var $instantiatorFactory InstantiatorFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */
         /* @var $metaDataReader ReaderInterface */
-        $objectMember = new ObjectMember($processorFactory, $constructorFactory, $metaDataReader);
+        $objectMember = new ObjectMember($processorFactory, $instantiatorFactory, $metaDataReader);
         /* @var  $nonObjectType TypeInterface */
         $shouldBeNull = $objectMember->create($nonObjectType);
 
