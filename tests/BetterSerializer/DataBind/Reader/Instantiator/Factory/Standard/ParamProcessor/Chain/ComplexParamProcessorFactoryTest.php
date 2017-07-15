@@ -38,17 +38,17 @@ class ComplexParamProcessorFactoryTest extends TestCase
     public function testNewParamProcessor(): void
     {
         $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
         $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
         $tuple->expects(self::once())
-            ->method('getPropertyMetaData')
-            ->willReturn($propertyMetaData);
+            ->method('getType')
+            ->willReturn($type);
 
         $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
         $processorFactory->expects(self::once())
-            ->method('createFromMetaData')
-            ->with($propertyMetaData)
+            ->method('createFromType')
+            ->with($type)
             ->willReturn($processor);
 
         /* @var $tuple PropertyWithConstructorParamTupleInterface */

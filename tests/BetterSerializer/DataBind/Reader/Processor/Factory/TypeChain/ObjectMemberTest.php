@@ -7,15 +7,15 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
-use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ObjectPropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Object;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -59,13 +59,21 @@ class ObjectMemberTest extends TestCase
             ->withConsecutive([$property1], [$property2])
             ->willReturn($processor);
 
-        $constructor = $this->getMockBuilder(InstantiatorInterface::class)->getMock();
+        $instantiator = $this->getMockBuilder(InstantiatorInterface::class)->getMock();
+
+        $instantiatorResult = $this->getMockBuilder(InstantiatorResultInterface::class)->getMock();
+        $instantiatorResult->expects(self::once())
+            ->method('getInstantiator')
+            ->willReturn($instantiator);
+        $instantiatorResult->expects(self::once())
+            ->method('getProcessedMetaData')
+            ->willReturn($metaData);
 
         $instantiatorFactory = $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock();
         $instantiatorFactory->expects(self::once())
             ->method('newInstantiator')
             ->with($metaData)
-            ->willReturn($constructor);
+            ->willReturn($instantiatorResult);
 
         /* @var $instantiatorFactory InstantiatorFactoryInterface */
         /* @var $processorFactory ProcessorFactoryInterface */

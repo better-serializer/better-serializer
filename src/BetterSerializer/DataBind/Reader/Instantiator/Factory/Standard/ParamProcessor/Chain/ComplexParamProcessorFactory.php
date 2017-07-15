@@ -12,6 +12,9 @@ use BetterSerializer\DataBind\MetaData\Type\ComplexTypeInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
+use LogicException;
+use ReflectionException;
+use RuntimeException;
 
 /**
  * Class ComplexParamProcessorFactory
@@ -47,12 +50,15 @@ final class ComplexParamProcessorFactory implements ChainedParamProcessorFactory
     /**
      * @param PropertyWithConstructorParamTupleInterface $tuple
      * @return ParamProcessorInterface
+     * @throws LogicException
+     * @throws ReflectionException
+     * @throws RuntimeException
      */
     public function newChainedParamProcessorFactory(
         PropertyWithConstructorParamTupleInterface $tuple
     ): ParamProcessorInterface {
-        $processor = $this->processorFactory->createFromMetaData($tuple->getPropertyMetaData());
+        $processor = $this->processorFactory->createFromType($tuple->getType());
 
-        return new ComplexParamProcessor($processor);
+        return new ComplexParamProcessor($tuple->getOutputKey(), $processor);
     }
 }

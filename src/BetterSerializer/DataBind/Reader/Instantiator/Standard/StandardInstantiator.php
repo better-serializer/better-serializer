@@ -47,7 +47,7 @@ final class StandardInstantiator implements InstantiatorInterface
      * @param ContextInterface $context
      * @return mixed
      */
-    public function construct(ContextInterface $context)
+    public function instantiate(ContextInterface $context)
     {
         $params = array_map(function (ParamProcessorInterface $paramProcessor) use ($context) {
             return $paramProcessor->processParam($context);

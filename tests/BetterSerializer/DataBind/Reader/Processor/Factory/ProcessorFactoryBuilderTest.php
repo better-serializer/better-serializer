@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory;
 
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\ChainedInstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -26,17 +26,15 @@ class ProcessorFactoryBuilderTest extends TestCase
      */
     public function testBuild(): void
     {
-        $instantiatorFactory = $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock();
         $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
         $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
         $metaDataReader = $this->getMockBuilder(ReaderInterface::class)->getMock();
 
-        /* @var $instantiatorFactory InstantiatorFactoryInterface */
+        /* @var $instantiatorFactory ChainedInstantiatorFactoryInterface */
         /* @var $injectorFactory InjectorFactoryInterface */
         /* @var $converterFactory ConverterFactoryInterface */
         /* @var $metaDataReader ReaderInterface */
         $builder = new ProcessorFactoryBuilder(
-            $instantiatorFactory,
             $converterFactory,
             $injectorFactory,
             $metaDataReader

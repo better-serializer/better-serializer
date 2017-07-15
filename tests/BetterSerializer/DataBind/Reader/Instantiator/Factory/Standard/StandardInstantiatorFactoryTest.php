@@ -8,8 +8,10 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\ExcludePropertiesMetaData;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyTuple\PropertyWithConstructorParamTupleInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\ParamProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\StandardInstantiator;
@@ -55,9 +57,11 @@ class StandardInstantiatorFactoryTest extends TestCase
         /* @var $procFactory ParamProcessorFactoryInterface */
         /* @var $metaData MetaDataInterface */
         $factory = new StandardInstantiatorFactory($procFactory);
-        $instantiator = $factory->newInstantiator($metaData);
+        $result = $factory->newInstantiator($metaData);
 
-        self::assertInstanceOf(StandardInstantiator::class, $instantiator);
+        self::assertInstanceOf(InstantiatorResultInterface::class, $result);
+        self::assertInstanceOf(StandardInstantiator::class, $result->getInstantiator());
+        self::assertInstanceOf(ExcludePropertiesMetaData::class, $result->getProcessedMetaData());
     }
 
     /**

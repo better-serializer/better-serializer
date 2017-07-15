@@ -10,8 +10,6 @@ namespace BetterSerializer;
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactory as AbstractInjectorFactory;
@@ -21,6 +19,7 @@ use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Reader;
 use BetterSerializer\DataBind\Reader\ReaderInterface;
+use LogicException;
 
 /**
  * Class ReaderBuilder
@@ -55,11 +54,6 @@ final class ReaderBuilder
      * @var ProcessorFactoryBuilder
      */
     private $processorFactoryBuilder;
-
-    /**
-     * @var InstantiatorFactoryInterface
-     */
-    private $instantiatorFactory;
 
     /**
      * @var InjectorFactoryInterface
@@ -106,6 +100,7 @@ final class ReaderBuilder
 
     /**
      * @return ProcessorFactoryInterface
+     * @throws LogicException
      */
     private function getProcessorFactory(): ProcessorFactoryInterface
     {
@@ -123,7 +118,6 @@ final class ReaderBuilder
     {
         if ($this->processorFactoryBuilder === null) {
             $this->processorFactoryBuilder = new ProcessorFactoryBuilder(
-                $this->getInstantiator(),
                 $this->converterFactory,
                 $this->getInjectorFactory(),
                 $this->metaDataReader
@@ -131,18 +125,6 @@ final class ReaderBuilder
         }
 
         return $this->processorFactoryBuilder;
-    }
-
-    /**
-     * @return InstantiatorFactoryInterface
-     */
-    private function getInstantiator(): InstantiatorFactoryInterface
-    {
-        if ($this->instantiatorFactory === null) {
-            $this->instantiatorFactory = new DeserializeInstantiatorFactory();
-        }
-
-        return $this->instantiatorFactory;
     }
 
     /**

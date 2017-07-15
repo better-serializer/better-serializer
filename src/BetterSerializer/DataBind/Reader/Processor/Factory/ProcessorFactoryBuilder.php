@@ -9,26 +9,27 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory;
 
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\Chain\ComplexParamProcessorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\Chain\SimpleParamProcessorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\ParamProcessorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\StandardInstantiatorFactory;
 use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
 use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\SimpleMember;
 use BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\CollectionMember;
 use BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember;
+use LogicException;
 
 /**
  * Class ProcessorFactoryBuilder
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor\Factory
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class ProcessorFactoryBuilder
 {
-
-    /**
-     * @var InstantiatorFactoryInterface
-     */
-    private $instantiatorFactory;
-
     /**
      * @var ConverterFactoryInterface
      */
@@ -46,18 +47,15 @@ final class ProcessorFactoryBuilder
 
     /**
      * ProcessorFactoryBuilder constructor.
-     * @param InstantiatorFactoryInterface $instantiatorFactory
      * @param ConverterFactoryInterface $converterFactory
      * @param InjectorFactoryInterface $injectorFactory
      * @param ReaderInterface $metaDataReader
      */
     public function __construct(
-        InstantiatorFactoryInterface $instantiatorFactory,
         ConverterFactoryInterface $converterFactory,
         InjectorFactoryInterface $injectorFactory,
         ReaderInterface $metaDataReader
     ) {
-        $this->instantiatorFactory = $instantiatorFactory;
         $this->injectorFactory = $injectorFactory;
         $this->converterFactory = $converterFactory;
         $this->metaDataReader = $metaDataReader;
@@ -65,6 +63,7 @@ final class ProcessorFactoryBuilder
 
     /**
      * @return ProcessorFactory
+     * @throws LogicException
      */
     public function build(): ProcessorFactory
     {
@@ -72,7 +71,18 @@ final class ProcessorFactoryBuilder
         $metaDataObject = new ComplexNestedMember($factory, $this->injectorFactory);
         $metaDataSimple = new SimpleMember($this->converterFactory, $this->injectorFactory);
         $typeArrayMember = new CollectionMember($this->converterFactory, $factory);
-        $objectMember = new Objectmember($factory, $this->instantiatorFactory, $this->metaDataReader);
+
+        $paramProcFactory = new ParamProcessorFactory([
+            new SimpleParamProcessorFactory(),
+            new ComplexParamProcessorFactory($factory),
+        ]);
+
+        $instantiatorFactory = new InstantiatorFactory([
+            new StandardInstantiatorFactory($paramProcFactory),
+            new DeserializeInstantiatorFactory(),
+        ]);
+
+        $objectMember = new Objectmember($factory, $instantiatorFactory, $this->metaDataReader);
 
         $factory->addMetaDataChainMember($metaDataSimple);
         $factory->addMetaDataChainMember($metaDataObject);

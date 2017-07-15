@@ -10,6 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize;
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Deserialize\DeserializeInstantiator;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -36,9 +37,10 @@ class DeserializeInstantiatorFactoryTest extends TestCase
 
         /* @var $metaData MetaDataInterface */
         $factory = new DeserializeInstantiatorFactory();
-        $constructor = $factory->newInstantiator($metaData);
+        $result = $factory->newInstantiator($metaData);
 
-        self::assertInstanceOf(DeserializeInstantiator::class, $constructor);
+        self::assertInstanceOf(InstantiatorResultInterface::class, $result);
+        self::assertInstanceOf(DeserializeInstantiator::class, $result->getInstantiator());
         self::assertTrue($factory->isApplicable($metaData));
     }
 }
