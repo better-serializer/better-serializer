@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
-use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -27,20 +27,20 @@ final class StandardInstantiator implements InstantiatorInterface
     private $reflectionClass;
 
     /**
-     * @var ProcessorInterface[]
+     * @var ParamProcessorInterface[]
      */
-    private $processors;
+    private $paramProcessors;
 
     /**
      * ReflectionConstructor constructor.
      * @param ReflectionClass $reflectionClass
-     * @param ProcessorInterface[] $processors
+     * @param ParamProcessorInterface[] $paramProcessors
      * @throws ReflectionException
      */
-    public function __construct(ReflectionClass $reflectionClass, array $processors)
+    public function __construct(ReflectionClass $reflectionClass, array $paramProcessors)
     {
         $this->reflectionClass = $reflectionClass;
-        $this->processors = $processors;
+        $this->paramProcessors = $paramProcessors;
     }
 
     /**
@@ -49,11 +49,9 @@ final class StandardInstantiator implements InstantiatorInterface
      */
     public function construct(ContextInterface $context)
     {
-        $params = array_map(function (ProcessorInterface $processor) use ($context) {
-            $processor->process($context);
-
-            return $context->getDeserialized();
-        }, $this->processors);
+        $params = array_map(function (ParamProcessorInterface $paramProcessor) use ($context) {
+            return $paramProcessor->processParam($context);
+        }, $this->paramProcessors);
 
         return $this->reflectionClass->newInstanceArgs($params);
     }
