@@ -60,4 +60,15 @@ class ArrayTypeTest extends TestCase
             [new StringType(), false],
         ];
     }
+
+    /**
+     *
+     */
+    public function testToString(): void
+    {
+        self::assertSame(
+           TypeEnum::ARRAY . '<' . TypeEnum::STRING . '>',
+           (string) new ArrayType(new StringType())
+        );
+    }
 }

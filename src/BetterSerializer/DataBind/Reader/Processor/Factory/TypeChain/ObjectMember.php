@@ -70,7 +70,7 @@ final class ObjectMember extends ChainMember
     {
         /* @var $type ObjectType */
         $metaData = $this->metadataReader->read($type->getClassName());
-        $constructor = $this->instantiatorFactory->newConstructor($metaData);
+        $constructor = $this->instantiatorFactory->newInstantiator($metaData);
         $propertiesMetaData = $metaData->getPropertiesMetadata();
         $propertyProcessors = [];
 

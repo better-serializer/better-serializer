@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Instantiator\Factory;
+namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
@@ -36,7 +36,7 @@ class DeserializeInstantiatorFactoryTest extends TestCase
 
         /* @var $metaData MetaDataInterface */
         $factory = new DeserializeInstantiatorFactory();
-        $constructor = $factory->newConstructor($metaData);
+        $constructor = $factory->newInstantiator($metaData);
 
         self::assertInstanceOf(DeserializeInstantiator::class, $constructor);
         self::assertTrue($factory->isApplicable($metaData));

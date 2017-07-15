@@ -53,4 +53,12 @@ class IntegerTypeTest extends TestCase
             [new StringType(), false],
         ];
     }
+
+    /**
+     *
+     */
+    public function testToString(): void
+    {
+        self::assertSame(TypeEnum::INTEGER, (string) new IntegerType());
+    }
 }

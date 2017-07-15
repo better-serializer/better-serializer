@@ -34,4 +34,12 @@ final class ArrayType extends AbstractCollectionType
         /* @var $type ArrayType */
         return parent::equals($type) && $this->getNestedType()->equals($type->getNestedType());
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return parent::__toString() . '<' . $this->getNestedType() . '>';
+    }
 }

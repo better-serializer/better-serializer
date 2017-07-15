@@ -56,4 +56,15 @@ class ObjectTypeTest extends TestCase
             [new StringType(), false],
         ];
     }
+
+    /**
+     *
+     */
+    public function testToString(): void
+    {
+        self::assertSame(
+            TypeEnum::OBJECT . '<' . Car::class . '>',
+            (string) new ObjectType(Car::class)
+        );
+    }
 }

@@ -23,4 +23,9 @@ interface TypeInterface
      * @return bool
      */
     public function equals(TypeInterface $type): bool;
+
+    /**
+     * @return string
+     */
+    public function __toString(): string;
 }

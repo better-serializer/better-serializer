@@ -53,4 +53,12 @@ class StringTypeTest extends TestCase
             [new StringType(), true],
         ];
     }
+
+    /**
+     *
+     */
+    public function testToString(): void
+    {
+        self::assertSame(TypeEnum::STRING, (string) new StringType());
+    }
 }

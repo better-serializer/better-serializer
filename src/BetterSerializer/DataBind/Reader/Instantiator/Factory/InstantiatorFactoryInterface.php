@@ -21,7 +21,7 @@ interface InstantiatorFactoryInterface
      * @param MetaDataInterface $metaData
      * @return InstantiatorInterface
      */
-    public function newConstructor(MetaDataInterface $metaData): InstantiatorInterface;
+    public function newInstantiator(MetaDataInterface $metaData): InstantiatorInterface;
 
     /**
      * @param MetaDataInterface $metaData
