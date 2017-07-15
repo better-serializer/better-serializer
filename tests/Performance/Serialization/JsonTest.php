@@ -19,12 +19,13 @@ use JMS\Serializer\SerializerBuilder;
  * Class Json
  * @author mfris
  * @package Integration\Serialization
- * @group performance
  */
 final class JsonTest extends TestCase
 {
 
     /**
+     * @group performance
+     * @group performanceSerialization
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @dataProvider getTestTriples
      * @param mixed $data
@@ -51,8 +52,9 @@ final class JsonTest extends TestCase
         $start = microtime(true);
         $jmsSerializer->serialize($data, 'json');
         $jmsMicro = (microtime(true) - $start);
+        dump((float) $jmsMicro / (float) $betterMicro);
 
-        self::assertGreaterThan($boost, $jmsMicro / $betterMicro);
+        self::assertGreaterThan($boost, (float) $jmsMicro / (float) $betterMicro);
     }
 
     /**

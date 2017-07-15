@@ -92,7 +92,7 @@ final class Context implements ContextInterface
         }
 
         $subContext = new self();
-        $subContext->data = &$this->data[$key];
+        $subContext->data = $this->data[$key];
 
         return $subContext;
     }

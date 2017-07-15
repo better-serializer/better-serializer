@@ -23,13 +23,14 @@ final class JsonTest extends TestCase
 
     /**
      * @group performance
+     * @group performanceDeserialization
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @dataProvider getTestTriples
      * @param string $json
      * @param string $stringType
      * @param float $boost
      */
-    public function testSerialization(string $json, string $stringType, float $boost): void
+    public function testDeserialization(string $json, string $stringType, float $boost): void
     {
         if ($boost === 1.0) {
             $this->markTestIncomplete('Implement caching to see difference.');
@@ -50,7 +51,7 @@ final class JsonTest extends TestCase
         $start = microtime(true);
         $jmsSerializer->deserialize($json, $stringType, 'json');
         $jmsMicro = (microtime(true) - $start);
-        //echo PHP_EOL . $jmsMicro . '-' . $betterMicro;
+        dump((float) $jmsMicro / (float) $betterMicro);
 
         self::assertGreaterThan($boost, (float) $jmsMicro / (float) $betterMicro);
     }
@@ -90,7 +91,7 @@ final class JsonTest extends TestCase
 
         $json = '[' . implode(',', $json) . ']';
 
-        return [$json, 'array<' . Car::class .'>', 2.8];
+        return [$json, 'array<' . Car::class .'>', 3.6];
     }
 
     /**
@@ -107,6 +108,6 @@ final class JsonTest extends TestCase
 
         $json = '[' . implode(',', $json) . ']';
 
-        return [$json, 'array<' . Car::class .'>', 2.8];
+        return [$json, 'array<' . Car::class .'>', 3.6];
     }
 }
