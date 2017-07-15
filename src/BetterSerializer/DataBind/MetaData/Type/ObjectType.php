@@ -11,7 +11,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-final class ObjectType extends AbstractType
+final class ObjectType extends AbstractType implements ComplexTypeInterface
 {
 
     /**
@@ -46,5 +46,13 @@ final class ObjectType extends AbstractType
     {
         /* @var $type ObjectType */
         return parent::equals($type) && $this->className === $type->getClassName();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return parent::__toString() . '<' . $this->className . '>';
     }
 }

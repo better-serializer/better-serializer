@@ -39,4 +39,12 @@ abstract class AbstractType implements TypeInterface
 
         return $this->type->is($type->getType());
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string) $this->type->getValue();
+    }
 }

@@ -11,7 +11,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-abstract class AbstractCollectionType extends AbstractType
+abstract class AbstractCollectionType extends AbstractType implements ComplexTypeInterface
 {
 
     /**

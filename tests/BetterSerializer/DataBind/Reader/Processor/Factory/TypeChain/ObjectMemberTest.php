@@ -63,7 +63,7 @@ class ObjectMemberTest extends TestCase
 
         $instantiatorFactory = $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock();
         $instantiatorFactory->expects(self::once())
-            ->method('newConstructor')
+            ->method('newInstantiator')
             ->with($metaData)
             ->willReturn($constructor);
 

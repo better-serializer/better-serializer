@@ -11,7 +11,7 @@ use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\DeserializeInstantiatorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactory as AbstractInjectorFactory;

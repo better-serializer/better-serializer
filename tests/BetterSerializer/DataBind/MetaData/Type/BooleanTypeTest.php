@@ -53,4 +53,12 @@ class BooleanTypeTest extends TestCase
             [new StringType(), false],
         ];
     }
+
+    /**
+     *
+     */
+    public function testToString(): void
+    {
+        self::assertSame(TypeEnum::BOOLEAN, (string) new BooleanType());
+    }
 }
