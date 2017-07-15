@@ -30,7 +30,7 @@ Currently, only JSON de/serialization is implemented. It's possible to de/serial
 For now the code is only a proof of concept, but it already yields interesting results. Without implementing
 metadata caching, the serialization process is already 
 [5-6x faster](tests/Performance/Serialization/JsonTest.php) than using JmsSerializer. 
-The deserialization process is also faster, but only [cca 3x faster](tests/Performance/Deserialization/JsonTest.php).
+The deserialization process is also faster, but only [cca 3.5x faster](tests/Performance/Deserialization/JsonTest.php).
 
 Regarding the performance gains - I'd like someone to check the measured values, since the results seem quite great
 and I'm suspicious myself :).
