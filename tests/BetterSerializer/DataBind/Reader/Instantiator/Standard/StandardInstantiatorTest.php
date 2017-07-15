@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
-use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\Dto\CarInterface;
 use BetterSerializer\Dto\RadioInterface;
 use PHPUnit\Framework\TestCase;
@@ -38,18 +38,16 @@ class StandardInstantiatorTest extends TestCase
             ->willReturn($car);
 
         $context = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $context->expects(self::once())
-            ->method('getDeserialized')
-            ->willReturn($radio);
 
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
-        $processor->expects(self::once())
-            ->method('process')
-            ->with($context);
+        $paramProcessor = $this->getMockBuilder(ParamProcessorInterface::class)->getMock();
+        $paramProcessor->expects(self::once())
+            ->method('processParam')
+            ->with($context)
+            ->willReturn($radio);
 
         /* @var $reflClass ReflectionClass */
         /* @var $context ContextInterface */
-        $constructor = new StandardInstantiator($reflClass, [$processor]);
+        $constructor = new StandardInstantiator($reflClass, [$paramProcessor]);
         $constructed = $constructor->construct($context);
 
         self::assertSame($car, $constructed);
