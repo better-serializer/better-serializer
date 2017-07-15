@@ -8,9 +8,10 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize;
 
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\ChainedInstantiatorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Deserialize\DeserializeInstantiator;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResult;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInterface;
 use Doctrine\Instantiator\Instantiator as DoctrineInstantiator;
 use Doctrine\Instantiator\InstantiatorInterface as DoctrineInstantiatorInterface;
 
@@ -19,7 +20,7 @@ use Doctrine\Instantiator\InstantiatorInterface as DoctrineInstantiatorInterface
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Instantiator
  */
-final class DeserializeInstantiatorFactory implements InstantiatorFactoryInterface
+final class DeserializeInstantiatorFactory implements ChainedInstantiatorFactoryInterface
 {
 
     /**
@@ -29,13 +30,16 @@ final class DeserializeInstantiatorFactory implements InstantiatorFactoryInterfa
 
     /**
      * @param MetaDataInterface $metaData
-     * @return InstantiatorInterface
+     * @return InstantiatorResultInterface
      */
-    public function newInstantiator(MetaDataInterface $metaData): InstantiatorInterface
+    public function newInstantiator(MetaDataInterface $metaData): InstantiatorResultInterface
     {
         $className = $metaData->getClassMetadata()->getClassName();
 
-        return new DeserializeInstantiator($this->getInstantiatorInterface(), $className);
+        return new InstantiatorResult(
+            new DeserializeInstantiator($this->getInstantiatorInterface(), $className),
+            $metaData
+        );
     }
 
     /**

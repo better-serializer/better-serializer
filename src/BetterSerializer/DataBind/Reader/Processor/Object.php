@@ -44,7 +44,7 @@ final class Object implements ComplexNestedProcessorInterface
      */
     public function process(ContextInterface $context): void
     {
-        $instance = $this->instantiator->construct($context);
+        $instance = $this->instantiator->instantiate($context);
         $context->setDeserialized($instance);
 
         foreach ($this->processors as $processor) {

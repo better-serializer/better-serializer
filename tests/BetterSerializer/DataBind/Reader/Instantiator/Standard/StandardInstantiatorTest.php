@@ -48,7 +48,7 @@ class StandardInstantiatorTest extends TestCase
         /* @var $reflClass ReflectionClass */
         /* @var $context ContextInterface */
         $constructor = new StandardInstantiator($reflClass, [$paramProcessor]);
-        $constructed = $constructor->construct($context);
+        $constructed = $constructor->instantiate($context);
 
         self::assertSame($car, $constructed);
     }

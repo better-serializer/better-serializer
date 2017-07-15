@@ -70,14 +70,14 @@ final class ObjectMember extends ChainMember
     {
         /* @var $type ObjectType */
         $metaData = $this->metadataReader->read($type->getClassName());
-        $constructor = $this->instantiatorFactory->newInstantiator($metaData);
-        $propertiesMetaData = $metaData->getPropertiesMetadata();
+        $instantiatorResult = $this->instantiatorFactory->newInstantiator($metaData);
+        $propertiesMetaData = $instantiatorResult->getProcessedMetaData()->getPropertiesMetadata();
         $propertyProcessors = [];
 
         foreach ($propertiesMetaData as $propertyMetaData) {
             $propertyProcessors[] = $this->processorFactory->createFromMetaData($propertyMetaData);
         }
 
-        return new ObjectProcessor($constructor, $propertyProcessors);
+        return new ObjectProcessor($instantiatorResult->getInstantiator(), $propertyProcessors);
     }
 }

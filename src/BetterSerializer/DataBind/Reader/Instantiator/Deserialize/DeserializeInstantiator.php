@@ -47,7 +47,7 @@ final class DeserializeInstantiator implements InstantiatorInterface
      * @throws ExceptionInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function construct(ContextInterface $context)
+    public function instantiate(ContextInterface $context)
     {
         return $this->instantiator->instantiate($this->className);
     }

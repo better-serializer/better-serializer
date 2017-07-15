@@ -38,7 +38,7 @@ class DeserializeInstantiatorTest extends TestCase
         /* @var $instantiator InstantiatorInterface */
         /* @var $context ContextInterface */
         $constructor = new DeserializeInstantiator($instantiator, $className);
-        $object = $constructor->construct($context);
+        $object = $constructor->instantiate($context);
 
         self::assertInstanceOf($className, $object);
     }

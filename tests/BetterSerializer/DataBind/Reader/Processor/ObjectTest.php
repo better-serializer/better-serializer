@@ -32,7 +32,7 @@ class ObjectTest extends TestCase
             ->with($instance);
         $instantiatorMock = $this->getMockBuilder(InstantiatorInterface::class)->getMock();
         $instantiatorMock->expects(self::once())
-            ->method('construct')
+            ->method('instantiate')
             ->with($contextMock)
             ->willReturn($instance);
         $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();

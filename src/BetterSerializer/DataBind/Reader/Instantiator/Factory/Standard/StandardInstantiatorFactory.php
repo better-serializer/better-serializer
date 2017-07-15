@@ -7,11 +7,12 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard;
 
+use BetterSerializer\DataBind\MetaData\Model\ExcludePropertiesMetaData;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyTuple\PropertyWithConstructorParamTupleInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\ChainedInstantiatorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResult;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\ParamProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\StandardInstantiator;
 use ReflectionClass;
 use ReflectionException;
@@ -21,7 +22,7 @@ use ReflectionException;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Instantiator\Factory
  */
-final class StandardInstantiatorFactory implements InstantiatorFactoryInterface
+final class StandardInstantiatorFactory implements ChainedInstantiatorFactoryInterface
 {
 
     /**
@@ -40,22 +41,26 @@ final class StandardInstantiatorFactory implements InstantiatorFactoryInterface
 
     /**
      * @param MetaDataInterface $metaData
-     * @return InstantiatorInterface
+     * @return InstantiatorResultInterface
      * @throws ReflectionException
      */
-    public function newInstantiator(MetaDataInterface $metaData): InstantiatorInterface
+    public function newInstantiator(MetaDataInterface $metaData): InstantiatorResultInterface
     {
         $className = $metaData->getClassMetadata()->getClassName();
         $reflClass = new ReflectionClass($className);
         $processorFactory = $this->paramProcessorFactory;
-        $paramProcessors = array_map(
-            function (PropertyWithConstructorParamTupleInterface $tuple) use ($processorFactory) {
-                return $processorFactory->newParamProcessor($tuple);
-            },
-            $metaData->getPropertyWithConstructorParamTuples()
-        );
+        $excludedProperties = [];
+        $paramProcessors = [];
 
-        return new StandardInstantiator($reflClass, $paramProcessors);
+        foreach ($metaData->getPropertyWithConstructorParamTuples() as $paramName => $tuple) {
+            $excludedProperties[] = $paramName;
+            $paramProcessors[] = $processorFactory->newParamProcessor($tuple);
+        }
+
+        return new InstantiatorResult(
+            new StandardInstantiator($reflClass, $paramProcessors),
+            new ExcludePropertiesMetaData($metaData, $excludedProperties)
+        );
     }
 
     /**

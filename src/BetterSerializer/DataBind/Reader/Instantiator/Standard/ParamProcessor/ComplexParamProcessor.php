@@ -19,16 +19,23 @@ final class ComplexParamProcessor implements ParamProcessorInterface
 {
 
     /**
+     * @var string
+     */
+    private $key;
+
+    /**
      * @var ProcessorInterface
      */
     private $processor;
 
     /**
      * ComplexParamProcessor constructor.
+     * @param string $key
      * @param ProcessorInterface $processor
      */
-    public function __construct(ProcessorInterface $processor)
+    public function __construct(string $key, ProcessorInterface $processor)
     {
+        $this->key = $key;
         $this->processor = $processor;
     }
 
@@ -38,8 +45,9 @@ final class ComplexParamProcessor implements ParamProcessorInterface
      */
     public function processParam(ContextInterface $context)
     {
-        $this->processor->process($context);
+        $subContext = $context->readSubContext($this->key);
+        $this->processor->process($subContext);
 
-        return $context->getDeserialized();
+        return $subContext->getDeserialized();
     }
 }

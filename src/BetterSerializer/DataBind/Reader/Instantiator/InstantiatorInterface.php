@@ -21,5 +21,5 @@ interface InstantiatorInterface
      * @param ContextInterface $context
      * @return mixed
      */
-    public function construct(ContextInterface $context);
+    public function instantiate(ContextInterface $context);
 }
