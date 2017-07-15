@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Constructor;
+namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -17,9 +17,9 @@ use ReflectionClass;
 /**
  * Class StandardConstructorTest
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Constructor
+ * @package BetterSerializer\DataBind\Reader\Instantiator
  */
-class StandardConstructorTest extends TestCase
+class StandardInstantiatorTest extends TestCase
 {
 
     /**
@@ -49,7 +49,7 @@ class StandardConstructorTest extends TestCase
 
         /* @var $reflClass ReflectionClass */
         /* @var $context ContextInterface */
-        $constructor = new StandardConstructor($reflClass, [$processor]);
+        $constructor = new StandardInstantiator($reflClass, [$processor]);
         $constructed = $constructor->construct($context);
 
         self::assertSame($car, $constructed);

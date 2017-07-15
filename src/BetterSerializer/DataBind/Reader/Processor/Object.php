@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor;
 
-use BetterSerializer\DataBind\Reader\Constructor\ConstructorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 
 /**
@@ -19,9 +19,9 @@ final class Object implements ComplexNestedProcessorInterface
 {
 
     /**
-     * @var ConstructorInterface
+     * @var InstantiatorInterface
      */
-    private $constructor;
+    private $instantiator;
 
     /**
      * @var ProcessorInterface[]
@@ -30,12 +30,12 @@ final class Object implements ComplexNestedProcessorInterface
 
     /**
      * Object constructor.
-     * @param ConstructorInterface $constructor
+     * @param InstantiatorInterface $instantiator
      * @param ProcessorInterface[] $processors
      */
-    public function __construct(ConstructorInterface $constructor, array $processors)
+    public function __construct(InstantiatorInterface $instantiator, array $processors)
     {
-        $this->constructor = $constructor;
+        $this->instantiator = $instantiator;
         $this->processors = $processors;
     }
 
@@ -44,7 +44,7 @@ final class Object implements ComplexNestedProcessorInterface
      */
     public function process(ContextInterface $context): void
     {
-        $instance = $this->constructor->construct($context);
+        $instance = $this->instantiator->construct($context);
         $context->setDeserialized($instance);
 
         foreach ($this->processors as $processor) {

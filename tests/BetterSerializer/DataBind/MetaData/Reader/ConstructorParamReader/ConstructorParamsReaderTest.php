@@ -117,7 +117,7 @@ class ConstructorParamsReaderTest extends TestCase
 
     /**
      * @expectedException LogicException
-     * @expectedExceptionMessageRegExp /Constructor parameter type missing for '[a-zA-Z0-9]+'./
+     * @expectedExceptionMessageRegExp /Instantiator parameter type missing for '[a-zA-Z0-9]+'./
      */
     public function testGetConstructorParamsMetadataThrowsOnReflTypeMissing(): void
     {

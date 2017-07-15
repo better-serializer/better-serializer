@@ -5,19 +5,19 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Constructor\Factory;
+namespace BetterSerializer\DataBind\Reader\Instantiator\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
-use BetterSerializer\DataBind\Reader\Constructor\UnserializeConstructor;
+use BetterSerializer\DataBind\Reader\Instantiator\Deserialize\DeserializeInstantiator;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class UnserializeFactoryTest
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Constructor\Factory
+ * @package BetterSerializer\DataBind\Reader\Instantiator\Factory
  */
-class UnserializeFactoryTest extends TestCase
+class DeserializeFactoryTest extends TestCase
 {
 
     /**
@@ -35,9 +35,9 @@ class UnserializeFactoryTest extends TestCase
             ->willReturn($classMetaData);
 
         /* @var $metaData MetaDataInterface */
-        $factory = new UnserializeConstructorFactory();
+        $factory = new DeserializeInstantiatorFactory();
         $constructor = $factory->newConstructor($metaData);
 
-        self::assertInstanceOf(UnserializeConstructor::class, $constructor);
+        self::assertInstanceOf(DeserializeInstantiator::class, $constructor);
     }
 }

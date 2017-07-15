@@ -10,8 +10,8 @@ namespace BetterSerializer;
 use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\UnserializeConstructorFactory;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\DeserializeInstantiatorFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactory;
 use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactory as AbstractInjectorFactory;
@@ -57,7 +57,7 @@ final class ReaderBuilder
     private $processorFactoryBuilder;
 
     /**
-     * @var ConstructorFactoryInterface
+     * @var InstantiatorFactoryInterface
      */
     private $constructorFactoryInterface;
 
@@ -134,12 +134,12 @@ final class ReaderBuilder
     }
 
     /**
-     * @return ConstructorFactoryInterface
+     * @return InstantiatorFactoryInterface
      */
-    private function getConstructor(): ConstructorFactoryInterface
+    private function getConstructor(): InstantiatorFactoryInterface
     {
         if ($this->constructorFactoryInterface === null) {
-            $this->constructorFactoryInterface = new UnserializeConstructorFactory();
+            $this->constructorFactoryInterface = new DeserializeInstantiatorFactory();
         }
 
         return $this->constructorFactoryInterface;

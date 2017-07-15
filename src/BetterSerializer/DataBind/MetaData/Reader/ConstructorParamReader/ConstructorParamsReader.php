@@ -95,7 +95,7 @@ final class ConstructorParamsReader implements ConstructorParamsReaderInterface
         $reflectionType = $arg->getType();
 
         if (!$reflectionType) {
-            throw new LogicException(sprintf("Constructor parameter type missing for '%s'.", $name));
+            throw new LogicException(sprintf("Instantiator parameter type missing for '%s'.", $name));
         }
 
         $stringType = (string) $reflectionType;

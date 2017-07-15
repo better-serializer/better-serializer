@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Model;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\Reader\Constructor\Factory\ConstructorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,8 +32,8 @@ class MetaDataTest extends TestCase
             $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock(),
         ];
         $constrParamsMetaData = [
-            $this->getMockBuilder(ConstructorFactoryInterface::class)->getMock(),
-            $this->getMockBuilder(ConstructorFactoryInterface::class)->getMock(),
+            $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock(),
+            $this->getMockBuilder(InstantiatorFactoryInterface::class)->getMock(),
         ];
 
         /* @var $classMetadata ClassMetaDataInterface */
