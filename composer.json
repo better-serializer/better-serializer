@@ -15,7 +15,8 @@
         "marc-mabe/php-enum": "^2.3",
         "doctrine/annotations": "^1.3",
         "roave/security-advisories": "dev-master",
-        "doctrine/instantiator": "^1.0"
+        "doctrine/instantiator": "^1.0",
+        "jms/serializer": "^1.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
@@ -29,7 +30,6 @@
         "sensiolabs/security-checker": "^4.0",
         "phpmd/phpmd": "^2.6",
         "phpstan/phpstan": "^0.7",
-        "jms/serializer": "^1.7",
         "satooshi/php-coveralls": "~1.0"
     },
 
