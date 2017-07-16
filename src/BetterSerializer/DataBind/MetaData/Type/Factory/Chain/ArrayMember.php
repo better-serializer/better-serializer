@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\DerivedStringTypedPropertyContext;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringType;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -41,12 +41,12 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param StringTypedPropertyContextInterface $context
+     * @param StringTypeInterface $stringType
      * @return bool
      */
-    protected function isProcessable(StringTypedPropertyContextInterface $context): bool
+    protected function isProcessable(StringTypeInterface $stringType): bool
     {
-        if (preg_match('/array<([^>]+)>/', $context->getStringType(), $matches)) {
+        if (preg_match('/array<([^>]+)>/', $stringType->getStringType(), $matches)) {
             $this->stringSubType = $matches[1];
 
             return true;
@@ -56,12 +56,12 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param StringTypedPropertyContextInterface $context
+     * @param StringTypeInterface $stringType
      * @return TypeInterface
      */
-    protected function createType(StringTypedPropertyContextInterface $context): TypeInterface
+    protected function createType(StringTypeInterface $stringType): TypeInterface
     {
-        $subContect = new DerivedStringTypedPropertyContext($this->stringSubType, $context->getNamespace());
+        $subContect = new StringType($this->stringSubType, $stringType->getNamespace());
         $subType = $this->typeFactory->getType($subContect);
 
         return new ArrayType($subType);

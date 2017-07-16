@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
@@ -25,25 +25,25 @@ class ObjectMemberTest extends TestCase
 
     /**
      * @dataProvider classNameProvider
-     * @param string $stringType
+     * @param string $stringTypeString
      * @param string $className
      * @param string $namespace
      * @param int $nsCalls
      */
-    public function testGetType(string $stringType, string $className, string $namespace, int $nsCalls): void
+    public function testGetType(string $stringTypeString, string $className, string $namespace, int $nsCalls): void
     {
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::once())
             ->method('getStringType')
-            ->willReturn($stringType);
-        $context->expects(self::exactly($nsCalls))
+            ->willReturn($stringTypeString);
+        $stringType->expects(self::exactly($nsCalls))
             ->method('getNamespace')
             ->willReturn($namespace);
-        /* @var $context StringTypedPropertyContextInterface */
+        /* @var $stringType StringTypeInterface */
 
         $objectMember = new ObjectMember();
         /* @var $typeObject ObjectType */
-        $typeObject = $objectMember->getType($context);
+        $typeObject = $objectMember->getType($stringType);
 
         self::assertInstanceOf(ObjectType::class, $typeObject);
         self::assertSame($typeObject->getClassName(), $className);
@@ -65,17 +65,17 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(TypeEnum::STRING);
-        $context->expects(self::once())
+        $stringType->expects(self::once())
             ->method('getNamespace')
             ->willReturn('');
-        /* @var $context StringTypedPropertyContextInterface */
+        /* @var $stringType StringTypeInterface */
 
         $objectMember = new ObjectMember();
-        $shouldBeNull = $objectMember->getType($context);
+        $shouldBeNull = $objectMember->getType($stringType);
 
         self::assertNull($shouldBeNull);
     }

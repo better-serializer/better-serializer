@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+
 /**
  * Class StringTypedPropertyContext
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader
  */
-final class StringTypedPropertyContext implements StringTypedPropertyContextInterface
+final class StringTypedPropertyContext implements StringTypeInterface
 {
 
     /**
