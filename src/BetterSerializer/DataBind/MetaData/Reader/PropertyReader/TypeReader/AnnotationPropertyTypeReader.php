@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 
 /**
  * Class AnnotationPropertyTypeReader
@@ -21,9 +21,9 @@ final class AnnotationPropertyTypeReader implements TypeReaderInterface
 
     /**
      * @param PropertyContextInterface $context
-     * @return StringTypedPropertyContextInterface|null
+     * @return StringTypeInterface|null
      */
-    public function resolveType(PropertyContextInterface $context): ?StringTypedPropertyContextInterface
+    public function resolveType(PropertyContextInterface $context): ?StringTypeInterface
     {
         $propertyAnnotation = $context->getPropertyAnnotation();
 

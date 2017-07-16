@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
@@ -28,19 +28,19 @@ class SimpleMemberTest extends TestCase
 
     /**
      * @dataProvider typeMappingProvider
-     * @param string $stringType
+     * @param string $stringTypeString
      * @param string $typeClassName
      */
-    public function testGetType(string $stringType, string $typeClassName): void
+    public function testGetType(string $stringTypeString, string $typeClassName): void
     {
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::exactly(2))
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::exactly(2))
             ->method('getStringType')
-            ->willReturn($stringType);
-        /* @var $context StringTypedPropertyContextInterface */
+            ->willReturn($stringTypeString);
+        /* @var $stringType StringTypeInterface */
 
         $simpleMember = new SimpleMember();
-        $typeObject = $simpleMember->getType($context);
+        $typeObject = $simpleMember->getType($stringType);
 
         self::assertInstanceOf($typeClassName, $typeObject);
     }
@@ -50,14 +50,14 @@ class SimpleMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(Car::class);
-        /* @var $context StringTypedPropertyContextInterface */
+        /* @var $stringType StringTypeInterface */
 
         $simpleMember = new SimpleMember();
-        $shouldBeNull = $simpleMember->getType($context);
+        $shouldBeNull = $simpleMember->getType($stringType);
 
         self::assertNull($shouldBeNull);
     }

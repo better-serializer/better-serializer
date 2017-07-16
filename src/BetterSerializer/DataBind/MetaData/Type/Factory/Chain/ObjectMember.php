@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
@@ -25,12 +25,12 @@ final class ObjectMember extends ChainMember
     private $className;
 
     /**
-     * @param StringTypedPropertyContextInterface $context
+     * @param StringTypeInterface $stringType
      * @return bool
      */
-    protected function isProcessable(StringTypedPropertyContextInterface $context): bool
+    protected function isProcessable(StringTypeInterface $stringType): bool
     {
-        $className = $this->getClassName($context);
+        $className = $this->getClassName($stringType);
 
         if ($className) {
             $this->className = $className;
@@ -42,28 +42,28 @@ final class ObjectMember extends ChainMember
     }
 
     /**
-     * @param StringTypedPropertyContextInterface $context
+     * @param StringTypeInterface $stringType
      * @return TypeInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createType(StringTypedPropertyContextInterface $context): TypeInterface
+    protected function createType(StringTypeInterface $stringType): TypeInterface
     {
         return new ObjectType($this->className);
     }
 
     /**
-     * @param StringTypedPropertyContextInterface $context
+     * @param StringTypeInterface $stringType
      * @return string|null
      */
-    private function getClassName(StringTypedPropertyContextInterface $context): ?string
+    private function getClassName(StringTypeInterface $stringType): ?string
     {
-        $stringType = $context->getStringType();
+        $stringTypeString = $stringType->getStringType();
 
-        if (class_exists($stringType)) {
-            return $stringType;
+        if (class_exists($stringTypeString)) {
+            return $stringTypeString;
         }
 
-        $completeClass = $context->getNamespace() . '\\' . $stringType;
+        $completeClass = $stringType->getNamespace() . '\\' . $stringTypeString;
         $completeClass = str_replace('\\\\', '\\', $completeClass);
 
         return class_exists($completeClass) ? $completeClass : null;

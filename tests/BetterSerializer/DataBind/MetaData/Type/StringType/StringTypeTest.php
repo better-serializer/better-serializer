@@ -5,16 +5,16 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
+namespace BetterSerializer\DataBind\MetaData\Type\StringType;
 
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DerivedStringTypedPropertyContextTest
+ * Class StringTypeTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader
  */
-class DerivedStringTypedPropertyContextTest extends TestCase
+class StringTypeTest extends TestCase
 {
 
     /**
@@ -25,7 +25,7 @@ class DerivedStringTypedPropertyContextTest extends TestCase
         $type = 'string';
         $namespace = 'test';
 
-        $context = new DerivedStringTypedPropertyContext($type, $namespace);
+        $context = new StringType($type, $namespace);
 
         self::assertSame($type, $context->getStringType());
         self::assertSame($namespace, $context->getNamespace());

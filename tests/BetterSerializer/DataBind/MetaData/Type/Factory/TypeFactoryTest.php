@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ChainMemberInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -28,17 +28,17 @@ class TypeFactoryTest extends TestCase
     public function testGetType(): void
     {
         $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
 
         $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
         $chainMember->expects(self::exactly(2))
             ->method('getType')
-            ->with($context)
+            ->with($stringType)
             ->willReturnOnConsecutiveCalls(null, $type);
 
 
         $typeFactory = new TypeFactory([$chainMember, $chainMember]);
-        $createdType = $typeFactory->getType($context);
+        $createdType = $typeFactory->getType($stringType);
 
         self::assertSame($type, $createdType);
     }
@@ -49,21 +49,21 @@ class TypeFactoryTest extends TestCase
      */
     public function testGetTypeThrowsException(): void
     {
-        $stringType = TypeEnum::STRING;
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $stringTypeString = TypeEnum::STRING;
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::once())
             ->method('getStringType')
-            ->willReturn($stringType);
-        /* @var $context StringTypedPropertyContextInterface */
+            ->willReturn($stringTypeString);
+        /* @var $stringType StringTypeInterface */
 
         $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
         $chainMember->expects(self::once())
             ->method('getType')
-            ->with($context)
+            ->with($stringType)
             ->willReturn(null);
 
         $typeFactory = new TypeFactory([$chainMember]);
-        $typeFactory->getType($context);
+        $typeFactory->getType($stringType);
     }
 
     /**
@@ -71,31 +71,31 @@ class TypeFactoryTest extends TestCase
      */
     public function testAddChainMemberType(): void
     {
-        $stringType = TypeEnum::STRING;
-        $context = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $stringTypeString = TypeEnum::STRING;
+        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType->expects(self::once())
             ->method('getStringType')
-            ->willReturn($stringType);
-        /* @var $context StringTypedPropertyContextInterface */
+            ->willReturn($stringTypeString);
+        /* @var $stringType StringTypeInterface */
 
         $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
         $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
         $chainMember->expects(self::once())
             ->method('getType')
-            ->with($context)
+            ->with($stringType)
             ->willReturn($type);
 
         $typeFactory = new TypeFactory();
 
         try {
-            $typeFactory->getType($context);
+            $typeFactory->getType($stringType);
         } catch (LogicException $e) {
         }
 
         /* @var $chainMember ChainMemberInterface */
         $typeFactory->addChainMember($chainMember);
-        $createdType = $typeFactory->getType($context);
+        $createdType = $typeFactory->getType($stringType);
 
         self::assertSame($type, $createdType);
     }

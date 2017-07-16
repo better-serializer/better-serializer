@@ -8,7 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContextInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
@@ -57,7 +57,7 @@ class PropertiesReaderTest extends TestCase
      */
     public function testGetPropertyMetadata(): void
     {
-        $typedContextStub = $this->getMockBuilder(StringTypedPropertyContextInterface::class)->getMock();
+        $stringTypeStub = $this->getMockBuilder(StringTypeInterface::class)->getMock();
 
         $annotationReaderStub = $this->getMockBuilder(AnnotationReader::class)->getMock();
         $annotationReaderStub->expects(self::exactly(2))
@@ -73,7 +73,7 @@ class PropertiesReaderTest extends TestCase
         $typeReaderStub = $this->getMockBuilder(TypeReaderInterface::class)->getMock();
         $typeReaderStub->expects(self::exactly(2))
             ->method('resolveType')
-            ->willReturn($typedContextStub);
+            ->willReturn($stringTypeStub);
         /* @var $typeReaderStub TypeReaderInterface */
 
         $reflPropertyStub1 = $this->getMockBuilder(ReflectionProperty::class)
