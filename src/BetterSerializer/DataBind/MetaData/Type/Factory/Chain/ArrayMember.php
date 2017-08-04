@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringType;
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -41,10 +41,10 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param StringTypeInterface $stringType
+     * @param StringFormTypeInterface $stringType
      * @return bool
      */
-    protected function isProcessable(StringTypeInterface $stringType): bool
+    protected function isProcessable(StringFormTypeInterface $stringType): bool
     {
         if (preg_match('/array<([^>]+)>/', $stringType->getStringType(), $matches)) {
             $this->stringSubType = $matches[1];
@@ -56,13 +56,13 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param StringTypeInterface $stringType
+     * @param StringFormTypeInterface $stringType
      * @return TypeInterface
      */
-    protected function createType(StringTypeInterface $stringType): TypeInterface
+    protected function createType(StringFormTypeInterface $stringType): TypeInterface
     {
-        $subContect = new StringType($this->stringSubType, $stringType->getNamespace());
-        $subType = $this->typeFactory->getType($subContect);
+        $subContext = new StringFormType($this->stringSubType, $stringType->getNamespace());
+        $subType = $this->typeFactory->getType($subContext);
 
         return new ArrayType($subType);
     }

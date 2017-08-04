@@ -7,6 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\Radio;
 use BetterSerializer\Dto\SpecialCar;
 use PHPUnit\Framework\TestCase;
 
@@ -14,6 +15,7 @@ use PHPUnit\Framework\TestCase;
  * Class ObjectTypeTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ObjectTypeTest extends TestCase
 {
@@ -31,7 +33,7 @@ class ObjectTypeTest extends TestCase
     /**
      * @param TypeInterface $typeToTest
      * @param bool $expectedResult
-     * @dataProvider typeProvider
+     * @dataProvider typeProviderForEquals
      */
     public function testEquals(TypeInterface $typeToTest, bool $expectedResult): void
     {
@@ -43,7 +45,7 @@ class ObjectTypeTest extends TestCase
     /**
      * @return array
      */
-    public function typeProvider(): array
+    public function typeProviderForEquals(): array
     {
         return [
             [new ArrayType(new StringType()), false],
@@ -54,6 +56,7 @@ class ObjectTypeTest extends TestCase
             [new ObjectType(Car::class), true],
             [new ObjectType(SpecialCar::class), false],
             [new StringType(), false],
+            [new UnknownType(), false],
         ];
     }
 
@@ -66,5 +69,35 @@ class ObjectTypeTest extends TestCase
             TypeEnum::OBJECT . '<' . Car::class . '>',
             (string) new ObjectType(Car::class)
         );
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProviderForIsCompatible
+     */
+    public function testIsCompatibleWith(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new ObjectType(Car::class);
+
+        self::assertSame($expectedResult, $type->isCompatibleWith($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProviderForIsCompatible(): array
+    {
+        return [
+            [new ArrayType(new StringType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), false],
+            [new IntegerType(), false],
+            [new NullType(), false],
+            [new ObjectType(Car::class), true],
+            [new ObjectType(Radio::class), false],
+            [new StringType(), false],
+            [new UnknownType(), true],
+        ];
     }
 }

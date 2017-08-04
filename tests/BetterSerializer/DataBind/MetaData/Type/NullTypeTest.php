@@ -29,7 +29,7 @@ class NullTypeTest extends TestCase
     /**
      * @param TypeInterface $typeToTest
      * @param bool $expectedResult
-     * @dataProvider typeProvider
+     * @dataProvider typeProviderForEquals
      */
     public function testEquals(TypeInterface $typeToTest, bool $expectedResult): void
     {
@@ -41,7 +41,7 @@ class NullTypeTest extends TestCase
     /**
      * @return array
      */
-    public function typeProvider(): array
+    public function typeProviderForEquals(): array
     {
         return [
             [new ArrayType(new StringType()), false],
@@ -51,6 +51,7 @@ class NullTypeTest extends TestCase
             [new NullType(), true],
             [new ObjectType(Car::class), false],
             [new StringType(), false],
+            [new UnknownType(), false],
         ];
     }
 
@@ -60,5 +61,34 @@ class NullTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(TypeEnum::NULL, (string) new NullType());
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProviderForIsCompatible
+     */
+    public function testIsCompatibleWith(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new NullType();
+
+        self::assertSame($expectedResult, $type->isCompatibleWith($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProviderForIsCompatible(): array
+    {
+        return [
+            [new ArrayType(new StringType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), false],
+            [new IntegerType(), false],
+            [new NullType(), true],
+            [new ObjectType(Car::class), false],
+            [new StringType(), false],
+            [new UnknownType(), true],
+        ];
     }
 }

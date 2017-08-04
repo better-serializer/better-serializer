@@ -58,6 +58,7 @@ class ArrayTypeTest extends TestCase
             [new NullType(), false],
             [new ObjectType(Car::class), false],
             [new StringType(), false],
+            [new UnknownType(), false],
         ];
     }
 
@@ -70,5 +71,35 @@ class ArrayTypeTest extends TestCase
            TypeEnum::ARRAY . '<' . TypeEnum::STRING . '>',
            (string) new ArrayType(new StringType())
         );
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProviderForIsCompatible
+     */
+    public function testIsCompatibleWith(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new ArrayType(new StringType());
+
+        self::assertSame($expectedResult, $type->isCompatibleWith($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProviderForIsCompatible(): array
+    {
+        return [
+            [new ArrayType(new StringType()), true],
+            [new ArrayType(new BooleanType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), false],
+            [new IntegerType(), false],
+            [new NullType(), false],
+            [new ObjectType(Car::class), false],
+            [new StringType(), false],
+            [new UnknownType(), true],
+        ];
     }
 }

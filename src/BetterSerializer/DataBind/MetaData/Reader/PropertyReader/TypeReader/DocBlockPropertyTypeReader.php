@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use RuntimeException;
@@ -38,10 +38,10 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
 
     /**
      * @param PropertyContextInterface $context
-     * @return StringTypeInterface|null
+     * @return StringFormTypeInterface|null
      * @throws RuntimeException
      */
-    public function resolveType(PropertyContextInterface $context): ?StringTypeInterface
+    public function resolveType(PropertyContextInterface $context): ?StringFormTypeInterface
     {
         $reflectionProperty = $context->getReflectionProperty();
         $docComment = $reflectionProperty->getDocComment();
@@ -59,6 +59,6 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
         /** @var Var_[] $varTags */
         $type = $varTags[0]->getType();
 
-        return new StringTypedPropertyContext($context, (string) $type);
+        return new StringFormTypedPropertyContext($context, (string) $type);
     }
 }

@@ -36,6 +36,21 @@ final class ArrayType extends AbstractCollectionType
     }
 
     /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function isCompatibleWith(TypeInterface $type): bool
+    {
+        /* @var $type ArrayType */
+        $typeClass = get_class($type);
+
+        return (
+            (static::class === $typeClass && $this->getNestedType()->isCompatibleWith($type->getNestedType()))
+            || $typeClass === UnknownType::class
+        );
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
@@ -33,11 +33,11 @@ class SimpleMemberTest extends TestCase
      */
     public function testGetType(string $stringTypeString, string $typeClassName): void
     {
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::exactly(2))
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $simpleMember = new SimpleMember();
         $typeObject = $simpleMember->getType($stringType);
@@ -50,11 +50,11 @@ class SimpleMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(Car::class);
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $simpleMember = new SimpleMember();
         $shouldBeNull = $simpleMember->getType($stringType);

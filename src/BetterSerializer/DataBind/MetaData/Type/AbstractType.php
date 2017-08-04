@@ -41,6 +41,17 @@ abstract class AbstractType implements TypeInterface
     }
 
     /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function isCompatibleWith(TypeInterface $type): bool
+    {
+        $typeClass = get_class($type);
+
+        return (static::class === $typeClass || $typeClass === UnknownType::class);
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

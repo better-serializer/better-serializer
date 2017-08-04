@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +47,7 @@ class DocBlockPropertyTypeReaderTest extends TestCase
         $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
         $typedContext = $typeReader->resolveType($contextStub);
 
-        self::assertInstanceOf(StringTypedPropertyContext::class, $typedContext);
+        self::assertInstanceOf(StringFormTypedPropertyContext::class, $typedContext);
         self::assertSame('string', $typedContext->getStringType());
     }
 

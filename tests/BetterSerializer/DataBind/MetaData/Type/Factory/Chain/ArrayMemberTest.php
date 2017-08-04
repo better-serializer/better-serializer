@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
@@ -38,14 +38,14 @@ class ArrayMemberTest extends TestCase
             ->willReturn($stringTypeInstance);
         /* @var $typeFactory TypeFactoryInterface */
 
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
         $stringType->expects(self::once())
             ->method('getNamespace')
             ->willReturn('test');
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
@@ -69,14 +69,14 @@ class ArrayMemberTest extends TestCase
             ->willReturn($objectTypeInstance);
         /* @var $typeFactory TypeFactoryInterface */
 
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
         $stringType->expects(self::once())
             ->method('getNamespace')
             ->willReturn('test');
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
@@ -94,11 +94,11 @@ class ArrayMemberTest extends TestCase
         $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
         /* @var $typeFactory TypeFactoryInterface */
 
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(TypeEnum::STRING);
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         $shouldBeNull = $arrayMember->getType($stringType);

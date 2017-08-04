@@ -30,7 +30,7 @@ class FloatTypeTest extends TestCase
     /**
      * @param TypeInterface $typeToTest
      * @param bool $expectedResult
-     * @dataProvider typeProvider
+     * @dataProvider typeProviderForEquals
      */
     public function testEquals(TypeInterface $typeToTest, bool $expectedResult): void
     {
@@ -42,7 +42,7 @@ class FloatTypeTest extends TestCase
     /**
      * @return array
      */
-    public function typeProvider(): array
+    public function typeProviderForEquals(): array
     {
         return [
             [new ArrayType(new StringType()), false],
@@ -52,6 +52,7 @@ class FloatTypeTest extends TestCase
             [new NullType(), false],
             [new ObjectType(Car::class), false],
             [new StringType(), false],
+            [new UnknownType(), false],
         ];
     }
 
@@ -61,5 +62,34 @@ class FloatTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(TypeEnum::FLOAT, (string) new FloatType());
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProviderForIsCompatible
+     */
+    public function testIsCompatibleWith(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new FloatType();
+
+        self::assertSame($expectedResult, $type->isCompatibleWith($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProviderForIsCompatible(): array
+    {
+        return [
+            [new ArrayType(new StringType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), true],
+            [new IntegerType(), false],
+            [new NullType(), false],
+            [new ObjectType(Car::class), false],
+            [new StringType(), false],
+            [new UnknownType(), true],
+        ];
     }
 }
