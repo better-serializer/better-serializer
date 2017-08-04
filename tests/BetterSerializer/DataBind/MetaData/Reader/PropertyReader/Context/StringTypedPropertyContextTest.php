@@ -28,9 +28,10 @@ class StringTypedPropertyContextTest extends TestCase
             ->willReturn('test');
 
         /* @var $innerContext PropertyContextInterface */
-        $context = new StringTypedPropertyContext($innerContext, 'array');
+        $context = new StringFormTypedPropertyContext($innerContext, 'array');
 
         self::assertSame('test', $context->getNamespace());
         self::assertSame('array', $context->getStringType());
+        self::assertTrue($context->isClass());
     }
 }

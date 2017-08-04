@@ -29,7 +29,7 @@ class IntegerTypeTest extends TestCase
     /**
      * @param TypeInterface $typeToTest
      * @param bool $expectedResult
-     * @dataProvider typeProvider
+     * @dataProvider typeProviderForEquals
      */
     public function testEquals(TypeInterface $typeToTest, bool $expectedResult): void
     {
@@ -41,7 +41,7 @@ class IntegerTypeTest extends TestCase
     /**
      * @return array
      */
-    public function typeProvider(): array
+    public function typeProviderForEquals(): array
     {
         return [
             [new ArrayType(new StringType()), false],
@@ -51,6 +51,7 @@ class IntegerTypeTest extends TestCase
             [new NullType(), false],
             [new ObjectType(Car::class), false],
             [new StringType(), false],
+            [new UnknownType(), false],
         ];
     }
 
@@ -60,5 +61,34 @@ class IntegerTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(TypeEnum::INTEGER, (string) new IntegerType());
+    }
+
+    /**
+     * @param TypeInterface $typeToTest
+     * @param bool $expectedResult
+     * @dataProvider typeProviderForIsCompatible
+     */
+    public function testIsCompatibleWith(TypeInterface $typeToTest, bool $expectedResult): void
+    {
+        $type = new IntegerType();
+
+        self::assertSame($expectedResult, $type->isCompatibleWith($typeToTest));
+    }
+
+    /**
+     * @return array
+     */
+    public function typeProviderForIsCompatible(): array
+    {
+        return [
+            [new ArrayType(new StringType()), false],
+            [new BooleanType(), false],
+            [new FloatType(), false],
+            [new IntegerType(), true],
+            [new NullType(), false],
+            [new ObjectType(Car::class), false],
+            [new StringType(), false],
+            [new UnknownType(), true],
+        ];
     }
 }

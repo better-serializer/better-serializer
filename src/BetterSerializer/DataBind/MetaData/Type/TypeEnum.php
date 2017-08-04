@@ -19,6 +19,7 @@ use MabeEnum\Enum;
  * @method static TypeEnum OBJECT
  * @method static TypeEnum ARRAY
  * @method static TypeEnum NULL
+ * @method static TypeEnum UNKNOWN
  */
 final class TypeEnum extends Enum
 {
@@ -57,4 +58,9 @@ final class TypeEnum extends Enum
      * @const string
      */
     const NULL = 'null';
+
+    /**
+     * @const string
+     */
+    const UNKNOWN = 'unknown';
 }

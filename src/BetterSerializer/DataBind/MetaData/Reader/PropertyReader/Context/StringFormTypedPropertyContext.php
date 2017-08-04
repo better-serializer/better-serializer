@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 
 /**
  * Class StringTypedPropertyContext
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader
  */
-final class StringTypedPropertyContext implements StringTypeInterface
+final class StringFormTypedPropertyContext implements StringFormTypeInterface
 {
 
     /**
@@ -52,5 +52,13 @@ final class StringTypedPropertyContext implements StringTypeInterface
     public function getStringType(): string
     {
         return $this->stringType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClass(): bool
+    {
+        return true;
     }
 }

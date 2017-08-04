@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -57,7 +57,7 @@ class AnnotationPropertyTypeReaderTest extends TestCase
         $reader = new AnnotationPropertyTypeReader();
         $typedContext = $reader->resolveType($context);
 
-        self::assertInstanceOf(StringTypedPropertyContext::class, $typedContext);
+        self::assertInstanceOf(StringFormTypedPropertyContext::class, $typedContext);
         self::assertSame('string', $typedContext->getStringType());
     }
 }

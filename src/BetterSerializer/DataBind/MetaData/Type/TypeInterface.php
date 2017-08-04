@@ -25,6 +25,12 @@ interface TypeInterface
     public function equals(TypeInterface $type): bool;
 
     /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function isCompatibleWith(TypeInterface $type): bool;
+
+    /**
      * @return string
      */
     public function __toString(): string;

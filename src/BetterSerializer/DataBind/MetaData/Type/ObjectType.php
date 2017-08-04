@@ -49,6 +49,18 @@ final class ObjectType extends AbstractType implements ComplexTypeInterface
     }
 
     /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function isCompatibleWith(TypeInterface $type): bool
+    {
+        return (
+            ($type instanceof ObjectType && $this->className === $type->className)
+            || $type instanceof UnknownType
+        );
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

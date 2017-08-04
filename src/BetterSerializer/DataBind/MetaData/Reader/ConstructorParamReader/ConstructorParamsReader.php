@@ -11,7 +11,7 @@ use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorPa
 use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaData;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContext;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
 use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use ReflectionClass;
@@ -107,7 +107,7 @@ final class ConstructorParamsReader implements ConstructorParamsReaderInterface
             return new ConstructorParamMetaData($name, $propType, $property->getOutputKey());
         }
 
-        $typedContext = new StringTypedPropertyContext($context, $stringType);
+        $typedContext = new StringFormTypedPropertyContext($context, $stringType);
         $type = $this->typeFactory->getType($typedContext);
 
         if (!$type->equals($property->getType())) {

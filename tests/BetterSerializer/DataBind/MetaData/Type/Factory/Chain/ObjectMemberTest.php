@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
@@ -32,14 +32,14 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetType(string $stringTypeString, string $className, string $namespace, int $nsCalls): void
     {
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
         $stringType->expects(self::exactly($nsCalls))
             ->method('getNamespace')
             ->willReturn($namespace);
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $objectMember = new ObjectMember();
         /* @var $typeObject ObjectType */
@@ -65,14 +65,14 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $stringType = $this->getMockBuilder(StringTypeInterface::class)->getMock();
+        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(TypeEnum::STRING);
         $stringType->expects(self::once())
             ->method('getNamespace')
             ->willReturn('');
-        /* @var $stringType StringTypeInterface */
+        /* @var $stringType StringFormTypeInterface */
 
         $objectMember = new ObjectMember();
         $shouldBeNull = $objectMember->getType($stringType);

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringType\StringTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
@@ -25,10 +25,10 @@ final class ObjectMember extends ChainMember
     private $className;
 
     /**
-     * @param StringTypeInterface $stringType
+     * @param StringFormTypeInterface $stringType
      * @return bool
      */
-    protected function isProcessable(StringTypeInterface $stringType): bool
+    protected function isProcessable(StringFormTypeInterface $stringType): bool
     {
         $className = $this->getClassName($stringType);
 
@@ -42,20 +42,20 @@ final class ObjectMember extends ChainMember
     }
 
     /**
-     * @param StringTypeInterface $stringType
+     * @param StringFormTypeInterface $stringType
      * @return TypeInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createType(StringTypeInterface $stringType): TypeInterface
+    protected function createType(StringFormTypeInterface $stringType): TypeInterface
     {
         return new ObjectType($this->className);
     }
 
     /**
-     * @param StringTypeInterface $stringType
+     * @param StringFormTypeInterface $stringType
      * @return string|null
      */
-    private function getClassName(StringTypeInterface $stringType): ?string
+    private function getClassName(StringFormTypeInterface $stringType): ?string
     {
         $stringTypeString = $stringType->getStringType();
 
