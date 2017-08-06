@@ -106,3 +106,6 @@ Drawbacks:
 
 It's up to the user to decide, whether the slower data validation (and consequential data correctness)
 brings higher added value, or not. 
+
+All the remaining class properties, that aren't present as constructor parameters are injected through
+reflection in the case of applying the natural instantiation method.
