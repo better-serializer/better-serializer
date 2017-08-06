@@ -13,6 +13,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
+use phpDocumentor\Reflection\Types\Context;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -60,7 +61,7 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
      */
     public function initialize(ReflectionMethod $constructor): void
     {
-        $this->currentNamespace = $constructor->getNamespaceName();
+        $this->currentNamespace = $constructor->getDeclaringClass()->getNamespaceName();
         $docComment = trim($constructor->getDocComment());
 
         if (!$docComment) {
@@ -69,7 +70,8 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
             return;
         }
 
-        $docBlock = $this->docBlockFactory->create($docComment);
+        $context = new Context($this->currentNamespace);
+        $docBlock = $this->docBlockFactory->create($docComment, $context);
         /** @var Param[] $paramTags */
         $paramTags = $docBlock->getTagsByName('param');
         $this->params = [];

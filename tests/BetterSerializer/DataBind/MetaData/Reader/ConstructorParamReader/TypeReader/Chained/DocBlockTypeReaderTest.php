@@ -12,6 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use phpDocumentor\Reflection\DocBlockFactory;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -29,12 +30,19 @@ class DocBlockTypeReaderTest extends TestCase
      */
     public function testGetTypeReturnsNormalType(): void
     {
+        $declaringClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $declaringClass->expects(self::once())
+            ->method('getNamespaceName')
+            ->willReturn('test');
+
         $constructor = $this->getMockBuilder(ReflectionMethod::class)
             ->disableOriginalConstructor()
             ->getMock();
         $constructor->expects(self::once())
-            ->method('getNamespaceName')
-            ->willReturn('test');
+            ->method('getDeclaringClass')
+            ->willReturn($declaringClass);
         $constructor->expects(self::once())
             ->method('getDocComment')
             ->willReturn('/** @param int $test */');
@@ -70,12 +78,19 @@ class DocBlockTypeReaderTest extends TestCase
      */
     public function testGetTypeReturnsUnknownType(): void
     {
+        $declaringClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $declaringClass->expects(self::once())
+            ->method('getNamespaceName')
+            ->willReturn('test');
+
         $constructor = $this->getMockBuilder(ReflectionMethod::class)
             ->disableOriginalConstructor()
             ->getMock();
         $constructor->expects(self::once())
-            ->method('getNamespaceName')
-            ->willReturn('test');
+            ->method('getDeclaringClass')
+            ->willReturn($declaringClass);
         $constructor->expects(self::once())
             ->method('getDocComment')
             ->willReturn('');

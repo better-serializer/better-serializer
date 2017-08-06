@@ -19,7 +19,7 @@ use ReflectionParameter;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner
  */
-final class PropertyWithParamCombiner implements PropertyWithParamCombinerInterface
+final class PropertyWithConstructorParamCombiner implements PropertyWithConstructorParamCombinerInterface
 {
 
     /**

@@ -85,7 +85,7 @@ class AnnotationCombinerTest extends TestCase
         $tuple = $combiner->combineWithParameter($parameter);
 
         self::assertInstanceOf(Context\PropertyWithConstructorParamTuple::class, $tuple);
-        self::assertSame($propertyMetaData, $tuple->getClassProperty());
+        self::assertSame($propertyMetaData, $tuple->getPropertyMetaData());
         self::assertSame($parameter, $tuple->getConstructorParam());
     }
 
