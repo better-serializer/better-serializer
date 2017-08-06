@@ -78,6 +78,7 @@ class Car
         $this->title = $specialTitle;
     }
 }
+```
 
 In this case, the serializer knows, that the `specialTitle` constructor argument is being assigned to the `title`
 class property.
