@@ -48,14 +48,15 @@ class Car implements CarInterface
      * Car constructor.
      * @param string $title
      * @param string $color
-     * @param Radio $radio
+     * @param Radio $music
      * @param Door[] $doors
+     * @Serializer\BoundToProperty(propertyName="radio", argumentName="music")
      */
-    public function __construct(string $title, string $color, Radio $radio, array $doors = [])
+    public function __construct(string $title, string $color, Radio $music, array $doors = [])
     {
         $this->title = $title;
         $this->color = $color;
-        $this->radio = $radio;
+        $this->radio = $music;
         $this->doors = $doors;
     }
 

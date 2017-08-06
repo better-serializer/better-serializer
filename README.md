@@ -31,7 +31,8 @@ and I'm suspicious myself :).
 
 ## Features
 
-You can check out the features in the [features page](doc/Features.md)
+You can check out the features in the [features page](doc/Features.md). Please also check the supported 
+[annotations documentation](doc/Annotations.md).
 
 ## Requirements
 

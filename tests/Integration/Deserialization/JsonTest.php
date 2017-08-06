@@ -9,6 +9,7 @@ namespace Integration\Deserialization;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\Car2;
 use Integration\AbstractIntegrationTest;
 
 /**
@@ -47,6 +48,7 @@ final class JsonTest extends AbstractIntegrationTest
             $this->getObjectsInArrayTuple(),
             $this->getObjectsInArrayTupleWithInnerArray(),
             $this->getStringsInArray(),
+            $this->getOverridenNameTuple(),
         ];
     }
 
@@ -118,5 +120,15 @@ final class JsonTest extends AbstractIntegrationTest
         $json = '[' . implode(',', $jsonArray) . ']';
 
         return [$json, 'array<string>'];
+    }
+
+    /**
+     * @return array
+     */
+    private function getOverridenNameTuple(): array
+    {
+        $json = '{"serializedTitle":"Honda"}';
+
+        return [$json, Car2::class];
     }
 }

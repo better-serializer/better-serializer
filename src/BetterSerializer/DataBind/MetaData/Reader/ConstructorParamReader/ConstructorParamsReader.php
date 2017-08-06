@@ -82,7 +82,7 @@ final class ConstructorParamsReader implements ConstructorParamsReaderInterface
             $type = $types[$paramName];
 
             try {
-                $constructorParams[$paramName] = new ConstructorParamMetaData($tuple, $type);
+                $constructorParams[$tuple->getPropertyName()] = new ConstructorParamMetaData($tuple, $type);
             } catch (LogicException $e) {
             }
         }

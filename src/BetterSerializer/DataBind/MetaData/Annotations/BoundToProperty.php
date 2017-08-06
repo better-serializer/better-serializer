@@ -13,8 +13,8 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  * @Annotation
  * @Target("METHOD")
  * @Attributes({
- *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\PropertyWithArgument::KEY_PROPERTY_NAME, type="string"),
- *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\PropertyWithArgument::KEY_ARGUMENT_NAME, type="string"),
+ *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\BoundToProperty::KEY_PROPERTY_NAME, type="string"),
+ *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\BoundToProperty::KEY_ARGUMENT_NAME, type="string"),
  * })
  */
 final class BoundToProperty implements BoundToPropertyInterface

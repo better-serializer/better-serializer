@@ -57,7 +57,7 @@ class ConstructorParamsReaderTest extends TestCase
         $tuple->expects(self::exactly(2))
             ->method('getParamName')
             ->willReturn($name);
-        $tuple->expects(self::once())
+        $tuple->expects(self::exactly(2))
             ->method('getPropertyName')
             ->willReturn($name);
         $tuple->expects(self::once())
