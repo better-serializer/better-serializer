@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace Performance\Serialization;
 
-use BetterSerializer\Builder;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Door;
 use BetterSerializer\Dto\Radio;
-use PHPUnit\Framework\TestCase;
+use Integration\AbstractIntegrationTest;
 use JMS\Serializer\SerializerBuilder;
 
 /**
@@ -20,7 +19,7 @@ use JMS\Serializer\SerializerBuilder;
  * @author mfris
  * @package Integration\Serialization
  */
-final class JsonTest extends TestCase
+final class JsonTest extends AbstractIntegrationTest
 {
 
     /**
@@ -37,8 +36,7 @@ final class JsonTest extends TestCase
             $this->markTestIncomplete('Implement caching to see difference.');
         }
 
-        $builder = new Builder();
-        $serializer = $builder->createSerializer();
+        $serializer = $this->getSerializer();
         $jmsSerializer = SerializerBuilder::create()->build();
 
         // opcache warmup

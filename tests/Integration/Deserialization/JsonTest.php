@@ -7,17 +7,16 @@ declare(strict_types=1);
 
 namespace Integration\Deserialization;
 
-use BetterSerializer\Builder;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
-use PHPUnit\Framework\TestCase;
+use Integration\AbstractIntegrationTest;
 
 /**
  * Class Json
  * @author mfris
  * @package Integration\Deserialization
  */
-final class JsonTest extends TestCase
+final class JsonTest extends AbstractIntegrationTest
 {
 
     /**
@@ -29,8 +28,7 @@ final class JsonTest extends TestCase
      */
     public function testDeserialization(string $expectedJson, string $stringType): void
     {
-        $builder = new Builder();
-        $serializer = $builder->createSerializer();
+        $serializer = $this->getSerializer();
 
         $data = $serializer->deserialize($expectedJson, $stringType, SerializationType::JSON());
         $json = $serializer->serialize($data, SerializationType::JSON());

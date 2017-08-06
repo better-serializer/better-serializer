@@ -7,20 +7,19 @@ declare(strict_types=1);
 
 namespace Integration\Serialization;
 
-use BetterSerializer\Builder;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Door;
 use BetterSerializer\Dto\Radio;
 use BetterSerializer\Dto\SpecialCar;
-use PHPUnit\Framework\TestCase;
+use Integration\AbstractIntegrationTest;
 
 /**
  * Class Json
  * @author mfris
  * @package Integration\Serialization
  */
-final class JsonTest extends TestCase
+final class JsonTest extends AbstractIntegrationTest
 {
 
     /**
@@ -32,8 +31,7 @@ final class JsonTest extends TestCase
      */
     public function testSerialization($data, string $expectedJson): void
     {
-        $builder = new Builder();
-        $serializer = $builder->createSerializer();
+        $serializer = $this->getSerializer();
 
         $json = $serializer->serialize($data, SerializationType::JSON());
         self::assertSame($expectedJson, $json);
