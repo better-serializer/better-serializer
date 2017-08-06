@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use ReflectionParameter;
 
 /**
@@ -26,19 +27,19 @@ final class PropertyWithConstructorParamTuple implements PropertyWithConstructor
     /**
      * @var PropertyMetaDataInterface
      */
-    private $classProperty;
+    private $propertyMetaData;
 
     /**
      * PropertyWithConstructorParamTuple constructor.
      * @param ReflectionParameter $constructorParam
-     * @param PropertyMetaDataInterface $classProperty
+     * @param PropertyMetaDataInterface $propertyMetaData
      */
     public function __construct(
         ReflectionParameter $constructorParam,
-        PropertyMetaDataInterface $classProperty
+        PropertyMetaDataInterface $propertyMetaData
     ) {
         $this->constructorParam = $constructorParam;
-        $this->classProperty = $classProperty;
+        $this->propertyMetaData = $propertyMetaData;
     }
 
     /**
@@ -50,10 +51,34 @@ final class PropertyWithConstructorParamTuple implements PropertyWithConstructor
     }
 
     /**
+     * @return string
+     */
+    public function getParamName(): string
+    {
+        return $this->constructorParam->getName();
+    }
+
+    /**
      * @return PropertyMetaDataInterface
      */
-    public function getClassProperty(): PropertyMetaDataInterface
+    public function getPropertyMetaData(): PropertyMetaDataInterface
     {
-        return $this->classProperty;
+        return $this->propertyMetaData;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPropertyName(): string
+    {
+        return $this->propertyMetaData->getOutputKey();
+    }
+
+    /**
+     * @return TypeInterface
+     */
+    public function getPropertyType(): TypeInterface
+    {
+        return $this->propertyMetaData->getType();
     }
 }

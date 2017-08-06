@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel;
 
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
+use LogicException;
 
 /**
  * Class ConstructorParamTest
@@ -23,31 +25,70 @@ class ConstructorParamMetaDataTest extends TestCase
      */
     public function testGetPropertiesWithCustomParamName(): void
     {
-        $name = 'test';
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $paramName = 'test';
         $propertyName = 'testProperty';
 
-        /* @var $type TypeInterface */
-        $constructorParam = new ConstructorParamMetaData($name, $type, $propertyName);
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        self::assertSame($name, $constructorParam->getName());
-        self::assertSame($type, $constructorParam->getType());
-        self::assertSame($propertyName, $constructorParam->getPropertyName());
+        $propertyType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $propertyType->expects(self::once())
+            ->method('isCompatibleWith')
+            ->with($type)
+            ->willReturn(true);
+
+        $tuple = $this->getMockBuilder(Context\PropertyWithConstructorParamTupleInterface::class)->getMock();
+        $tuple->expects(self::once())
+            ->method('getPropertyType')
+            ->willReturn($propertyType);
+        $tuple->expects(self::once())
+            ->method('getParamName')
+            ->willReturn($paramName);
+        $tuple->expects(self::once())
+            ->method('getPropertyName')
+            ->willReturn($propertyName);
+
+        /* @var $tuple Context\PropertyWithConstructorParamTupleInterface */
+        /* @var $type TypeInterface */
+        $paramMetaData = new ConstructorParamMetaData($tuple, $type);
+
+        self::assertSame($paramName, $paramMetaData->getName());
+        self::assertSame($type, $paramMetaData->getType());
+        self::assertSame($propertyName, $paramMetaData->getPropertyName());
     }
 
     /**
-     *
+     * @expectedException LogicException
      */
-    public function testGetPropertiesWithSameParamName(): void
+    public function testGetPropertiesWithCustomParamNameThrowsLogicException(): void
     {
-        $name = 'test';
+        $this->expectExceptionMessageRegExp(
+            "/Constructor parameter '[a-zA-Z0-9]+' and property '[a-zA-Z0-9]+' have incompatible types./"
+        );
+
+        $paramName = 'test';
+        $propertyName = 'testProperty';
+
         $type = $this->getMockBuilder(TypeInterface::class)->getMock();
 
-        /* @var $type TypeInterface */
-        $constructorParam = new ConstructorParamMetaData($name, $type);
+        $propertyType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $propertyType->expects(self::once())
+            ->method('isCompatibleWith')
+            ->with($type)
+            ->willReturn(false);
 
-        self::assertSame($name, $constructorParam->getName());
-        self::assertSame($type, $constructorParam->getType());
-        self::assertSame($name, $constructorParam->getPropertyName());
+        $tuple = $this->getMockBuilder(Context\PropertyWithConstructorParamTupleInterface::class)->getMock();
+        $tuple->expects(self::once())
+            ->method('getPropertyType')
+            ->willReturn($propertyType);
+        $tuple->expects(self::once())
+            ->method('getParamName')
+            ->willReturn($paramName);
+        $tuple->expects(self::once())
+            ->method('getPropertyName')
+            ->willReturn($propertyName);
+
+        /* @var $tuple Context\PropertyWithConstructorParamTupleInterface */
+        /* @var $type TypeInterface */
+        new ConstructorParamMetaData($tuple, $type);
     }
 }

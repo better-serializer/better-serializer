@@ -27,7 +27,7 @@ final class ObjectType extends AbstractType implements ComplexTypeInterface
     public function __construct(string $className)
     {
         $this->type = TypeEnum::OBJECT();
-        $this->className = $className;
+        $this->className = ltrim($className, '\\');
     }
 
     /**

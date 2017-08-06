@@ -14,7 +14,7 @@ use ReflectionMethod;
  * Interface PropertyWithParamCombinerInterface
  * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner
  */
-interface PropertyWithParamCombinerInterface
+interface PropertyWithConstructorParamCombinerInterface
 {
 
     /**

@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel;
 
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use LogicException;
 
 /**
  * Class ConstructorParam
@@ -18,9 +20,9 @@ final class ConstructorParamMetaData implements ConstructorParamMetaDataInterfac
 {
 
     /**
-     * @var string
+     * @var Context\PropertyWithConstructorParamTupleInterface
      */
-    private $name;
+    private $tuple;
 
     /**
      * @var TypeInterface
@@ -28,30 +30,25 @@ final class ConstructorParamMetaData implements ConstructorParamMetaDataInterfac
     private $type;
 
     /**
-     * @var string
-     */
-    private $propertyName;
-
-    /**
      * ConstructorParam constructor.
-     * @param string $name
+     * @param Context\PropertyWithConstructorParamTupleInterface $tuple
      * @param TypeInterface $type
-     * @param string $propertyName
+     * @throws LogicException
      */
-    public function __construct($name, TypeInterface $type, $propertyName = '')
+    public function __construct(Context\PropertyWithConstructorParamTupleInterface $tuple, TypeInterface $type)
     {
-        $this->setName($name);
-        $this->type = $type;
-        $this->setPropertyName($propertyName);
-    }
+        if (!$tuple->getPropertyType()->isCompatibleWith($type)) {
+            throw new LogicException(
+                sprintf(
+                    "Constructor parameter '%s' and property '%s' have incompatible types.",
+                    $tuple->getParamName(),
+                    $tuple->getPropertyName()
+                )
+            );
+        }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    private function setName(string $name): void
-    {
-        $this->name = trim($name);
+        $this->tuple = $tuple;
+        $this->type = $type;
     }
 
     /**
@@ -59,7 +56,7 @@ final class ConstructorParamMetaData implements ConstructorParamMetaDataInterfac
      */
     public function getName(): string
     {
-        return $this->name;
+        return $this->tuple->getParamName();
     }
 
     /**
@@ -71,20 +68,10 @@ final class ConstructorParamMetaData implements ConstructorParamMetaDataInterfac
     }
 
     /**
-     * @param string $propertyName
-     * @return void
-     */
-    private function setPropertyName(string $propertyName): void
-    {
-        $propertyName = trim($propertyName);
-        $this->propertyName = $propertyName ?: $this->getName();
-    }
-
-    /**
      * @return string
      */
     public function getPropertyName(): string
     {
-        return $this->propertyName;
+        return $this->tuple->getPropertyName();
     }
 }

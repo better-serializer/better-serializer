@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionParameter;
 
@@ -24,19 +25,36 @@ class PropertyWithConstructorParamTupleTest extends TestCase
      */
     public function testEverything(): void
     {
+        $paramName = 'test';
+        $propertyName = 'testProperty';
+
         $constructorParam = $this->getMockBuilder(ReflectionParameter::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $constructorParam->expects(self::once())
+            ->method('getName')
+            ->willReturn($paramName);
 
-        $classProperty = $this->getMockBuilder(PropertyMetaDataInterface::class)
+        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+
+        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $propertyMetaData->expects(self::once())
+            ->method('getOutputKey')
+            ->willReturn($propertyName);
+        $propertyMetaData->expects(self::once())
+            ->method('getType')
+            ->willReturn($type);
 
         /* @var $constructorParam ReflectionParameter */
-        /* @var $classProperty PropertyMetaDataInterface */
-        $tuple = new PropertyWithConstructorParamTuple($constructorParam, $classProperty);
+        /* @var $propertyMetaData PropertyMetaDataInterface */
+        $tuple = new PropertyWithConstructorParamTuple($constructorParam, $propertyMetaData);
 
         self::assertSame($constructorParam, $tuple->getConstructorParam());
-        self::assertSame($classProperty, $tuple->getClassProperty());
+        self::assertSame($propertyMetaData, $tuple->getPropertyMetaData());
+        self::assertSame($paramName, $tuple->getParamName());
+        self::assertSame($propertyName, $tuple->getPropertyName());
+        self::assertSame($type, $tuple->getPropertyType());
     }
 }

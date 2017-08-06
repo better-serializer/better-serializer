@@ -20,7 +20,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner
  */
-class PropertyWithParamCombinerTest extends TestCase
+class PropertyWithConstructorParamCombinerTest extends TestCase
 {
 
     /**
@@ -60,7 +60,7 @@ class PropertyWithParamCombinerTest extends TestCase
             ->willReturnOnConsecutiveCalls($tuple, null);
 
         /* @var ReflectionMethod $constructor */
-        $combiner = new PropertyWithParamCombiner([$badCombiner, $goodCombiner]);
+        $combiner = new PropertyWithConstructorParamCombiner([$badCombiner, $goodCombiner]);
         $tuples = $combiner->combine($constructor, [$propertyName => $propertyMetaData]);
 
         self::assertInternalType('array', $tuples);
@@ -75,6 +75,6 @@ class PropertyWithParamCombinerTest extends TestCase
      */
     public function testConstructorThrowsIfChainedCombinersMissing(): void
     {
-        new PropertyWithParamCombiner([]);
+        new PropertyWithConstructorParamCombiner([]);
     }
 }
