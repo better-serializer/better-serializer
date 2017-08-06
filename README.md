@@ -18,12 +18,6 @@ the best features from JmsSerializer and from [Jackson](https://github.com/Faste
 
 ## Current state
 
-Regarding the features from other serializers - none of them are implemented yet :) With two exceptions - if you are
-using `@var` docblock annotations in class properties, you don't need to define the `@Type` serialization annotation, which
-would be duplicit in this case. Regarding the other feature - you don't have to declare full classified class name
-in the `@var` or `@Type` annotations. The serializer automatically checks for the class existence in the same namespace 
-which the owning class resides in.
-
 Currently, only JSON de/serialization is implemented. It's possible to de/serialize complex nested data structures
 (objects and arrays). Only arrays are supported as collection types for now.
 
@@ -34,6 +28,10 @@ The deserialization process is also faster, but only [cca 3.5x faster](tests/Per
 
 Regarding the performance gains - I'd like someone to check the measured values, since the results seem quite great
 and I'm suspicious myself :).
+
+## Features
+
+You can check out the features in the [features page](doc/Features.md)
 
 ## Requirements
 
@@ -51,7 +49,7 @@ Regarding class annotations, check these [example DTOs](tests/BetterSerializer/D
 - metadata caching
 - XML and YAML support
 - various collection classes support (Doctrine collections, internal PHP collections like SplStack)
-- data injection using class constructors (internal and static), which should improve performance even more
+- data injection using class constructors (~~internal~~ and static), which should improve performance even more
 - various features import from JmsSerializer and Jackson
 - framework integrations
 
