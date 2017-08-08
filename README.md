@@ -40,11 +40,9 @@ This library requires PHP 7.1 and it won't work with older versions. Older versi
 
 ## Usage
 
-The usage is quite simple for now. There is a builder which creates an instance of the serializer.
-These are examples for [serialization](tests/Integration/Serialization/JsonTest.php) 
-and for [deserialization](tests/Integration/Serialization/JsonTest.php) usage.
+The usage is described [here](doc/Usage.md).
 
-Regarding class annotations, check these [example DTOs](tests/BetterSerializer/Dto).
+The de/serializaton annotations are described [here](doc/Annotations.md).
 
 ## Future Plans
 - metadata caching

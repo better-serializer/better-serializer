@@ -47,10 +47,9 @@ The following types are supported currently:
 | int                                                      | Primitive integer                                |
 | float                                                    | Primitive double                                 |
 | string                                                   | Primitive string                                 |
-| array<T>                                                 | A list of type T (T can be any available type).  |
-|                                                          | Examples:                                        |
-|                                                          | array<string>, array<MyNamespace\MyObject>, etc. |
-| T                                                        | Where T is a fully qualified class name.         | 
+| array<T>                                                 | An array of type T (T can be any available type).<br>Examples:<br>array<string>, array<MyNamespace\MyObject>, etc.|
+| T[]                                                      | An array of type T (T can be any available type).|
+| T                                                        | Where T is a class name. It either can be fully qualified, or relative to the current namespace of the parent class.| 
 
 ### @BoundToProperty
 
