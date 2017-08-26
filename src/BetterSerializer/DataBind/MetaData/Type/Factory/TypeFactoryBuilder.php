@@ -10,6 +10,7 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ArrayMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DateTimeMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DocBlockArrayMember;
+use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\MixedMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ObjectMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember;
 
@@ -32,6 +33,7 @@ final class TypeFactoryBuilder
         $typeFactory->addChainMember(new ObjectMember());
         $typeFactory->addChainMember(new ArrayMember($typeFactory));
         $typeFactory->addChainMember(new DocBlockArrayMember($typeFactory));
+        $typeFactory->addChainMember(new MixedMember($typeFactory));
 
         return $typeFactory;
     }

@@ -32,7 +32,7 @@ class Car implements CarInterface
     private $color;
 
     /**
-     * @var Radio
+     * @var Radio|null
      * @JmsSerializer\Type("BetterSerializer\Dto\Radio")
      */
     private $radio;
@@ -48,11 +48,11 @@ class Car implements CarInterface
      * Car constructor.
      * @param string $title
      * @param string $color
-     * @param Radio $music
+     * @param Radio|null $music
      * @param Door[] $doors
      * @Serializer\BoundToProperty(propertyName="radio", argumentName="music")
      */
-    public function __construct(string $title, string $color, Radio $music, array $doors = [])
+    public function __construct(string $title, string $color, Radio $music = null, array $doors = [])
     {
         $this->title = $title;
         $this->color = $color;
