@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
 
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
+use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
@@ -17,7 +18,7 @@ use BetterSerializer\DataBind\Writer\Processor\Property;
 /**
  * Class SimpleMember
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain
+ * @package BetterSerializer\DataBind\Writer\Processor\Converter\PropertyMetaDataChain
  */
 final class SimpleMember extends ExtractingChainMember
 {
@@ -46,7 +47,9 @@ final class SimpleMember extends ExtractingChainMember
      */
     protected function isCreatable(PropertyMetaDataInterface $metaData): bool
     {
-        return $metaData->getType() instanceof SimpleTypeInterface;
+        $type = $metaData->getType();
+
+        return $type instanceof SimpleTypeInterface || $type instanceof DateTimeTypeInterface;
     }
 
     /**

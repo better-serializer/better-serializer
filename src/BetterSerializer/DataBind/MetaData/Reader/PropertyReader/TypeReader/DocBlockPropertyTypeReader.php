@@ -9,9 +9,11 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
+use LogicException;
 use RuntimeException;
 
 /**
@@ -40,6 +42,7 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
      * @param PropertyContextInterface $context
      * @return StringFormTypeInterface|null
      * @throws RuntimeException
+     * @throws LogicException
      */
     public function resolveType(PropertyContextInterface $context): ?StringFormTypeInterface
     {
@@ -58,7 +61,8 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
 
         /** @var Var_[] $varTags */
         $type = $varTags[0]->getType();
+        $stringType = (string) $type;
 
-        return new StringFormTypedPropertyContext($context, (string) $type);
+        return new ContextStringFormType($stringType, $context->getReflectionClass());
     }
 }

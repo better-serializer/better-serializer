@@ -9,8 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use ReflectionClass;
-use ReflectionProperty;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 
 /**
  * Class PropertyContext
@@ -21,12 +21,12 @@ final class PropertyContext implements PropertyContextInterface
 {
 
     /**
-     * @var ReflectionClass
+     * @var ReflectionClassInterface
      */
     private $reflectionClass;
 
     /**
-     * @var ReflectionProperty
+     * @var ReflectionPropertyInterface
      */
     private $reflectionProperty;
 
@@ -37,13 +37,13 @@ final class PropertyContext implements PropertyContextInterface
 
     /**
      * PropertyContext constructor.
-     * @param ReflectionClass $reflectionClass
-     * @param ReflectionProperty $reflectionProperty
+     * @param ReflectionClassInterface $reflectionClass
+     * @param ReflectionPropertyInterface $reflectionProperty
      * @param AnnotationInterface[] $annotations
      */
     public function __construct(
-        ReflectionClass $reflectionClass,
-        ReflectionProperty $reflectionProperty,
+        ReflectionClassInterface $reflectionClass,
+        ReflectionPropertyInterface $reflectionProperty,
         array $annotations
     ) {
         $this->reflectionClass = $reflectionClass;
@@ -52,17 +52,17 @@ final class PropertyContext implements PropertyContextInterface
     }
 
     /**
-     * @return ReflectionClass
+     * @return ReflectionClassInterface
      */
-    public function getReflectionClass(): ReflectionClass
+    public function getReflectionClass(): ReflectionClassInterface
     {
         return $this->reflectionClass;
     }
 
     /**
-     * @return ReflectionProperty
+     * @return ReflectionPropertyInterface
      */
-    public function getReflectionProperty(): ReflectionProperty
+    public function getReflectionProperty(): ReflectionPropertyInterface
     {
         return $this->reflectionProperty;
     }

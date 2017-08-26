@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -17,7 +18,7 @@ use BetterSerializer\DataBind\Reader\Processor\Property;
 /**
  * Class SimpleMember
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain
+ * @package BetterSerializer\DataBind\Reader\Processor\Converter\PropertyMetaDataChain
  */
 final class SimpleMember extends InjectingChainMember
 {
@@ -45,7 +46,9 @@ final class SimpleMember extends InjectingChainMember
      */
     protected function isCreatable(PropertyMetaDataInterface $metaData): bool
     {
-        return $metaData->getType() instanceof SimpleTypeInterface;
+        $type = $metaData->getType();
+
+        return $type instanceof SimpleTypeInterface || $type instanceof DateTimeTypeInterface;
     }
 
     /**

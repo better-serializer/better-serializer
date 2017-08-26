@@ -9,8 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeR
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionMethod;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use RuntimeException;
 
 /**
@@ -41,10 +41,10 @@ final class TypeReader implements TypeReaderInterface
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @return TypeInterface[]
      */
-    public function getParameterTypes(ReflectionMethod $constructor): array
+    public function getParameterTypes(ReflectionMethodInterface $constructor): array
     {
         $this->initializeTypeReaders($constructor);
         $parameterTypes = [];
@@ -57,9 +57,9 @@ final class TypeReader implements TypeReaderInterface
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      */
-    private function initializeTypeReaders(ReflectionMethod $constructor): void
+    private function initializeTypeReaders(ReflectionMethodInterface $constructor): void
     {
         foreach ($this->typeReaders as $typeReader) {
             $typeReader->initialize($constructor);
@@ -67,10 +67,10 @@ final class TypeReader implements TypeReaderInterface
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return TypeInterface
      */
-    private function retrieveParameterType(ReflectionParameter $parameter): TypeInterface
+    private function retrieveParameterType(ReflectionParameterInterface $parameter): TypeInterface
     {
         /* @var $type TypeInterface */
         $type = null;

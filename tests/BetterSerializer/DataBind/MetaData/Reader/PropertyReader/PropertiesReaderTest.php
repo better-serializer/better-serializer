@@ -10,14 +10,14 @@ use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
 use RuntimeException;
+use ReflectionProperty;
 
 /**
  * Class PropertyReaderTest
@@ -36,20 +36,10 @@ class PropertiesReaderTest extends TestCase
      */
     public function testConstructionWithEmptyTypeReadersThrowsException(): void
     {
-        /* @var $reflClassHelper ReflectionClassHelperInterface */
-        $reflClassHelper = $this->getMockBuilder(ReflectionClassHelperInterface::class)->getMock();
+        $annotationReaderStub = $this->createMock(AnnotationReader::class);
+        $typeFactoryStub = $this->createMock(TypeFactoryInterface::class);
 
-        /* @var $annotationReaderStub AnnotationReader */
-        $annotationReaderStub = $this->getMockBuilder(AnnotationReader::class)->getMock();
-        /* @var $typeFactoryStub TypeFactoryInterface */
-        $typeFactoryStub = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
-
-        new PropertiesReader(
-            $reflClassHelper,
-            $annotationReaderStub,
-            $typeFactoryStub,
-            []
-        );
+        new PropertiesReader($annotationReaderStub, $typeFactoryStub, []);
     }
 
     /**
@@ -57,63 +47,55 @@ class PropertiesReaderTest extends TestCase
      */
     public function testGetPropertyMetadata(): void
     {
-        $stringTypeStub = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringTypeStub = $this->createMock(StringFormTypeInterface::class);
 
-        $annotationReaderStub = $this->getMockBuilder(AnnotationReader::class)->getMock();
+        $annotationReaderStub = $this->createMock(AnnotationReader::class);
         $annotationReaderStub->expects(self::exactly(2))
             ->method('getPropertyAnnotations')
             ->willReturn([]);
 
-        $typeFactoryStub = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactoryStub = $this->createMock(TypeFactoryInterface::class);
         $typeFactoryStub->expects(self::exactly(2))
             ->method('getType')
             ->willReturn(new StringType());
-        /* @var $typeFactoryStub TypeFactoryInterface */
 
-        $typeReaderStub = $this->getMockBuilder(TypeReaderInterface::class)->getMock();
+        $typeReaderStub = $this->createMock(TypeReaderInterface::class);
         $typeReaderStub->expects(self::exactly(2))
             ->method('resolveType')
             ->willReturn($stringTypeStub);
-        /* @var $typeReaderStub TypeReaderInterface */
 
-        $reflPropertyStub1 = $this->getMockBuilder(ReflectionProperty::class)
+        $nativeReflProperty1 = $this->getMockBuilder(ReflectionProperty::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $reflPropertyStub1->expects(self::once())
-            ->method('getName')
+        $nativeReflProperty1->method('getName')
             ->willReturn('property1');
+
+        $nativeReflProperty2 = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $nativeReflProperty2->method('getName')
+            ->willReturn('property2');
+
+        $reflPropertyStub1 = $this->createMock(ReflectionPropertyInterface::class);
+        $reflPropertyStub1->expects(self::once())
+            ->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty1);
         $reflPropertyStub1->expects(self::once())
             ->method('setAccessible');
 
-        $reflPropertyStub2 = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflPropertyStub2 = $this->createMock(ReflectionPropertyInterface::class);
         $reflPropertyStub2->expects(self::once())
-            ->method('getName')
-            ->willReturn('property2');
+            ->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty2);
         $reflPropertyStub2->expects(self::once())
             ->method('setAccessible');
 
-        $reflClassStub = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reflClassHelper = $this->getMockBuilder(ReflectionClassHelperInterface::class)->getMock();
-        $reflClassHelper->expects(self::once())
+        $reflClassStub = $this->createMock(ReflectionClassInterface::class);
+        $reflClassStub->expects(self::once())
             ->method('getProperties')
-            ->with($reflClassStub)
             ->willReturn([$reflPropertyStub1, $reflPropertyStub2]);
 
-        /* @var $reflClassHelper ReflectionClassHelperInterface */
-        /* @var $reflClassStub ReflectionClass */
-        /* @var $annotationReaderStub AnnotationReader */
-
-        $reader = new PropertiesReader(
-            $reflClassHelper,
-            $annotationReaderStub,
-            $typeFactoryStub,
-            [$typeReaderStub]
-        );
+        $reader = new PropertiesReader($annotationReaderStub, $typeFactoryStub, [$typeReaderStub]);
         $propertyMetadata = $reader->getPropertiesMetadata($reflClassStub);
 
         self::assertInternalType('array', $propertyMetadata);
@@ -132,63 +114,54 @@ class PropertiesReaderTest extends TestCase
      */
     public function testGetPropertyMetadataThrowsException(): void
     {
-        $propertyAnnotStub1 = $this->getMockBuilder(PropertyInterface::class)->getMock();
-        $propertyAnnotStub2 = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $propertyAnnotStub1 = $this->createMock(PropertyInterface::class);
+        $propertyAnnotStub2 = $this->createMock(PropertyInterface::class);
 
-        $annotationReaderStub = $this->getMockBuilder(AnnotationReader::class)->getMock();
+        $annotationReaderStub = $this->createMock(AnnotationReader::class);
         $annotationReaderStub->expects(self::once())
             ->method('getPropertyAnnotations')
             ->willReturnOnConsecutiveCalls([
                 [$propertyAnnotStub1],
                 [$propertyAnnotStub2]
             ]);
-        /* @var $annotationReaderStub AnnotationReader */
 
-        $typeFactoryStub = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactoryStub = $this->createMock(TypeFactoryInterface::class);
         $typeFactoryStub->expects(self::exactly(0))
             ->method('getType');
-        /* @var $typeFactoryStub TypeFactoryInterface */
 
-        $typeReaderStub = $this->getMockBuilder(TypeReaderInterface::class)->getMock();
+        $typeReaderStub = $this->createMock(TypeReaderInterface::class);
         $typeReaderStub->expects(self::once())
             ->method('resolveType')
             ->willReturn(null);
-        /* @var $typeReaderStub TypeReaderInterface */
 
-        $reflDeclaringClassStub = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflDeclaringClassStub = $this->createMock(ReflectionClassInterface::class);
         $reflDeclaringClassStub->expects(self::once())
             ->method('getName')
             ->willReturn(StringType::class);
 
-        $reflPropertyStub1 = $this->getMockBuilder(ReflectionProperty::class)
+        $nativeReflProperty1 = $this->getMockBuilder(ReflectionProperty::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $reflPropertyStub1->expects(self::exactly(2))
-            ->method('getName')
+        $nativeReflProperty1->method('getName')
             ->willReturn('property1');
+
+        $reflPropertyStub1 = $this->createMock(ReflectionPropertyInterface::class);
+        $reflPropertyStub1->method('getName')
+            ->willReturn('property1');
+        $reflPropertyStub1->expects(self::once())
+            ->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty1);
         $reflPropertyStub1->expects(self::once())
             ->method('getDeclaringClass')
             ->willReturn($reflDeclaringClassStub);
 
-        $reflPropertyStub2 = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $reflClassStub = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reflClassHelper = $this->getMockBuilder(ReflectionClassHelperInterface::class)->getMock();
-        $reflClassHelper->expects(self::once())
+        $reflPropertyStub2 = $this->createMock(ReflectionPropertyInterface::class);
+        $reflClassStub = $this->createMock(ReflectionClassInterface::class);
+        $reflClassStub->expects(self::once())
             ->method('getProperties')
-            ->with($reflClassStub)
             ->willReturn([$reflPropertyStub1, $reflPropertyStub2]);
 
-        /* @var $reflClassHelper ReflectionClassHelperInterface */
-        /* @var $reflClassStub ReflectionClass */
-
-        $reader = new PropertiesReader($reflClassHelper, $annotationReaderStub, $typeFactoryStub, [$typeReaderStub]);
+        $reader = new PropertiesReader($annotationReaderStub, $typeFactoryStub, [$typeReaderStub]);
         $reader->getPropertiesMetadata($reflClassStub);
     }
 }

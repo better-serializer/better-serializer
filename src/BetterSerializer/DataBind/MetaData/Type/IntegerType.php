@@ -15,10 +15,10 @@ final class IntegerType extends AbstractSimpleType
 {
 
     /**
-     * StringDataType constructor.
+     * @return void
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct()
+    protected function initType(): void
     {
         $this->type = TypeEnum::INTEGER();
     }

@@ -9,9 +9,10 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeR
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
-use ReflectionParameter;
+use ReflectionType;
 
 /**
  * Class NativeTypeReaderTest
@@ -26,31 +27,22 @@ class NativeTypeReaderTest extends TestCase
      */
     public function testGetType(): void
     {
-        $namespace = 'test';
-
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
+        $reflType = $this->getMockBuilder(ReflectionType::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $constructor->expects(self::once())
-            ->method('getNamespaceName')
-            ->willReturn($namespace);
 
-        $param = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $param = $this->createMock(ReflectionParameterInterface::class);
         $param->expects(self::once())
             ->method('getType')
-            ->willReturn('int');
+            ->willReturn($reflType);
 
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
-        $nativeTypeFactory = $this->getMockBuilder(NativeTypeFactoryInterface::class)->getMock();
+        $nativeTypeFactory = $this->createMock(NativeTypeFactoryInterface::class);
         $nativeTypeFactory->expects(self::once())
             ->method('getType')
             ->willReturn($type);
-        /* @var $nativeTypeFactory NativeTypeFactoryInterface */
-        /* @var $constructor ReflectionMethod */
-        /* @var $param ReflectionParameter */
 
         $reader = new NativeTypeReader($nativeTypeFactory);
         $reader->initialize($constructor);

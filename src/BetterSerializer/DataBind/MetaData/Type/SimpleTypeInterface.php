@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
 
 /**
  * Interface SimpleTypeInterface
- * @package BetterSerializer\DataBind\MetaData\Type\Factory
+ * @package BetterSerializer\DataBind\MetaData\Type\Converter
  */
 interface SimpleTypeInterface extends TypeInterface
 {

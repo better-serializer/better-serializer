@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ArrayMember;
+use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DateTimeMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DocBlockArrayMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ObjectMember;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember;
@@ -15,7 +16,7 @@ use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember;
 /**
  * Class TypeFactoryBuilder
  * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory
+ * @package BetterSerializer\DataBind\MetaData\Type\Converter
  */
 final class TypeFactoryBuilder
 {
@@ -27,6 +28,7 @@ final class TypeFactoryBuilder
     {
         $typeFactory = new TypeFactory();
         $typeFactory->addChainMember(new SimpleMember());
+        $typeFactory->addChainMember(new DateTimeMember());
         $typeFactory->addChainMember(new ObjectMember());
         $typeFactory->addChainMember(new ArrayMember($typeFactory));
         $typeFactory->addChainMember(new DocBlockArrayMember($typeFactory));

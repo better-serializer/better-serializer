@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
  * Class ChainedCombiner
@@ -19,11 +19,11 @@ abstract class ChainedCombiner implements ChainedCombinerInterface
 {
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface|null
      */
     public function combineWithParameter(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): ?Context\PropertyWithConstructorParamTupleInterface {
         if (!$this->isAbleToCombine($parameter)) {
             return null;
@@ -33,16 +33,16 @@ abstract class ChainedCombiner implements ChainedCombinerInterface
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return bool
      */
-    abstract protected function isAbleToCombine(ReflectionParameter $parameter): bool;
+    abstract protected function isAbleToCombine(ReflectionParameterInterface $parameter): bool;
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface
      */
     abstract protected function createCombinedTuple(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): Context\PropertyWithConstructorParamTupleInterface;
 }

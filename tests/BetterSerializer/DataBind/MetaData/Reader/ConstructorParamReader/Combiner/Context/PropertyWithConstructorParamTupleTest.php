@@ -9,8 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combi
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionParameter;
 
 /**
  * Class PropertyWithConstructorParamTupleTest
@@ -28,18 +28,14 @@ class PropertyWithConstructorParamTupleTest extends TestCase
         $paramName = 'test';
         $propertyName = 'testProperty';
 
-        $constructorParam = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $constructorParam = $this->createMock(ReflectionParameterInterface::class);
         $constructorParam->expects(self::once())
             ->method('getName')
             ->willReturn($paramName);
 
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getOutputKey')
             ->willReturn($propertyName);
@@ -47,8 +43,6 @@ class PropertyWithConstructorParamTupleTest extends TestCase
             ->method('getType')
             ->willReturn($type);
 
-        /* @var $constructorParam ReflectionParameter */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
         $tuple = new PropertyWithConstructorParamTuple($constructorParam, $propertyMetaData);
 
         self::assertSame($constructorParam, $tuple->getConstructorParam());

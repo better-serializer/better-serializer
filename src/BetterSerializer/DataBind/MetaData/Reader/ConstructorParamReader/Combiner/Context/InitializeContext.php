@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
-use ReflectionMethod;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 
 /**
  * Class InitializeContext
@@ -19,7 +19,7 @@ final class InitializeContext implements InitializeContextInterface
 {
 
     /**
-     * @var ReflectionMethod
+     * @var ReflectionMethodInterface
      */
     private $constructor;
 
@@ -30,19 +30,21 @@ final class InitializeContext implements InitializeContextInterface
 
     /**
      * InitializeContext constructor.
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @param ShrinkingPropertiesMetaDataInterface $propertiesMetaData
      */
-    public function __construct(ReflectionMethod $constructor, ShrinkingPropertiesMetaDataInterface $propertiesMetaData)
-    {
+    public function __construct(
+        ReflectionMethodInterface $constructor,
+        ShrinkingPropertiesMetaDataInterface $propertiesMetaData
+    ) {
         $this->constructor = $constructor;
         $this->propertiesMetaData = $propertiesMetaData;
     }
 
     /**
-     * @return ReflectionMethod
+     * @return ReflectionMethodInterface
      */
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethodInterface
     {
         return $this->constructor;
     }

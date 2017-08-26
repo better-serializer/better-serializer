@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Injector\Property;
 
 use BetterSerializer\Dto\CarInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
@@ -25,18 +26,21 @@ class ReflectionInjectorTest extends TestCase
      */
     public function testInject(): void
     {
-        $objectStub = $this->getMockBuilder(CarInterface::class)->getMock();
+        $objectStub = $this->createMock(CarInterface::class);
         $value = 'red';
 
-        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
+        $nativeReflProperty = $this->getMockBuilder(ReflectionProperty::class)
             ->disableOriginalConstructor()
             ->disableProxyingToOriginalMethods()
             ->getMock();
-        $reflPropertyStub->expects(self::once())
+        $nativeReflProperty->expects(self::once())
             ->method('setValue')
             ->with($objectStub, $value);
 
-        /* @var $reflPropertyStub ReflectionProperty */
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
+        $reflPropertyStub->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty);
+
         $injector = new ReflectionInjector($reflPropertyStub);
         $injector->inject($objectStub, $value);
     }

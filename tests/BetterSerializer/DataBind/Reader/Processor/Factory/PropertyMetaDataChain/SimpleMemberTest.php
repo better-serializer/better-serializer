@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;

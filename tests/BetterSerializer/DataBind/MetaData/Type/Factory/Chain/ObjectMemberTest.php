@@ -24,40 +24,23 @@ class ObjectMemberTest extends TestCase
 {
 
     /**
-     * @dataProvider classNameProvider
-     * @param string $stringTypeString
-     * @param string $className
-     * @param string $namespace
-     * @param int $nsCalls
+     *
      */
-    public function testGetType(string $stringTypeString, string $className, string $namespace, int $nsCalls): void
+    public function testGetType(): void
     {
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
-        $stringType->expects(self::once())
-            ->method('getStringType')
+        $stringTypeString = Car::class;
+        $stringType = $this->createMock(StringFormTypeInterface::class);
+        $stringType->method('getStringType')
             ->willReturn($stringTypeString);
-        $stringType->expects(self::exactly($nsCalls))
-            ->method('getNamespace')
-            ->willReturn($namespace);
-        /* @var $stringType StringFormTypeInterface */
+        $stringType->method('isClass')
+            ->willReturn(true);
 
         $objectMember = new ObjectMember();
         /* @var $typeObject ObjectType */
         $typeObject = $objectMember->getType($stringType);
 
         self::assertInstanceOf(ObjectType::class, $typeObject);
-        self::assertSame($typeObject->getClassName(), $className);
-    }
-
-    /**
-     * @return array
-     */
-    public function classNameProvider(): array
-    {
-        return [
-            [Car::class, Car::class, '', 0],
-            ['Radio', Radio::class, 'BetterSerializer\\Dto\\', 1],
-        ];
+        self::assertSame($typeObject->getClassName(), $stringTypeString);
     }
 
     /**
@@ -65,14 +48,10 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringType = $this->createMock(StringFormTypeInterface::class);
         $stringType->expects(self::once())
-            ->method('getStringType')
-            ->willReturn(TypeEnum::STRING);
-        $stringType->expects(self::once())
-            ->method('getNamespace')
-            ->willReturn('');
-        /* @var $stringType StringFormTypeInterface */
+            ->method('isClass')
+            ->willReturn(false);
 
         $objectMember = new ObjectMember();
         $shouldBeNull = $objectMember->getType($stringType);

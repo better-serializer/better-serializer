@@ -8,10 +8,11 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionMethod;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
+use LogicException;
 
 /**
  * Class NativeTypeReader
@@ -27,11 +28,6 @@ final class NativeTypeReader implements ChainedTypeReaderInterface
     private $nativeTypeFactory;
 
     /**
-     * @var string
-     */
-    private $currentNamespace;
-
-    /**
      * NativeTypeReader constructor.
      * @param NativeTypeFactoryInterface $nativeTypeFactory
      */
@@ -41,21 +37,22 @@ final class NativeTypeReader implements ChainedTypeReaderInterface
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function initialize(ReflectionMethod $constructor): void
+    public function initialize(ReflectionMethodInterface $constructor): void
     {
-        $this->currentNamespace = $constructor->getNamespaceName();
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return TypeInterface
+     * @throws LogicException
      */
-    public function getType(ReflectionParameter $parameter): TypeInterface
+    public function getType(ReflectionParameterInterface $parameter): TypeInterface
     {
         $type = $parameter->getType();
-        $stringFormType = new StringFormType((string) $type, $this->currentNamespace);
+        $stringFormType = new ContextStringFormType((string) $type, $parameter->getDeclaringClass());
 
         return $this->nativeTypeFactory->getType($stringFormType);
     }

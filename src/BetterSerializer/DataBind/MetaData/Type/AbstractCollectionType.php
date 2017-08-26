@@ -26,6 +26,7 @@ abstract class AbstractCollectionType extends AbstractType implements ComplexTyp
      */
     public function __construct(TypeInterface $nestedType)
     {
+        parent::__construct();
         $this->nestedType = $nestedType;
     }
 

@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use RuntimeException;
 
 /**
- * Class Factory
+ * Class Converter
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Extractor
  */
@@ -23,6 +23,7 @@ final class AbstractFactory implements AbstractFactoryInterface
 
     /**
      * @const string[]
+     * @SuppressWarnings(PHPMD)
      */
     private const METADATA2FACTORY_MAPPING = [
         ReflectionPropertyMetaDataInterface::class => ReflectionFactory::class,

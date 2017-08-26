@@ -15,10 +15,10 @@ final class UnknownType extends AbstractType
 {
 
     /**
-     * StringDataType constructor.
+     * @return void
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function __construct()
+    protected function initType(): void
     {
         $this->type = TypeEnum::UNKNOWN();
     }
@@ -26,6 +26,7 @@ final class UnknownType extends AbstractType
     /**
      * @param TypeInterface $type
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function isCompatibleWith(TypeInterface $type): bool
     {

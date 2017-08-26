@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combi
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
  * Class PropertyWithConsturctorParamTupleInterface
@@ -20,9 +20,9 @@ interface PropertyWithConstructorParamTupleInterface
 {
 
     /**
-     * @return ReflectionParameter
+     * @return ReflectionParameterInterface
      */
-    public function getConstructorParam(): ReflectionParameter;
+    public function getConstructorParam(): ReflectionParameterInterface;
 
     /**
      * @return string

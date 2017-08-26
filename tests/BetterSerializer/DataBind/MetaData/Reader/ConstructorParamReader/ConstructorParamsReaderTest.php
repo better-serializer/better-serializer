@@ -11,9 +11,9 @@ use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorPa
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionMethod;
 use RuntimeException;
 
 /**
@@ -30,30 +30,22 @@ class ConstructorParamsReaderTest extends TestCase
     public function testGetConstructorParamsMetadata(): void
     {
         $name = 'name';
-
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $type = $this->createMock(TypeInterface::class);
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
         $propertiesMetaData = [];
 
-        $reflClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
         $reflClass->expects(self::once())
             ->method('getConstructor')
             ->willReturn($constructor);
 
-        $propertyType = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $propertyType = $this->createMock(TypeInterface::class);
         $propertyType->expects(self::once())
             ->method('isCompatibleWith')
             ->with($type)
             ->willReturn(true);
 
-        $tuple = $this->getMockBuilder(Combiner\Context\PropertyWithConstructorParamTupleInterface::class)
-            ->getMock();
+        $tuple = $this->createMock(Combiner\Context\PropertyWithConstructorParamTupleInterface::class);
         $tuple->expects(self::exactly(2))
             ->method('getParamName')
             ->willReturn($name);
@@ -64,22 +56,18 @@ class ConstructorParamsReaderTest extends TestCase
             ->method('getPropertyType')
             ->willReturn($propertyType);
 
-        $combiner = $this->getMockBuilder(Combiner\PropertyWithConstructorParamCombinerInterface::class)
-            ->getMock();
+        $combiner = $this->createMock(Combiner\PropertyWithConstructorParamCombinerInterface::class);
         $combiner->expects(self::once())
             ->method('combine')
             ->with($constructor, $propertiesMetaData)
             ->willReturn([$tuple]);
 
-        $typeReader = $this->getMockBuilder(TypeReaderInterface::class)->getMock();
+        $typeReader = $this->createMock(TypeReaderInterface::class);
         $typeReader->expects(self::once())
             ->method('getParameterTypes')
             ->with($constructor)
             ->willReturn([$name => $type]);
 
-        /* @var $combiner Combiner\PropertyWithConstructorParamCombinerInterface */
-        /* @var $typeReader TypeReaderInterface */
-        /* @var $reflClass ReflectionClass */
         $reader = new ConstructorParamsReader($combiner, $typeReader);
         $constrParamsMetaData = $reader->getConstructorParamsMetadata($reflClass, $propertiesMetaData);
 
@@ -99,42 +87,31 @@ class ConstructorParamsReaderTest extends TestCase
     public function testGetConstructorParamsMetadataWillThrowRuntimeException(): void
     {
         $name = 'name';
-
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
         $propertiesMetaData = [];
 
-        $reflClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
         $reflClass->expects(self::once())
             ->method('getConstructor')
             ->willReturn($constructor);
 
-        $tuple = $this->getMockBuilder(Combiner\Context\PropertyWithConstructorParamTupleInterface::class)
-            ->getMock();
+        $tuple = $this->createMock(Combiner\Context\PropertyWithConstructorParamTupleInterface::class);
         $tuple->expects(self::once())
             ->method('getParamName')
             ->willReturn($name);
 
-        $combiner = $this->getMockBuilder(Combiner\PropertyWithConstructorParamCombinerInterface::class)
-            ->getMock();
+        $combiner = $this->createMock(Combiner\PropertyWithConstructorParamCombinerInterface::class);
         $combiner->expects(self::once())
             ->method('combine')
             ->with($constructor, $propertiesMetaData)
             ->willReturn([$tuple]);
 
-        $typeReader = $this->getMockBuilder(TypeReaderInterface::class)->getMock();
+        $typeReader = $this->createMock(TypeReaderInterface::class);
         $typeReader->expects(self::once())
             ->method('getParameterTypes')
             ->with($constructor)
             ->willReturn([]);
 
-        /* @var $combiner Combiner\PropertyWithConstructorParamCombinerInterface */
-        /* @var $typeReader TypeReaderInterface */
-        /* @var $reflClass ReflectionClass */
         $reader = new ConstructorParamsReader($combiner, $typeReader);
         $reader->getConstructorParamsMetadata($reflClass, $propertiesMetaData);
     }

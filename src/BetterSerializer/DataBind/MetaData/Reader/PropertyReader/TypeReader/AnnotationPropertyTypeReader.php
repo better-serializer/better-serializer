@@ -8,8 +8,9 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use LogicException;
 
 /**
  * Class AnnotationPropertyTypeReader
@@ -22,6 +23,7 @@ final class AnnotationPropertyTypeReader implements TypeReaderInterface
     /**
      * @param PropertyContextInterface $context
      * @return StringFormTypeInterface|null
+     * @throws LogicException
      */
     public function resolveType(PropertyContextInterface $context): ?StringFormTypeInterface
     {
@@ -33,6 +35,6 @@ final class AnnotationPropertyTypeReader implements TypeReaderInterface
 
         $propertyType = $propertyAnnotation->getType();
 
-        return new StringFormTypedPropertyContext($context, $propertyType);
+        return new ContextStringFormType($propertyType, $context->getReflectionClass());
     }
 }

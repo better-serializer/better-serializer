@@ -11,8 +11,8 @@ use BetterSerializer\DataBind\MetaData\Annotations\BoundToPropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
-use ReflectionParameter;
 
 /**
  * Class AnnotationCombiner
@@ -54,7 +54,7 @@ final class AnnotationCombiner extends ChainedCombiner
         $this->propertiesMetaData = $context->getPropertiesMetaData();
         $constructor = $context->getConstructor();
 
-        $allAnnotations = $this->annotationReader->getMethodAnnotations($constructor);
+        $allAnnotations = $this->annotationReader->getMethodAnnotations($constructor->getNativeReflMethod());
         $this->annotations = [];
 
         foreach ($allAnnotations as $annotation) {
@@ -67,20 +67,20 @@ final class AnnotationCombiner extends ChainedCombiner
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return bool
      */
-    protected function isAbleToCombine(ReflectionParameter $parameter): bool
+    protected function isAbleToCombine(ReflectionParameterInterface $parameter): bool
     {
         return isset($this->annotations[$parameter->getName()]);
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface
      */
     protected function createCombinedTuple(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): Context\PropertyWithConstructorParamTupleInterface {
         $boundTuple = $this->annotations[$parameter->getName()];
         /* @var $propertyMetaData ReflectionPropertyMetaDataInterface */

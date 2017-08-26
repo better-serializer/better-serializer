@@ -11,8 +11,8 @@ use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Co
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionParameter;
 
 /**
  * Class EqualNamesCombinerTest
@@ -30,9 +30,9 @@ class EqualNamesCombinerTest extends TestCase
         $paramName = 'test';
         $argName = 'test';
 
-        $propertyMetaData = $this->getMockBuilder(ReflectionPropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(ReflectionPropertyMetaDataInterface::class);
 
-        $propertiesMetaData = $this->getMockBuilder(ShrinkingPropertiesMetaDataInterface::class)->getMock();
+        $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
         $propertiesMetaData->expects(self::once())
             ->method('hasProperty')
             ->with($paramName)
@@ -42,20 +42,17 @@ class EqualNamesCombinerTest extends TestCase
             ->with($paramName)
             ->willReturn($propertyMetaData);
 
-        $context = $this->getMockBuilder(InitializeContextInterface::class)->getMock();
+        $context = $this->createMock(InitializeContextInterface::class);
         $context->expects(self::once())
             ->method('getPropertiesMetaData')
             ->willReturn($propertiesMetaData);
 
-        $parameter = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $parameter = $this->createMock(ReflectionParameterInterface::class);
         $parameter->expects(self::exactly(2))
             ->method('getName')
             ->willReturn($argName);
 
         /* @var $context InitializeContextInterface */
-        /* @var $parameter ReflectionParameter */
         $combiner = new EqualNamesCombiner();
         $combiner->initialize($context);
         $tuple = $combiner->combineWithParameter($parameter);
@@ -71,22 +68,19 @@ class EqualNamesCombinerTest extends TestCase
     public function testCombineWithParameterNotApplicable(): void
     {
         $argName = 'testArg';
-        $propertiesMetaData = $this->getMockBuilder(ShrinkingPropertiesMetaDataInterface::class)->getMock();
+        $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
 
-        $context = $this->getMockBuilder(InitializeContextInterface::class)->getMock();
+        $context = $this->createMock(InitializeContextInterface::class);
         $context->expects(self::once())
             ->method('getPropertiesMetaData')
             ->willReturn($propertiesMetaData);
 
-        $parameter = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $parameter = $this->createMock(ReflectionParameterInterface::class);
         $parameter->expects(self::once())
             ->method('getName')
             ->willReturn($argName);
 
         /* @var $context InitializeContextInterface */
-        /* @var $parameter ReflectionParameter */
         $combiner = new EqualNamesCombiner();
         $combiner->initialize($context);
         $tuple = $combiner->combineWithParameter($parameter);

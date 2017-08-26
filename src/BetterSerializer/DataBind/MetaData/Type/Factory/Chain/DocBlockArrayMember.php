@@ -7,11 +7,14 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\FqdnStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use LogicException;
 
 /**
  * Class SimpleMember
@@ -41,12 +44,12 @@ final class DocBlockArrayMember extends ChainMember
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringType): bool
+    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
     {
-        if (preg_match('/([^\[]+)\[\]/', $stringType->getStringType(), $matches)) {
+        if (preg_match('/([^\[]+)\[\]/', $stringFormType->getStringType(), $matches)) {
             $this->stringSubType = $matches[1];
 
             return true;
@@ -56,13 +59,24 @@ final class DocBlockArrayMember extends ChainMember
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface
+     * @throws LogicException
      */
-    protected function createType(StringFormTypeInterface $stringType): TypeInterface
+    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
     {
-        $subContext = new StringFormType($this->stringSubType, $stringType->getNamespace());
-        $subType = $this->typeFactory->getType($subContext);
+        $subTypeCallback = function (string $stringSubType): StringFormTypeInterface {
+            return new FqdnStringFormType($stringSubType);
+        };
+
+        if ($stringFormType instanceof ContextStringFormTypeInterface) {
+            $subTypeCallback = function (string $stringSubType) use ($stringFormType): StringFormTypeInterface {
+                return new ContextStringFormType($stringSubType, $stringFormType->getReflectionClass());
+            };
+        }
+
+        $nestedStringFormType = $subTypeCallback($this->stringSubType);
+        $subType = $this->typeFactory->getType($nestedStringFormType);
 
         return new ArrayType($subType);
     }

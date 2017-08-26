@@ -45,7 +45,7 @@ final class NativeTypeFactory implements NativeTypeFactoryInterface
             case $stringType === 'string':
                 return new StringType();
             case $stringFormType->isClass():
-                return new ObjectType($stringFormType->getNamespace() . '\\' . $stringType);
+                return new ObjectType($stringType);
         }
 
         return new UnknownType();

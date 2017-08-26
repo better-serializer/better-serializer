@@ -13,10 +13,10 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
-use ReflectionParameter;
 
 /**
  * Class AnnotationCombinerTest
@@ -34,20 +34,17 @@ class AnnotationCombinerTest extends TestCase
         $paramName = 'test';
         $argName = 'testArg';
 
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
 
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $propertiesMetaData = $this->getMockBuilder(ShrinkingPropertiesMetaDataInterface::class)->getMock();
+        $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
         $propertiesMetaData->expects(self::once())
             ->method('shrinkBy')
             ->with($paramName)
             ->willReturn($propertyMetaData);
 
-        $wrongAnnotation = $this->getMockBuilder(AnnotationInterface::class)->getMock();
-        $goodAnnotation = $this->getMockBuilder(BoundToPropertyInterface::class)->getMock();
+        $wrongAnnotation = $this->createMock(AnnotationInterface::class);
+        $goodAnnotation = $this->createMock(BoundToPropertyInterface::class);
         $goodAnnotation->expects(self::once())
             ->method('getArgumentName')
             ->willReturn($argName);
@@ -62,7 +59,7 @@ class AnnotationCombinerTest extends TestCase
             ->method('getMethodAnnotations')
             ->willReturn([$wrongAnnotation, $goodAnnotation]);
 
-        $context = $this->getMockBuilder(InitializeContextInterface::class)->getMock();
+        $context = $this->createMock(InitializeContextInterface::class);
         $context->expects(self::once())
             ->method('getConstructor')
             ->willReturn($constructor);
@@ -70,16 +67,12 @@ class AnnotationCombinerTest extends TestCase
             ->method('getPropertiesMetaData')
             ->willReturn($propertiesMetaData);
 
-        $parameter = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $parameter = $this->createMock(ReflectionParameterInterface::class);
         $parameter->expects(self::exactly(2))
             ->method('getName')
             ->willReturn($argName);
 
         /* @var $annotationReader AnnotationReader */
-        /* @var $context InitializeContextInterface */
-        /* @var $parameter ReflectionParameter */
         $combiner = new AnnotationCombiner($annotationReader);
         $combiner->initialize($context);
         $tuple = $combiner->combineWithParameter($parameter);
@@ -96,13 +89,9 @@ class AnnotationCombinerTest extends TestCase
     {
         $argName = 'testArg';
 
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $propertiesMetaData = $this->getMockBuilder(ShrinkingPropertiesMetaDataInterface::class)->getMock();
-
-        $wrongAnnotation = $this->getMockBuilder(AnnotationInterface::class)->getMock();
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
+        $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
+        $wrongAnnotation = $this->createMock(AnnotationInterface::class);
 
         $annotationReader = $this->getMockBuilder(AnnotationReader::class)
             ->disableOriginalConstructor()
@@ -111,7 +100,7 @@ class AnnotationCombinerTest extends TestCase
             ->method('getMethodAnnotations')
             ->willReturn([$wrongAnnotation]);
 
-        $context = $this->getMockBuilder(InitializeContextInterface::class)->getMock();
+        $context = $this->createMock(InitializeContextInterface::class);
         $context->expects(self::once())
             ->method('getConstructor')
             ->willReturn($constructor);
@@ -119,16 +108,12 @@ class AnnotationCombinerTest extends TestCase
             ->method('getPropertiesMetaData')
             ->willReturn($propertiesMetaData);
 
-        $parameter = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $parameter = $this->createMock(ReflectionParameterInterface::class);
         $parameter->expects(self::once())
             ->method('getName')
             ->willReturn($argName);
 
         /* @var $annotationReader AnnotationReader */
-        /* @var $context InitializeContextInterface */
-        /* @var $parameter ReflectionParameter */
         $combiner = new AnnotationCombiner($annotationReader);
         $combiner->initialize($context);
         $tuple = $combiner->combineWithParameter($parameter);

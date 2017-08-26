@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combi
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
  * Class EqualNamesCombiner
@@ -34,20 +34,20 @@ final class EqualNamesCombiner extends ChainedCombiner
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return bool
      */
-    protected function isAbleToCombine(ReflectionParameter $parameter): bool
+    protected function isAbleToCombine(ReflectionParameterInterface $parameter): bool
     {
         return $this->propertiesMetaData->hasProperty($parameter->getName());
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface
      */
     protected function createCombinedTuple(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): Context\PropertyWithConstructorParamTupleInterface {
         $propertyMetaData = $this->propertiesMetaData->shrinkBy($parameter->getName());
 

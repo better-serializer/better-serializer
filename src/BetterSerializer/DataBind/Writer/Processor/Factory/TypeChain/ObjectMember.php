@@ -19,9 +19,9 @@ use ReflectionException;
 /**
  * Class ObjectMember
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain
+ * @package BetterSerializer\DataBind\Writer\Processor\Converter\TypeChain
  */
-final class ObjectMember extends ChainMember
+final class ObjectMember extends RecursiveChainMember
 {
 
     /**

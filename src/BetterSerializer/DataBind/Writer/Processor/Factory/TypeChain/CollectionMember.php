@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -24,7 +24,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain
  */
-final class CollectionMember extends ChainMember
+final class CollectionMember extends RecursiveChainMember
 {
 
     /**

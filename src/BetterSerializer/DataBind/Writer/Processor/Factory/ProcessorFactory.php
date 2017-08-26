@@ -20,7 +20,7 @@ use RuntimeException;
 /**
  * Class ProcessorFactory
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory
+ * @package BetterSerializer\DataBind\Writer\Processor\Converter
  */
 final class ProcessorFactory implements ProcessorFactoryInterface
 {

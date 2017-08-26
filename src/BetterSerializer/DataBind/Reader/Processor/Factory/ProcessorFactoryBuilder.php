@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory;
 
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
+use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory;

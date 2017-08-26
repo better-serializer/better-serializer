@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Extractor\Property;
 
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use ReflectionProperty;
 
 /**
@@ -25,11 +26,11 @@ final class ReflectionExtractor implements ExtractorInterface
 
     /**
      * ReflectionExtractor constructor.
-     * @param ReflectionProperty $reflectionProperty
+     * @param ReflectionPropertyInterface $reflectionProperty
      */
-    public function __construct(ReflectionProperty $reflectionProperty)
+    public function __construct(ReflectionPropertyInterface $reflectionProperty)
     {
-        $this->reflectionProperty = $reflectionProperty;
+        $this->reflectionProperty = $reflectionProperty->getNativeReflProperty();
     }
 
     /**

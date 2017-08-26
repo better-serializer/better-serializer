@@ -13,7 +13,7 @@ use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 /**
  * Class ChainMember
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain
+ * @package BetterSerializer\DataBind\Writer\Processor\Converter\PropertyMetaDataChain
  */
 abstract class ChainMember implements ChainMemberInterface
 {

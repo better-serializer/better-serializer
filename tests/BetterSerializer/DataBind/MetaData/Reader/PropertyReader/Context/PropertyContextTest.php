@@ -8,9 +8,9 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
 
 /**
  * Class PropertyContextTest
@@ -26,21 +26,15 @@ class PropertyContextTest extends TestCase
      */
     public function testEverything(): void
     {
-        $reflClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
         $reflClass->expects(self::once())
             ->method('getNamespaceName')
             ->willReturn('test');
 
-        $reflProperty = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $propertyAnnotation = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
+        $propertyAnnotation = $this->createMock(PropertyInterface::class);
         $annotations = [$propertyAnnotation];
 
-        /* @var $reflClass ReflectionClass */
-        /* @var $reflProperty ReflectionProperty */
         $context = new PropertyContext($reflClass, $reflProperty, $annotations);
 
         self::assertSame($reflClass, $context->getReflectionClass());

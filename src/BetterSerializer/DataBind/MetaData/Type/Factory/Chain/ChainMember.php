@@ -13,33 +13,33 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 /**
  * Class ChainMember
  * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory\Chain
+ * @package BetterSerializer\DataBind\MetaData\Type\Converter\Chain
  */
 abstract class ChainMember implements ChainMemberInterface
 {
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface|null
      */
-    public function getType(StringFormTypeInterface $stringType): ?TypeInterface
+    public function getType(StringFormTypeInterface $stringFormType): ?TypeInterface
     {
-        if (!$this->isProcessable($stringType)) {
+        if (!$this->isProcessable($stringFormType)) {
             return null;
         }
 
-        return $this->createType($stringType);
+        return $this->createType($stringFormType);
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return bool
      */
-    abstract protected function isProcessable(StringFormTypeInterface $stringType): bool;
+    abstract protected function isProcessable(StringFormTypeInterface $stringFormType): bool;
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface
      */
-    abstract protected function createType(StringFormTypeInterface $stringType): TypeInterface;
+    abstract protected function createType(StringFormTypeInterface $stringFormType): TypeInterface;
 }

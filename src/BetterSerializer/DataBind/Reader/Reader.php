@@ -7,8 +7,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader;
 
 use BetterSerializer\Common\SerializationTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\FqdnStringFormType;
 use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use LogicException;
@@ -66,7 +66,7 @@ final class Reader implements ReaderInterface
     public function readValue(string $serialized, string $stringType, SerializationTypeInterface $serializationType)
     {
         $context = $this->contextFactory->createContext($serialized, $serializationType);
-        $typeContext = new StringFormType($stringType, '');
+        $typeContext = new FqdnStringFormType($stringType);
         $type = $this->typeFactory->getType($typeContext);
         $processor = $this->processorFactory->createFromType($type);
         $processor->process($context);

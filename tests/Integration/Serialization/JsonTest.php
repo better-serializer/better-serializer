@@ -11,9 +11,12 @@ use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Car2;
 use BetterSerializer\Dto\Door;
+use BetterSerializer\Dto\Nested\CarFactory;
 use BetterSerializer\Dto\Radio;
 use BetterSerializer\Dto\SpecialCar;
 use Integration\AbstractIntegrationTest;
+use DateTime;
+use DateTimeImmutable;
 
 /**
  * Class Json
@@ -51,6 +54,7 @@ final class JsonTest extends AbstractIntegrationTest
             $this->getStringsInArray(),
             $this->getInheritedObjectTuple(),
             $this->getOverridenNameTuple(),
+            $this->getNamespaceFeatureTupleWithDateTimes(),
         ];
     }
 
@@ -157,12 +161,44 @@ final class JsonTest extends AbstractIntegrationTest
 
     /**
      * @return array
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function getOverridenNameTuple(): array
     {
-        $car2 = new Car2('testTitle');
-        $json = '{"serializedTitle":"testTitle"}';
+        $car2 = new Car2(
+            'testTitle',
+            DateTime::createFromFormat('Y-m-d H:i:s', '2010-09-01 08:07:06'),
+            DateTime::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00'),
+            DateTimeImmutable::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00')
+        );
+        $json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
+            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
 
         return [$car2, $json];
+    }
+
+    /**
+     * @return array
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    private function getNamespaceFeatureTupleWithDateTimes(): array
+    {
+        $radio = new Radio('test station');
+        $car = new SpecialCar('Honda', 'white', $radio, 'special');
+        $carJson = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[],"special":"special"}';
+
+        $car2 = new Car2(
+            'testTitle',
+            DateTime::createFromFormat('Y-m-d H:i:s', '2010-09-01 08:07:06'),
+            DateTime::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00'),
+            DateTimeImmutable::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00')
+        );
+        $car2Json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
+            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
+
+        $factory = new CarFactory([$car], [$car2]);
+        $json = '{"cars":[' . $carJson .'],"cars2":['. $car2Json .']}';
+
+        return [$factory, $json];
     }
 }

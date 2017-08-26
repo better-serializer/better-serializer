@@ -20,7 +20,7 @@ use ReflectionException;
 /**
  * Class ObjectMember
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain
+ * @package BetterSerializer\DataBind\Reader\Processor\Converter\TypeChain
  */
 final class ObjectMember extends ChainMember
 {

@@ -9,9 +9,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeR
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained\ChainedTypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
-use ReflectionParameter;
 use RuntimeException;
 
 /**
@@ -29,29 +29,25 @@ class TypeReaderTest extends TestCase
     {
         $paramName = 'test';
 
-        $reflectionParam = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionParam = $this->createMock(ReflectionParameterInterface::class);
         $reflectionParam->expects(self::once())
             ->method('getName')
             ->willReturn($paramName);
 
-        $reflectionMethod = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflectionMethod = $this->createMock(ReflectionMethodInterface::class);
         $reflectionMethod->expects(self::once())
             ->method('getParameters')
             ->willReturn([$reflectionParam]);
 
-        $type2 = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type2 = $this->createMock(TypeInterface::class);
 
-        $type1 = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type1 = $this->createMock(TypeInterface::class);
         $type1->expects(self::once())
             ->method('isCompatibleWith')
             ->with($type2)
             ->willReturn(true);
 
-        $chainReader1 = $this->getMockBuilder(ChainedTypeReaderInterface::class)->getMock();
+        $chainReader1 = $this->createMock(ChainedTypeReaderInterface::class);
         $chainReader1->expects(self::once())
             ->method('initialize')
             ->with($reflectionMethod);
@@ -60,7 +56,7 @@ class TypeReaderTest extends TestCase
             ->with($reflectionParam)
             ->willReturn($type1);
 
-        $chainReader2 = $this->getMockBuilder(ChainedTypeReaderInterface::class)->getMock();
+        $chainReader2 = $this->createMock(ChainedTypeReaderInterface::class);
         $chainReader2->expects(self::once())
             ->method('initialize')
             ->with($reflectionMethod);
@@ -69,7 +65,6 @@ class TypeReaderTest extends TestCase
             ->with($reflectionParam)
             ->willReturn($type2);
 
-        /* @var $reflectionMethod ReflectionMethod */
         $reader = new TypeReader([$chainReader1, $chainReader2]);
         $types = $reader->getParameterTypes($reflectionMethod);
 

@@ -8,30 +8,15 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 
 /**
  * Class ChainMember
  * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\Chain
+ * @package BetterSerializer\DataBind\Writer\Processor\Converter\Chain
  */
 abstract class ChainMember implements ChainMemberInterface
 {
-
-    /**
-     * @var ProcessorFactoryInterface
-     */
-    protected $processorFactory;
-
-    /**
-     * ChainMember constructor.
-     * @param ProcessorFactoryInterface $processorFactory
-     */
-    public function __construct(ProcessorFactoryInterface $processorFactory)
-    {
-        $this->processorFactory = $processorFactory;
-    }
 
     /**
      * @param TypeInterface $type

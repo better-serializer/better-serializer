@@ -20,7 +20,7 @@ use ReflectionException;
 /**
  * Class StandardConstructorFactory
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory
+ * @package BetterSerializer\DataBind\Reader\Instantiator\Converter
  */
 final class StandardInstantiatorFactory implements ChainedInstantiatorFactoryInterface
 {

@@ -16,7 +16,7 @@ use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
-use ReflectionClass;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use RuntimeException;
 
 /**
@@ -27,11 +27,6 @@ use RuntimeException;
  */
 final class PropertiesReader implements PropertiesReaderInterface
 {
-
-    /**
-     * @var ReflectionClassHelperInterface
-     */
-    private $reflClassHelper;
 
     /**
      * @var AnnotationReader
@@ -50,19 +45,16 @@ final class PropertiesReader implements PropertiesReaderInterface
 
     /**
      * PropertyReader constructor.
-     * @param ReflectionClassHelperInterface $reflClassHelper
      * @param AnnotationReader $annotationReader
      * @param TypeFactoryInterface $typeFactory
      * @param TypeReaderInterface[] $typeReaders
      * @throws RuntimeException
      */
     public function __construct(
-        ReflectionClassHelperInterface $reflClassHelper,
         AnnotationReader $annotationReader,
         TypeFactoryInterface $typeFactory,
         array $typeReaders
     ) {
-        $this->reflClassHelper = $reflClassHelper;
         $this->annotationReader = $annotationReader;
         $this->typeFactory = $typeFactory;
 
@@ -74,17 +66,18 @@ final class PropertiesReader implements PropertiesReaderInterface
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClassInterface $reflectionClass
      * @return PropertyMetaDataInterface[]
      * @throws RuntimeException
      */
-    public function getPropertiesMetadata(ReflectionClass $reflectionClass): array
+    public function getPropertiesMetadata(ReflectionClassInterface $reflectionClass): array
     {
         $metaData = [];
 
-        foreach ($this->reflClassHelper->getProperties($reflectionClass) as $reflectionProperty) {
-            $propertyName = $reflectionProperty->getName();
-            $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty);
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            $nativeReflProperty = $reflectionProperty->getNativeReflProperty();
+            $propertyName = $nativeReflProperty->getName();
+            $annotations = $this->annotationReader->getPropertyAnnotations($nativeReflProperty);
             $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
             $type = $this->getType($context);
             $propertyClassName = $type instanceof ObjectType ?

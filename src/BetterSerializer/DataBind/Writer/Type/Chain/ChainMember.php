@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 /**
  * Class ChainMember
  * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory\Chain
+ * @package BetterSerializer\DataBind\MetaData\Type\Converter\Chain
  */
 abstract class ChainMember implements ChainMemberInterface
 {

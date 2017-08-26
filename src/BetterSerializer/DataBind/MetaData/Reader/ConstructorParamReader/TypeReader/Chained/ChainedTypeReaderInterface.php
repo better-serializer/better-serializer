@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionMethod;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
  * Interface ChainedTypeReaderInterface
@@ -20,13 +20,13 @@ interface ChainedTypeReaderInterface
 {
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      */
-    public function initialize(ReflectionMethod $constructor): void;
+    public function initialize(ReflectionMethodInterface $constructor): void;
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return TypeInterface
      */
-    public function getType(ReflectionParameter $parameter): TypeInterface;
+    public function getType(ReflectionParameterInterface $parameter): TypeInterface;
 }

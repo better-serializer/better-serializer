@@ -7,15 +7,13 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\MetaData;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader;
 use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReader;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use PHPUnit\Framework\TestCase;
 use LogicException;
 use ReflectionClass;
@@ -34,27 +32,31 @@ class ReaderTest extends TestCase
      */
     public function testRead(): void
     {
-        $classMetadata = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
+        $reflectionClass = $this->createMock(ReflectionClassInterface::class);
+        $reflectionClass->method('isUserDefined')
+            ->willReturn(true);
+        $reflClassFactory = $this->createMock(ReflectionClassFactoryInterface::class);
+        $reflClassFactory->method('newReflectionClass')
+            ->willReturn($reflectionClass);
 
-        $classReader = $this->getMockBuilder(ClassReaderInterface::class)->getMock();
+        $classMetadata = $this->createMock(ClassMetaDataInterface::class);
+
+        $classReader = $this->createMock(ClassReaderInterface::class);
         $classReader->expects(self::once())
             ->method('getClassMetadata')
             ->willReturn($classMetadata);
-        /* @var $classReader ClassReader */
 
-        $propertyReader = $this->getMockBuilder(PropertiesReaderInterface::class)->getMock();
+        $propertyReader = $this->createMock(PropertiesReaderInterface::class);
         $propertyReader->expects(self::once())
             ->method('getPropertiesMetadata')
             ->willReturn([]);
-        /* @var $propertyReader PropertiesReader */
 
-        $constrParamsReader = $this->getMockBuilder(ConstructorParamsReaderInterface::class)->getMock();
+        $constrParamsReader = $this->createMock(ConstructorParamsReaderInterface::class);
         $constrParamsReader->expects(self::once())
             ->method('getConstructorParamsMetadata')
             ->willReturn([]);
-        /* @var $constrParamsReader ConstructorParamsReaderInterface */
 
-        $reader = new Reader($classReader, $propertyReader, $constrParamsReader);
+        $reader = new Reader($reflClassFactory, $classReader, $propertyReader, $constrParamsReader);
         $metaData = $reader->read(Car::class);
 
         self::assertInstanceOf(MetaData::class, $metaData);
@@ -66,16 +68,19 @@ class ReaderTest extends TestCase
      */
     public function testReadSystemClassThrowsException(): void
     {
-        $classReader = $this->getMockBuilder(ClassReaderInterface::class)->getMock();
-        /* @var $classReader ClassReader */
+        $reflectionClass = $this->createMock(ReflectionClassInterface::class);
+        $reflectionClass->method('isUserDefined')
+            ->willReturn(false);
+        $reflectionClass->method('getName')
+            ->willReturn(ReflectionClass::class);
+        $reflClassFactory = $this->createMock(ReflectionClassFactoryInterface::class);
+        $reflClassFactory->method('newReflectionClass')
+            ->willReturn($reflectionClass);
+        $classReader = $this->createMock(ClassReaderInterface::class);
+        $propertyReader = $this->createMock(PropertiesReaderInterface::class);
+        $constrParamsReader = $this->createMock(ConstructorParamsReaderInterface::class);
 
-        $propertyReader = $this->getMockBuilder(PropertiesReaderInterface::class)->getMock();
-        /* @var $propertyReader PropertiesReader */
-
-        $constrParamsReader = $this->getMockBuilder(ConstructorParamsReaderInterface::class)->getMock();
-        /* @var $constrParamsReader ConstructorParamsReaderInterface */
-
-        $reader = new Reader($classReader, $propertyReader, $constrParamsReader);
+        $reader = new Reader($reflClassFactory, $classReader, $propertyReader, $constrParamsReader);
         $reader->read(ReflectionClass::class);
     }
 }

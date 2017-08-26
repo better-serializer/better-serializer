@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionMethod;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 
 /**
  * Class TypeReaderInterface
@@ -19,8 +19,8 @@ interface TypeReaderInterface
 {
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @return TypeInterface[]
      */
-    public function getParameterTypes(ReflectionMethod $constructor): array;
+    public function getParameterTypes(ReflectionMethodInterface $constructor): array;
 }

@@ -5,230 +5,229 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
+use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader;
 use Pimple\Container;
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactoryInterface;
-use BetterSerializer\DataBind\Converter\Factory\ConverterFactory;
-use BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory;
-use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader;
-use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained\AnnotationCombiner;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained\EqualNamesCombiner;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReader;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained\DocBlockTypeReader;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained\NativeTypeReader;
-use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader as ConstructorParamTypeReader;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReader;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\AnnotationPropertyTypeReader;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\DocBlockPropertyTypeReader;
-use BetterSerializer\DataBind\MetaData\Reader\Reader as MetaDataReader;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface as MetaDataReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelper;
-use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactory;
-use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\Reader\Context\ContextFactory as ReaderContextFactory;
-use BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface as ReaderContextFactoryInterface;
-use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactory as AbstractInjectorFactory;
-use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder as ReaderProcessorFactoryBuilder;
-use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface as ReaderProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Reader;
-use BetterSerializer\DataBind\Reader\ReaderInterface;
-use BetterSerializer\DataBind\Writer\Context\ContextFactory as WriterContextFactory;
-use BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface as WriterContextFactoryInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactory;
-use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder as WriterProcessorFactoryBuilder;
-use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface as WriterProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Type\ExtractorBuilder;
-use BetterSerializer\DataBind\Writer\Type\ExtractorInterface;
-use BetterSerializer\DataBind\Writer\Writer;
-use BetterSerializer\DataBind\Writer\WriterInterface;
-use BetterSerializer\Serializer;
-use Doctrine\Common\Annotations\AnnotationReader;
-use phpDocumentor\Reflection\DocBlockFactory;
-use phpDocumentor\Reflection\DocBlockFactoryInterface;
 
 $container = new Container();
 
-$container[Serializer::class] = function (Container $c) {
-    return new Serializer(
-        $c[ReaderInterface::class],
-        $c[WriterInterface::class]
+$container[BetterSerializer\Serializer::class] = function (Container $c) {
+    return new BetterSerializer\Serializer(
+        $c[BetterSerializer\DataBind\Reader\ReaderInterface::class],
+        $c[BetterSerializer\DataBind\Writer\WriterInterface::class]
     );
 };
 
-$container[ReaderInterface::class] = function (Container $c) {
-    return new Reader(
-        $c[TypeFactoryInterface::class],
-        $c[ReaderProcessorFactoryInterface::class],
-        $c[ReaderContextFactoryInterface::class]
+$container[BetterSerializer\DataBind\Reader\ReaderInterface::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\Reader\Reader(
+        $c[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class],
+        $c[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::class],
+        $c[BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface::class]
     );
 };
 
-$container[ReaderProcessorFactoryInterface::class] = function (Container $c) {
-    return $c[ReaderProcessorFactoryBuilder::class]->build();
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::class] =
+    function (Container $c) {
+        return $c[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder::class]->build();
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder(
+            $c[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface::class],
+            $c[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class],
+            $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactory();
 };
 
-$container[ReaderProcessorFactoryBuilder::class] = function (Container $c) {
-    return new ReaderProcessorFactoryBuilder(
-        $c[ConverterFactoryInterface::class],
-        $c[InjectorFactoryInterface::class],
-        $c[MetaDataReaderInterface::class]
+$container[BetterSerializer\DataBind\Reader\Context\ContextFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Reader\Context\ContextFactory();
+};
+
+$container[BetterSerializer\DataBind\Writer\WriterInterface::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\Writer\Writer(
+        $c[BetterSerializer\DataBind\Writer\Type\ExtractorInterface::class],
+        $c[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class],
+        $c[BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface::class]
     );
 };
 
-$container[InjectorFactoryInterface::class] = function () {
-    return new AbstractInjectorFactory();
+$container[BetterSerializer\DataBind\Writer\Type\ExtractorInterface::class] = function (Container $c) {
+    return $c[BetterSerializer\DataBind\Writer\Type\ExtractorBuilder::class]->build();
 };
 
-$container[ReaderContextFactoryInterface::class] = function () {
-    return new ReaderContextFactory();
+$container[BetterSerializer\DataBind\Writer\Type\ExtractorBuilder::class] = function () {
+    return new BetterSerializer\DataBind\Writer\Type\ExtractorBuilder();
 };
 
-$container[WriterInterface::class] = function (Container $c) {
-    return new Writer(
-        $c[ExtractorInterface::class],
-        $c[WriterProcessorFactoryInterface::class],
-        $c[WriterContextFactoryInterface::class]
+$container[BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Writer\Context\ContextFactory();
+};
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class] =
+    function (Container $c) {
+        return $c[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class]->build();
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder(
+            $c[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class],
+            $c[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class],
+            $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Writer\Converter\ConverterFactory();
+};
+
+$container[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactory();
+};
+
+$container[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Reader\Reader(
+        $c[\BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class],
+        $c[BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface::class],
+        $c[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface::class],
+        $c[BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface::class]
     );
 };
 
-$container[ExtractorInterface::class] = function (Container $c) {
-    return $c[ExtractorBuilder::class]->build();
-};
+$container[BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReader(
+            $c[Doctrine\Common\Annotations\AnnotationReader::class]
+        );
+    };
 
-$container[ExtractorBuilder::class] = function () {
-    return new ExtractorBuilder();
-};
+$container[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface::class] =
+    function (Container $c) {
+        $typeReaders = [
+            $c[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\AnnotationPropertyTypeReader::class],
+            $c[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\DocBlockPropertyTypeReader::class],
+        ];
 
-$container[WriterContextFactoryInterface::class] = function () {
-    return new WriterContextFactory();
-};
+        return new BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReader(
+            $c[Doctrine\Common\Annotations\AnnotationReader::class],
+            $c[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class],
+            $typeReaders
+        );
+    };
 
-$container[WriterProcessorFactoryInterface::class] = function (Container $c) {
-    return $c[WriterProcessorFactoryBuilder::class]->build();
-};
+$container[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\AnnotationPropertyTypeReader::class] =
+    function () {
+        return new BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\AnnotationPropertyTypeReader();
+    };
 
-$container[WriterProcessorFactoryBuilder::class] = function (Container $c) {
-    return new WriterProcessorFactoryBuilder(
-        $c[ConverterFactoryInterface::class],
-        $c[AbstractFactoryInterface::class],
-        $c[MetaDataReaderInterface::class]
+$container[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\DocBlockPropertyTypeReader::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\DocBlockPropertyTypeReader(
+            $c[phpDocumentor\Reflection\DocBlockFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReader(
+            $c[ConstructorParamReader\Combiner\PropertyWithConstructorParamCombinerInterface::class],
+            $c[BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\TypeReaderInterface::class]
+        );
+    };
+
+$container[ConstructorParamReader\Combiner\PropertyWithConstructorParamCombinerInterface::class] =
+    function (Container $c) {
+        return new ConstructorParamReader\Combiner\PropertyWithConstructorParamCombiner([
+            $c[ConstructorParamReader\Combiner\Chained\AnnotationCombiner::class],
+            $c[ConstructorParamReader\Combiner\Chained\EqualNamesCombiner::class],
+        ]);
+    };
+
+$container[ConstructorParamReader\Combiner\Chained\AnnotationCombiner::class] = function (Container $c) {
+    return new ConstructorParamReader\Combiner\Chained\AnnotationCombiner(
+        $c[Doctrine\Common\Annotations\AnnotationReader::class]
     );
 };
 
-$container[AbstractFactoryInterface::class] = function () {
-    return new AbstractFactory();
+$container[ConstructorParamReader\Combiner\Chained\EqualNamesCombiner::class] = function () {
+    return new BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained\EqualNamesCombiner();
 };
 
-$container[MetaDataReaderInterface::class] = function (Container $c) {
-    return new MetaDataReader(
-        $c[ClassReaderInterface::class],
-        $c[PropertiesReaderInterface::class],
-        $c[ConstructorParamsReaderInterface::class]
-    );
-};
-
-$container[ClassReaderInterface::class] = function (Container $c) {
-    return new ClassReader($c[AnnotationReader::class]);
-};
-
-$container[PropertiesReaderInterface::class] = function (Container $c) {
-    return new PropertiesReader(
-        $c[ReflectionClassHelperInterface::class],
-        $c[AnnotationReader::class],
-        $c[TypeFactoryInterface::class],
-        [
-            $c[AnnotationPropertyTypeReader::class],
-            $c[DocBlockPropertyTypeReader::class],
-        ]
-    );
-};
-
-$container[AnnotationPropertyTypeReader::class] = function () {
-    return new AnnotationPropertyTypeReader();
-};
-
-$container[DocBlockPropertyTypeReader::class] = function (Container $c) {
-    return new DocBlockPropertyTypeReader($c[DocBlockFactoryInterface::class]);
-};
-
-$container[ConstructorParamsReaderInterface::class] = function (Container $c) {
-    return new ConstructorParamsReader(
-        $c[Combiner\PropertyWithConstructorParamCombinerInterface::class],
-        $c[ConstructorParamTypeReader\TypeReaderInterface::class]
-    );
-};
-
-$container[Combiner\PropertyWithConstructorParamCombinerInterface::class] = function (Container $c) {
-    return new Combiner\PropertyWithConstructorParamCombiner([
-        $c[AnnotationCombiner::class],
-        $c[EqualNamesCombiner::class],
+$container[ConstructorParamReader\TypeReader\TypeReaderInterface::class] = function (Container $c) {
+    return new ConstructorParamReader\TypeReader\TypeReader([
+        $c[ConstructorParamReader\TypeReader\Chained\NativeTypeReader::class],
+        $c[ConstructorParamReader\TypeReader\Chained\DocBlockTypeReader::class]
     ]);
 };
 
-$container[AnnotationCombiner::class] = function (Container $c) {
-    return new AnnotationCombiner($c[AnnotationReader::class]);
-};
-
-$container[EqualNamesCombiner::class] = function () {
-    return new EqualNamesCombiner();
-};
-
-$container[ConstructorParamTypeReader\TypeReaderInterface::class] = function (Container $c) {
-    return new ConstructorParamTypeReader\TypeReader([
-        $c[NativeTypeReader::class],
-        $c[DocBlockTypeReader::class]
-    ]);
-};
-
-$container[NativeTypeReader::class] = function (Container $c) {
-    return new NativeTypeReader($c[NativeTypeFactoryInterface::class]);
-};
-
-$container[NativeTypeFactoryInterface::class] = function () {
-    return new NativeTypeFactory();
-};
-
-$container[DocBlockTypeReader::class] = function (Container $c) {
-    return new DocBlockTypeReader(
-        $c[TypeFactoryInterface::class],
-        $c[DocBlockFactoryInterface::class]
+$container[ConstructorParamReader\TypeReader\Chained\NativeTypeReader::class] = function (Container $c) {
+    return new ConstructorParamReader\TypeReader\Chained\NativeTypeReader(
+        $c[BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface::class]
     );
 };
 
-$container[AnnotationReader::class] = function (Container $c) {
-    return $c[AnnotationReaderFactory::class]->newAnnotationReader();
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactory();
 };
 
-$container[AnnotationReaderFactory::class] = function () {
-    return new AnnotationReaderFactory();
+$container[ConstructorParamReader\TypeReader\Chained\DocBlockTypeReader::class] = function (Container $c) {
+    return new ConstructorParamReader\TypeReader\Chained\DocBlockTypeReader(
+        $c[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class],
+        $c[phpDocumentor\Reflection\DocBlockFactoryInterface::class]
+    );
 };
 
-$container[DocBlockFactoryInterface::class] = function () {
-    return DocBlockFactory::createInstance();
+$container[Doctrine\Common\Annotations\AnnotationReader::class] = function (Container $c) {
+    return $c[BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory::class]->newAnnotationReader();
 };
 
-$container[ReflectionClassHelperInterface::class] = function () {
-    return new ReflectionClassHelper();
+$container[BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory::class] = function () {
+    return new BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory();
 };
 
-$container[TypeFactoryInterface::class] = function (Container $c) {
-    return $c[TypeFactoryBuilder::class]->build();
+$container[phpDocumentor\Reflection\DocBlockFactoryInterface::class] = function () {
+    return phpDocumentor\Reflection\DocBlockFactory::createInstance();
 };
 
-$container[TypeFactoryBuilder::class] = function () {
-    return new TypeFactoryBuilder();
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class] = function (Container $c) {
+    return $c[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder::class]->build();
 };
 
-$container[ConverterFactoryInterface::class] = function () {
-    return new ConverterFactory();
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder::class] = function () {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder();
+};
+
+$container[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Reader\Converter\ConverterFactory();
+};
+
+$container[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class] = function () {
+    return new BetterSerializer\DataBind\Writer\Converter\ConverterFactory();
+};
+
+$container[\BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class] = function (Container $c) {
+    return new \BetterSerializer\Reflection\Factory\ReflectionClassFactory(
+        $c[\BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class]
+    );
+};
+
+$container[\BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class] = function (Container $c) {
+    return new \BetterSerializer\Reflection\UseStatement\UseStatementsExtractor(
+        $c[\BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class],
+        $c[\BetterSerializer\Reflection\UseStatement\ParserInterface::class]
+    );
+};
+
+$container[\BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class] = function () {
+    return new \BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactory();
+};
+
+$container[\BetterSerializer\Reflection\UseStatement\ParserInterface::class] = function () {
+    return new \BetterSerializer\Reflection\UseStatement\Parser();
 };
 
 return $container;

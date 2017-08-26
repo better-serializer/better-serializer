@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Converter;
 
 /**
- * Class IntegerConverter
+ * Class StringConverter
  * @author mfris
  * @package BetterSerializer\DataBind\Converter
  */

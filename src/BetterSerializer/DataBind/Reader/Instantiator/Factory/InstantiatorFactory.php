@@ -14,7 +14,7 @@ use RuntimeException;
 /**
  * Class InstantiatorFactory
  * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory
+ * @package BetterSerializer\DataBind\Reader\Instantiator\Converter
  */
 final class InstantiatorFactory implements InstantiatorFactoryInterface
 {

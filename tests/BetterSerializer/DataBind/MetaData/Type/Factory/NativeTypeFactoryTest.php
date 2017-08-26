@@ -33,12 +33,11 @@ class NativeTypeFactoryTest extends TestCase
      */
     public function testGetType(string $stringType, string $expectedClass): void
     {
-        $stringFormType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringType);
 
-        /* @var $stringFormType StringFormTypeInterface */
         $factory = new NativeTypeFactory();
         $type = $factory->getType($stringFormType);
 
@@ -64,19 +63,15 @@ class NativeTypeFactoryTest extends TestCase
      */
     public function testGetTypeObject(): void
     {
-        $stringFormType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->expects(self::once())
             ->method('getStringType')
-            ->willReturn('Car');
-        $stringFormType->expects(self::once())
-            ->method('getNamespace')
-            ->willReturn('BetterSerializer\\Dto');
+            ->willReturn(Car::class);
         $stringFormType->expects(self::once())
             ->method('isClass')
             ->willReturn(true);
 
         $factory = new NativeTypeFactory();
-        /* @var $stringFormType StringFormTypeInterface */
         /* @var $type ObjectType */
         $type = $factory->getType($stringFormType);
 
@@ -89,13 +84,12 @@ class NativeTypeFactoryTest extends TestCase
      */
     public function testGetTypeArray(): void
     {
-        $stringFormType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->expects(self::once())
             ->method('getStringType')
             ->willReturn('array');
 
         $factory = new NativeTypeFactory();
-        /* @var $stringFormType StringFormTypeInterface */
         /* @var $type ArrayType */
         $type = $factory->getType($stringFormType);
 

@@ -10,11 +10,11 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeR
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionMethod;
-use ReflectionParameter;
 
 /**
  * Class DocBlockTypeReaderTest
@@ -30,41 +30,29 @@ class DocBlockTypeReaderTest extends TestCase
      */
     public function testGetTypeReturnsNormalType(): void
     {
-        $declaringClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $declaringClass->expects(self::once())
-            ->method('getNamespaceName')
-            ->willReturn('test');
+        $declaringClass = $this->createMock(ReflectionClassInterface::class);
 
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $constructor->expects(self::once())
-            ->method('getDeclaringClass')
-            ->willReturn($declaringClass);
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
         $constructor->expects(self::once())
             ->method('getDocComment')
             ->willReturn('/** @param int $test */');
 
-        $param = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $param = $this->createMock(ReflectionParameterInterface::class);
         $param->expects(self::once())
             ->method('getName')
             ->willReturn('test');
+        $param->expects(self::once())
+            ->method('getDeclaringClass')
+            ->willReturn($declaringClass);
 
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
         $docBlockFactory = DocBlockFactory::createInstance(); // final
-        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
         $typeFactory->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        /* @var $typeFactory TypeFactoryInterface */
-        /* @var $constructor ReflectionMethod */
-        /* @var $param ReflectionParameter */
         $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory);
         $reader->initialize($constructor);
 
@@ -78,36 +66,19 @@ class DocBlockTypeReaderTest extends TestCase
      */
     public function testGetTypeReturnsUnknownType(): void
     {
-        $declaringClass = $this->getMockBuilder(ReflectionClass::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $declaringClass->expects(self::once())
-            ->method('getNamespaceName')
-            ->willReturn('test');
-
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $constructor->expects(self::once())
-            ->method('getDeclaringClass')
-            ->willReturn($declaringClass);
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
         $constructor->expects(self::once())
             ->method('getDocComment')
             ->willReturn('');
 
-        $param = $this->getMockBuilder(ReflectionParameter::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $param = $this->createMock(ReflectionParameterInterface::class);
         $param->expects(self::once())
             ->method('getName')
             ->willReturn('test');
 
         $docBlockFactory = DocBlockFactory::createInstance(); // final
-        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
 
-        /* @var $typeFactory TypeFactoryInterface */
-        /* @var $constructor ReflectionMethod */
-        /* @var $param ReflectionParameter */
         $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory);
         $reader->initialize($constructor);
 

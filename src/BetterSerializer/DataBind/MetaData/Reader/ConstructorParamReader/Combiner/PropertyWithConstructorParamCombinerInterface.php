@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
-use ReflectionMethod;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 
 /**
  * Interface PropertyWithParamCombinerInterface
@@ -18,9 +18,9 @@ interface PropertyWithConstructorParamCombinerInterface
 {
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @param array $propertiesMetaData
      * @return Context\PropertyWithConstructorParamTupleInterface[]
      */
-    public function combine(ReflectionMethod $constructor, array $propertiesMetaData): array;
+    public function combine(ReflectionMethodInterface $constructor, array $propertiesMetaData): array;
 }

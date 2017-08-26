@@ -9,8 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
-use ReflectionClass;
-use ReflectionProperty;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 
 /**
  * Class PropertyContext
@@ -20,14 +20,14 @@ use ReflectionProperty;
 interface PropertyContextInterface
 {
     /**
-     * @return ReflectionClass
+     * @return ReflectionClassInterface
      */
-    public function getReflectionClass(): ReflectionClass;
+    public function getReflectionClass(): ReflectionClassInterface;
 
     /**
-     * @return ReflectionProperty
+     * @return ReflectionPropertyInterface
      */
-    public function getReflectionProperty(): ReflectionProperty;
+    public function getReflectionProperty(): ReflectionPropertyInterface;
 
     /**
      * @return AnnotationInterface[]

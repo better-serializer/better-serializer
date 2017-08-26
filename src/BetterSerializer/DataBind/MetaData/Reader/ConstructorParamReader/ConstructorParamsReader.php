@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorPa
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionClass;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use LogicException;
 use RuntimeException;
 
@@ -48,13 +48,15 @@ final class ConstructorParamsReader implements ConstructorParamsReaderInterface
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClassInterface $reflectionClass
      * @param array $propertiesMetaData
      * @return ConstructorParamMetaDataInterface[]
      * @throws RuntimeException
      */
-    public function getConstructorParamsMetadata(ReflectionClass $reflectionClass, array $propertiesMetaData): array
-    {
+    public function getConstructorParamsMetadata(
+        ReflectionClassInterface $reflectionClass,
+        array $propertiesMetaData
+    ): array {
         $constructor = $reflectionClass->getConstructor();
         $tuples = $this->paramCombiner->combine($constructor, $propertiesMetaData);
         $types = $this->typeReader->getParameterTypes($constructor);

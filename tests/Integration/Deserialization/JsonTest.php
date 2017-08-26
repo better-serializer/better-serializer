@@ -10,6 +10,7 @@ namespace Integration\Deserialization;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Car2;
+use BetterSerializer\Dto\Nested\CarFactory;
 use Integration\AbstractIntegrationTest;
 
 /**
@@ -49,6 +50,7 @@ final class JsonTest extends AbstractIntegrationTest
             $this->getObjectsInArrayTupleWithInnerArray(),
             $this->getStringsInArray(),
             $this->getOverridenNameTuple(),
+            $this->getNamespaceFeatureTupleWithDateTimes(),
         ];
     }
 
@@ -127,8 +129,23 @@ final class JsonTest extends AbstractIntegrationTest
      */
     private function getOverridenNameTuple(): array
     {
-        $json = '{"serializedTitle":"Honda"}';
+        $json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
+            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
 
         return [$json, Car2::class];
+    }
+
+    /**
+     * @return array
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    private function getNamespaceFeatureTupleWithDateTimes(): array
+    {
+        $carJson = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[],"special":"special"}';
+        $car2Json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
+            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
+        $json = '{"cars":[' . $carJson .'],"cars2":['. $car2Json .']}';
+
+        return [$json, CarFactory::class];
     }
 }

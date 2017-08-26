@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
  * Interface FactoryInterface
- * @package BetterSerializer\DataBind\Converter\Factory
+ * @package BetterSerializer\DataBind\Writer\Converter
  */
 interface ConverterFactoryInterface
 {

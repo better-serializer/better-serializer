@@ -20,6 +20,19 @@ abstract class AbstractType implements TypeInterface
     protected $type;
 
     /**
+     * AbstractType constructor.
+     */
+    public function __construct()
+    {
+        $this->initType();
+    }
+
+    /**
+     * @return void
+     */
+    abstract protected function initType(): void;
+
+    /**
      * @return TypeEnum
      */
     public function getType(): TypeEnum

@@ -18,8 +18,8 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 interface ChainMemberInterface
 {
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface|null
      */
-    public function getType(StringFormTypeInterface $stringType): ?TypeInterface;
+    public function getType(StringFormTypeInterface $stringFormType): ?TypeInterface;
 }

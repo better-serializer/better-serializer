@@ -19,7 +19,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 /**
  * Class SimpleMember
  * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory\Chain
+ * @package BetterSerializer\DataBind\MetaData\Type\Converter\Chain
  */
 final class SimpleMember extends ChainMember
 {
@@ -36,21 +36,21 @@ final class SimpleMember extends ChainMember
     ];
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringType): bool
+    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
     {
-        return isset(self::$type2Instance[$stringType->getStringType()]);
+        return isset(self::$type2Instance[$stringFormType->getStringType()]);
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface
      */
-    protected function createType(StringFormTypeInterface $stringType): TypeInterface
+    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
     {
-        $className = self::$type2Instance[$stringType->getStringType()];
+        $className = self::$type2Instance[$stringFormType->getStringType()];
 
         return new $className();
     }

@@ -16,7 +16,8 @@
         "doctrine/annotations": "^1.3",
         "roave/security-advisories": "dev-master",
         "doctrine/instantiator": "^1.0",
-        "phpdocumentor/reflection-docblock": "^3.0"
+        "phpdocumentor/reflection-docblock": "^3.0",
+        "league/flysystem": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",

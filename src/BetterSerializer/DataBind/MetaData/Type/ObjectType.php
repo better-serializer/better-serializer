@@ -11,60 +11,6 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-final class ObjectType extends AbstractType implements ComplexTypeInterface
+final class ObjectType extends AbstractObjectType
 {
-
-    /**
-     * @var string
-     */
-    private $className;
-
-    /**
-     * StringDataType constructor.
-     * @param string $className
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function __construct(string $className)
-    {
-        $this->type = TypeEnum::OBJECT();
-        $this->className = ltrim($className, '\\');
-    }
-
-    /**
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        return $this->className;
-    }
-
-    /**
-     * @param TypeInterface $type
-     * @return bool
-     */
-    public function equals(TypeInterface $type): bool
-    {
-        /* @var $type ObjectType */
-        return parent::equals($type) && $this->className === $type->getClassName();
-    }
-
-    /**
-     * @param TypeInterface $type
-     * @return bool
-     */
-    public function isCompatibleWith(TypeInterface $type): bool
-    {
-        return (
-            ($type instanceof ObjectType && $this->className === $type->className)
-            || $type instanceof UnknownType
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return parent::__toString() . '<' . $this->className . '>';
-    }
 }

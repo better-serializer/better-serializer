@@ -9,10 +9,11 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 
 /**
  * Class DocBlockPropertyTypeReaderTest
@@ -31,23 +32,20 @@ class DocBlockPropertyTypeReaderTest extends TestCase
     {
         $docBlockFactory = DocBlockFactory::createInstance(); // final
 
-        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
         $reflPropertyStub->expects(self::once())
             ->method('getDocComment')
             ->willReturn('/** @var string  */');
 
-        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub = $this->createMock(PropertyContextInterface::class);
         $contextStub->expects(self::once())
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
-        /* @var $contextStub PropertyContextInterface */
 
         $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
         $typedContext = $typeReader->resolveType($contextStub);
 
-        self::assertInstanceOf(StringFormTypedPropertyContext::class, $typedContext);
+        self::assertInstanceOf(ContextStringFormType::class, $typedContext);
         self::assertSame('string', $typedContext->getStringType());
     }
 
@@ -56,21 +54,17 @@ class DocBlockPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithoutDocBlock(): void
     {
-        $docBlockFactoryStub = $this->getMockBuilder(DocBlockFactoryInterface::class)->getMock();
-        /* @var $docBlockFactoryStub DocBlockFactoryInterface */
+        $docBlockFactoryStub = $this->createMock(DocBlockFactoryInterface::class);
 
-        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
         $reflPropertyStub->expects(self::once())
             ->method('getDocComment')
             ->willReturn('');
 
-        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub = $this->createMock(PropertyContextInterface::class);
         $contextStub->expects(self::once())
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
-        /* @var $contextStub PropertyContextInterface */
 
         $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
         $typedContext = $typeReader->resolveType($contextStub);
@@ -85,18 +79,15 @@ class DocBlockPropertyTypeReaderTest extends TestCase
     {
         $docBlockFactory = DocBlockFactory::createInstance(); // final
 
-        $reflPropertyStub = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
         $reflPropertyStub->expects(self::once())
             ->method('getDocComment')
             ->willReturn('/** @global */');
 
-        $contextStub = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $contextStub = $this->createMock(PropertyContextInterface::class);
         $contextStub->expects(self::once())
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
-        /* @var $contextStub PropertyContextInterface */
 
         $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
         $typedContext = $typeReader->resolveType($contextStub);

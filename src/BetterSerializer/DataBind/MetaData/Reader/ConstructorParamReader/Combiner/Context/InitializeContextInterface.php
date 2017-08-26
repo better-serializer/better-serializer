@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
-use ReflectionMethod;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 
 /**
  * Interface InitializeContextInterface
@@ -19,9 +19,9 @@ interface InitializeContextInterface
 {
 
     /**
-     * @return ReflectionMethod
+     * @return ReflectionMethodInterface
      */
-    public function getConstructor(): ReflectionMethod;
+    public function getConstructor(): ReflectionMethodInterface;
 
     /**
      * @return ShrinkingPropertiesMetaDataInterface

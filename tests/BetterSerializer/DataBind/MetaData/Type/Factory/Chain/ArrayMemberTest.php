@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
@@ -26,26 +27,21 @@ class ArrayMemberTest extends TestCase
     /**
      *
      */
-    public function testGetTypeWithSimpleSubType(): void
+    public function testGetTypeWithSimpleStringSubType(): void
     {
         $stringTypeString = 'array<string>';
 
-        $stringTypeInstance = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $stringTypeInstance = $this->createMock(TypeInterface::class);
 
-        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
         $typeFactory->expects(self::once())
             ->method('getType')
             ->willReturn($stringTypeInstance);
-        /* @var $typeFactory TypeFactoryInterface */
 
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringType = $this->createMock(StringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        $stringType->expects(self::once())
-            ->method('getNamespace')
-            ->willReturn('test');
-        /* @var $stringType StringFormTypeInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
@@ -58,25 +54,20 @@ class ArrayMemberTest extends TestCase
     /**
      *
      */
-    public function testGetTypeWithObjectSubType(): void
+    public function testGetTypeWithSimpleContextSubType(): void
     {
         $stringTypeString = 'array<Car>';
-        $objectTypeInstance = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $objectTypeInstance = $this->createMock(TypeInterface::class);
 
-        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
         $typeFactory->expects(self::once())
             ->method('getType')
             ->willReturn($objectTypeInstance);
-        /* @var $typeFactory TypeFactoryInterface */
 
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        $stringType->expects(self::once())
-            ->method('getNamespace')
-            ->willReturn('test');
-        /* @var $stringType StringFormTypeInterface */
 
         $arrayMember = new ArrayMember($typeFactory);
         /* @var $arrayType ArrayType */
@@ -91,8 +82,7 @@ class ArrayMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $typeFactory = $this->getMockBuilder(TypeFactoryInterface::class)->getMock();
-        /* @var $typeFactory TypeFactoryInterface */
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
 
         $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
         $stringType->expects(self::once())

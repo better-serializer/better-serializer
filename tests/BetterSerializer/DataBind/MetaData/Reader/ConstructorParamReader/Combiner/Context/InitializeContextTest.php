@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
 
 /**
  * Class InitializeContextTest
@@ -24,14 +24,9 @@ class InitializeContextTest extends TestCase
      */
     public function testEverything(): void
     {
-        $constructor = $this->getMockBuilder(ReflectionMethod::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
+        $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
 
-        $propertiesMetaData = $this->getMockBuilder(ShrinkingPropertiesMetaDataInterface::class)->getMock();
-
-        /* @var $constructor ReflectionMethod */
-        /* @var $propertiesMetaData ShrinkingPropertiesMetaDataInterface */
         $context = new InitializeContext($constructor, $propertiesMetaData);
 
         self::assertSame($constructor, $context->getConstructor());

@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
-use phpDocumentor\Reflection\Types\Context;
-use ReflectionMethod;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
+use LogicException;
 
 /**
  * Class DocBlockTypeReader
@@ -36,11 +36,6 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
     private $docBlockFactory;
 
     /**
-     * @var string
-     */
-    private $currentNamespace;
-
-    /**
      * @var array|null
      */
     private $params;
@@ -57,11 +52,10 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      */
-    public function initialize(ReflectionMethod $constructor): void
+    public function initialize(ReflectionMethodInterface $constructor): void
     {
-        $this->currentNamespace = $constructor->getDeclaringClass()->getNamespaceName();
         $docComment = trim($constructor->getDocComment());
 
         if (!$docComment) {
@@ -70,8 +64,7 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
             return;
         }
 
-        $context = new Context($this->currentNamespace);
-        $docBlock = $this->docBlockFactory->create($docComment, $context);
+        $docBlock = $this->docBlockFactory->create($docComment);
         /** @var Param[] $paramTags */
         $paramTags = $docBlock->getTagsByName('param');
         $this->params = [];
@@ -86,10 +79,11 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return TypeInterface
+     * @throws LogicException
      */
-    public function getType(ReflectionParameter $parameter): TypeInterface
+    public function getType(ReflectionParameterInterface $parameter): TypeInterface
     {
         $name = $parameter->getName();
 
@@ -98,7 +92,7 @@ final class DocBlockTypeReader implements ChainedTypeReaderInterface
         }
 
         $stringType = $this->params[$name];
-        $stringFormType = new StringFormType($stringType, $this->currentNamespace);
+        $stringFormType = new ContextStringFormType($stringType, $parameter->getDeclaringClass());
 
         return $this->typeFactory->getType($stringFormType);
     }

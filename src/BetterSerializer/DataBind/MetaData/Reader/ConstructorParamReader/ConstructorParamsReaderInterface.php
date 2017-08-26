@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader;
 
 use BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel\ConstructorParamMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use ReflectionClass;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 
 /**
  * Interface ConstructorParamReaderInterface
@@ -19,9 +19,12 @@ interface ConstructorParamsReaderInterface
 {
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClassInterface $reflectionClass
      * @param PropertyMetaDataInterface[] $propertiesMetaData
      * @return ConstructorParamMetaDataInterface[]
      */
-    public function getConstructorParamsMetadata(ReflectionClass $reflectionClass, array $propertiesMetaData): array;
+    public function getConstructorParamsMetadata(
+        ReflectionClassInterface $reflectionClass,
+        array $propertiesMetaData
+    ): array;
 }

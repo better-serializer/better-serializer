@@ -11,9 +11,11 @@ use BetterSerializer\DataBind\MetaData\Model\MetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface;
-use ReflectionClass;
+use BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use ReflectionException;
 use LogicException;
+use RuntimeException;
 
 /**
  * Class Reader
@@ -22,6 +24,12 @@ use LogicException;
  */
 final class Reader implements ReaderInterface
 {
+
+    /**
+     * @var ReflectionClassFactoryInterface
+     */
+    private $reflectionClassFactory;
+
     /**
      * @var ClassReaderInterface
      */
@@ -39,15 +47,18 @@ final class Reader implements ReaderInterface
 
     /**
      * Reader constructor.
+     * @param ReflectionClassFactoryInterface $reflClassFactory
      * @param ClassReaderInterface $classReader
      * @param PropertiesReaderInterface $propertyReader
      * @param ConstructorParamsReaderInterface $constrParamsReader
      */
     public function __construct(
+        ReflectionClassFactoryInterface $reflClassFactory,
         ClassReaderInterface $classReader,
         PropertiesReaderInterface $propertyReader,
         ConstructorParamsReaderInterface $constrParamsReader
     ) {
+        $this->reflectionClassFactory = $reflClassFactory;
         $this->classReader = $classReader;
         $this->propertiesReader = $propertyReader;
         $this->constrParamsReader = $constrParamsReader;
@@ -58,6 +69,7 @@ final class Reader implements ReaderInterface
      * @return MetaDataInterface
      * @throws LogicException
      * @throws ReflectionException
+     * @throws RuntimeException
      */
     public function read(string $className): MetaDataInterface
     {
@@ -72,13 +84,14 @@ final class Reader implements ReaderInterface
 
     /**
      * @param string $className
-     * @return ReflectionClass
+     * @return ReflectionClassInterface
      * @throws LogicException
      * @throws ReflectionException
+     * @throws RuntimeException
      */
-    private function getReflectionClass(string $className): ReflectionClass
+    private function getReflectionClass(string $className): ReflectionClassInterface
     {
-        $reflectionClass = new ReflectionClass($className);
+        $reflectionClass = $this->reflectionClassFactory->newReflectionClass($className);
 
         if (!$reflectionClass->isUserDefined()) {
             throw new LogicException(sprintf('Class "%s" is not user-defined', $reflectionClass->getName()));

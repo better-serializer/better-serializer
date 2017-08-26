@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 
-use ReflectionProperty;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 
 /**
  * Interface ReflectionPropertyMetadataInterface
@@ -17,8 +17,8 @@ interface ReflectionPropertyMetaDataInterface extends PropertyMetaDataInterface
 {
 
     /**
-     * @return ReflectionProperty
+     * @return ReflectionPropertyInterface
      *
      */
-    public function getReflectionProperty(): ReflectionProperty;
+    public function getReflectionProperty(): ReflectionPropertyInterface;
 }

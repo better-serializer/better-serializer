@@ -10,9 +10,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combi
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained\ChainedCombinerInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContext;
-use ReflectionMethod;
+use BetterSerializer\Reflection\ReflectionMethodInterface;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 use RuntimeException;
-use ReflectionParameter;
 
 /**
  * Class PropertyWithParamCombiner
@@ -42,11 +42,11 @@ final class PropertyWithConstructorParamCombiner implements PropertyWithConstruc
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @param PropertyMetaDataInterface[] $propertiesMetaData
      * @return Context\PropertyWithConstructorParamTupleInterface[]
      */
-    public function combine(ReflectionMethod $constructor, array $propertiesMetaData): array
+    public function combine(ReflectionMethodInterface $constructor, array $propertiesMetaData): array
     {
         $this->initializeCombiners($constructor, $propertiesMetaData);
         $params = $constructor->getParameters();
@@ -55,11 +55,11 @@ final class PropertyWithConstructorParamCombiner implements PropertyWithConstruc
     }
 
     /**
-     * @param ReflectionMethod $constructor
+     * @param ReflectionMethodInterface $constructor
      * @param array $propertiesMetaData
      */
     private function initializeCombiners(
-        ReflectionMethod $constructor,
+        ReflectionMethodInterface $constructor,
         array $propertiesMetaData
     ): void {
         $context = new InitializeContext($constructor, new ShrinkingPropertiesMetaData($propertiesMetaData));
@@ -70,7 +70,7 @@ final class PropertyWithConstructorParamCombiner implements PropertyWithConstruc
     }
 
     /**
-     * @param ReflectionParameter[] $constructorParams
+     * @param ReflectionParameterInterface[] $constructorParams
      * @return Context\PropertyWithConstructorParamTupleInterface[]
      */
     private function createCombinedTuples(array $constructorParams): array
@@ -89,11 +89,11 @@ final class PropertyWithConstructorParamCombiner implements PropertyWithConstruc
     }
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface|null
      */
     private function createCombinedTupleForParameter(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): ?Context\PropertyWithConstructorParamTupleInterface {
         foreach ($this->chainedCombiners as $combiner) {
             $tuple = $combiner->combineWithParameter($parameter);

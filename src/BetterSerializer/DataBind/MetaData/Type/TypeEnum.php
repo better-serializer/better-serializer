@@ -20,6 +20,7 @@ use MabeEnum\Enum;
  * @method static TypeEnum ARRAY
  * @method static TypeEnum NULL
  * @method static TypeEnum UNKNOWN
+ * @method static TypeEnum DATETIME
  */
 final class TypeEnum extends Enum
 {
@@ -63,4 +64,9 @@ final class TypeEnum extends Enum
      * @const string
      */
     const UNKNOWN = 'unknown';
+
+    /**
+     * @const string
+     */
+    const DATETIME = 'dateTime';
 }

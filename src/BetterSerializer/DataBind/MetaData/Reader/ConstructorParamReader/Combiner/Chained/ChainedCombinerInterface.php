@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combi
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
-use ReflectionParameter;
+use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
  * Interface StringTypeReaderInterface
@@ -24,10 +24,10 @@ interface ChainedCombinerInterface
     public function initialize(InitializeContextInterface $context): void;
 
     /**
-     * @param ReflectionParameter $parameter
+     * @param ReflectionParameterInterface $parameter
      * @return Context\PropertyWithConstructorParamTupleInterface|null
      */
     public function combineWithParameter(
-        ReflectionParameter $parameter
+        ReflectionParameterInterface $parameter
     ): ?Context\PropertyWithConstructorParamTupleInterface;
 }

@@ -20,52 +20,21 @@ final class ObjectMember extends ChainMember
 {
 
     /**
-     * @var string
-     */
-    private $className;
-
-    /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringType): bool
+    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
     {
-        $className = $this->getClassName($stringType);
-
-        if ($className) {
-            $this->className = $className;
-
-            return true;
-        }
-
-        return false;
+        return $stringFormType->isClass();
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createType(StringFormTypeInterface $stringType): TypeInterface
+    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
     {
-        return new ObjectType($this->className);
-    }
-
-    /**
-     * @param StringFormTypeInterface $stringType
-     * @return string|null
-     */
-    private function getClassName(StringFormTypeInterface $stringType): ?string
-    {
-        $stringTypeString = $stringType->getStringType();
-
-        if (class_exists($stringTypeString)) {
-            return $stringTypeString;
-        }
-
-        $completeClass = $stringType->getNamespace() . '\\' . $stringTypeString;
-        $completeClass = str_replace('\\\\', '\\', $completeClass);
-
-        return class_exists($completeClass) ? $completeClass : null;
+        return new ObjectType($stringFormType->getStringType());
     }
 }

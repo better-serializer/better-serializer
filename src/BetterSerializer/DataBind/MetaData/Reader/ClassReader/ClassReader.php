@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ClassReader;
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaData;
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaDataInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
-use ReflectionClass;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 
 /**
  * Class ClassReader
@@ -36,12 +36,12 @@ final class ClassReader implements ClassReaderInterface
     }
 
     /**
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClassInterface $reflectionClass
      * @return ClassMetaDataInterface
      */
-    public function getClassMetadata(ReflectionClass $reflectionClass): ClassMetaDataInterface
+    public function getClassMetadata(ReflectionClassInterface $reflectionClass): ClassMetaDataInterface
     {
-        $classAnnotations = $this->annotationReader->getClassAnnotations($reflectionClass);
+        $classAnnotations = $this->annotationReader->getClassAnnotations($reflectionClass->getNativeReflClass());
 
         return new ClassMetaData($reflectionClass->getName(), $classAnnotations);
     }
