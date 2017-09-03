@@ -38,7 +38,7 @@ interface ReflectionParameterInterface
      * @return ReflectionType|NULL Returns a ReflectionType object if a parameter type is specified, NULL otherwise.
      * @since 7.0
      */
-    public function getType(): ReflectionType;
+    public function getType(): ?ReflectionType;
 
     /**
      * Checks if the parameter has a type associated with it.
