@@ -18,7 +18,6 @@ parameters:
         rules:
           - '@@PSR2'
         using_cache: true
-        path_mode: ~
         verbose: false
         diff: true
         triggered_by: ['php']
