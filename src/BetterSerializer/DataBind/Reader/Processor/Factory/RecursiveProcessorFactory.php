@@ -33,9 +33,9 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
     private $processorFactory;
 
     /**
-     * @var int
+     * @var array
      */
-    private $nesting = 0;
+    private $nestings = [];
 
     /**
      * @var Cache
@@ -67,8 +67,8 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
      */
     public function createFromType(TypeInterface $type): ProcessorInterface
     {
-        $this->begin();
         $stringCacheKey = (string) $type;
+        $this->begin($stringCacheKey);
         $processor = $this->getCachedProcessor($stringCacheKey);
 
         if (!$processor) {
@@ -76,7 +76,7 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
             $this->storeProcessor($stringCacheKey, $processor);
         }
 
-        $this->commit($processor);
+        $this->commit($stringCacheKey, $processor);
 
         return $processor;
     }
@@ -124,27 +124,34 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
     }
 
     /**
+     * @param string $key
      * @return void
      */
-    private function begin(): void
+    private function begin(string $key): void
     {
-        if ($this->nesting === 0) {
+        if (empty($this->nestings)) {
             $this->cache = new Cache();
         }
 
-        $this->nesting++;
+        if (!isset($this->nestings[$key])) {
+            $this->nestings[$key] = 0;
+        }
+
+        $this->nestings[$key]++;
     }
 
     /**
+     * @param string $key
      * @param ProcessorInterface $processor
      * @return void
      */
-    private function commit(ProcessorInterface $processor): void
+    private function commit(string $key, ProcessorInterface $processor): void
     {
-        $this->nesting--;
+        $this->nestings[$key]--;
 
-        if ($this->nesting === 0 && $processor instanceof ComplexNestedProcessorInterface) {
+        if ($this->nestings[$key] === 0 && $processor instanceof ComplexNestedProcessorInterface) {
             $processor->resolveRecursiveProcessors();
+            unset($this->nestings[$key]);
         }
     }
 }
