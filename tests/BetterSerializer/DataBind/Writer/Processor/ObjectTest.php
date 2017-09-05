@@ -35,4 +35,25 @@ class ObjectTest extends TestCase
         $processor = new Object([$processorMock, $processorMock]);
         $processor->process($contextMock, $instance);
     }
+
+    /**
+     *
+     */
+    public function testResolveRecursiveProcessors(): void
+    {
+        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor->expects(self::once())
+            ->method('resolveRecursiveProcessors');
+
+        $processorMock = $this->createMock(CachedProcessorInterface::class);
+        $processorMock->expects(self::once())
+            ->method('getProcessor')
+            ->willReturn($subProcessor);
+
+        $processor = new Object([$processorMock]);
+        $processor->resolveRecursiveProcessors();
+
+        // lazy resolve test
+        $processor->resolveRecursiveProcessors();
+    }
 }

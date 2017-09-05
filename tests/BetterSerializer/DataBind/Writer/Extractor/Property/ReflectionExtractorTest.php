@@ -38,11 +38,23 @@ class ReflectionExtractorTest extends TestCase
         $reflPropertyStub->method('getNativeReflProperty')
             ->willReturn($nativeReflProperty);
 
-        $objectStub = $this->getMockBuilder(CarInterface::class)->getMock();
+        $objectStub = $this->createMock(CarInterface::class);
 
         $extractor = new ReflectionExtractor($reflPropertyStub);
         $extracted = $extractor->extract($objectStub);
 
         self::assertSame($value, $extracted);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function testExtractReturnsNull(): void
+    {
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
+        $extractor = new ReflectionExtractor($reflPropertyStub);
+        $extracted = $extractor->extract(null);
+
+        self::assertNull($extracted);
     }
 }

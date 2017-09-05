@@ -58,6 +58,11 @@ final class ConstructorParamsReader implements ConstructorParamsReaderInterface
         array $propertiesMetaData
     ): array {
         $constructor = $reflectionClass->getConstructor();
+
+        if ($constructor === null) {
+            return [];
+        }
+
         $tuples = $this->paramCombiner->combine($constructor, $propertiesMetaData);
         $types = $this->typeReader->getParameterTypes($constructor);
 

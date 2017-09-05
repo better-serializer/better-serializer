@@ -126,7 +126,7 @@ interface ReflectionClassInterface
      * has no constructor.
      * @since 5.0
      */
-    public function getConstructor(): ReflectionMethodInterface;
+    public function getConstructor(): ?ReflectionMethodInterface;
 
     /**
      * Checks if method is defined

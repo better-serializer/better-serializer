@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\Dto\CarInterface;
 use BetterSerializer\Dto\RadioInterface;
@@ -37,7 +38,7 @@ class StandardInstantiatorTest extends TestCase
             ->method('newInstanceArgs')
             ->willReturn($car);
 
-        $context = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $context = $this->createMock(ContextInterface::class);
 
         $paramProcessor = $this->getMockBuilder(ParamProcessorInterface::class)->getMock();
         $paramProcessor->expects(self::once())
@@ -46,10 +47,30 @@ class StandardInstantiatorTest extends TestCase
             ->willReturn($radio);
 
         /* @var $reflClass ReflectionClass */
-        /* @var $context ContextInterface */
-        $constructor = new StandardInstantiator($reflClass, [$paramProcessor]);
-        $constructed = $constructor->instantiate($context);
+        $instantiator = new StandardInstantiator($reflClass, [$paramProcessor]);
+        $instantiated = $instantiator->instantiate($context);
 
-        self::assertSame($car, $constructed);
+        self::assertSame($car, $instantiated);
+    }
+
+    /**
+     *
+     */
+    public function testResolveRecursiveProcessors(): void
+    {
+        $reflClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $paramProcessor = $this->getMockBuilder(ComplexParamProcessorInterface::class)->getMock();
+        $paramProcessor->expects(self::once())
+            ->method('resolveRecursiveProcessors');
+
+        /* @var $reflClass ReflectionClass */
+        $instantiator = new StandardInstantiator($reflClass, [$paramProcessor]);
+        $instantiator->resolveRecursiveProcessors();
+
+        // test lazyness
+        $instantiator->resolveRecursiveProcessors();
     }
 }

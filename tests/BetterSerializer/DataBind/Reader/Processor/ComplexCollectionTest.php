@@ -24,7 +24,7 @@ class ComplexCollectionTest extends TestCase
      */
     public function testProcess(): void
     {
-        $instance = $this->getMockBuilder(CarInterface::class)->getMock();
+        $instance = $this->createMock(CarInterface::class);
         $key1 = 0;
         $key2 = 1;
 
@@ -33,11 +33,11 @@ class ComplexCollectionTest extends TestCase
             $key2 => [],
         ];
 
-        $subContextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $subContextMock = $this->createMock(ContextInterface::class);
         $subContextMock->expects(self::exactly(2))
             ->method('getDeserialized')
             ->willReturn($instance);
-        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock = $this->createMock(ContextInterface::class);
         $contextMock->expects(self::once())
             ->method('getCurrentValue')
             ->willReturn($arrayData);
@@ -48,13 +48,11 @@ class ComplexCollectionTest extends TestCase
         $contextMock->expects(self::once())
             ->method('setDeserialized')
             ->with([$instance, $instance]);
-        $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processorMock = $this->createMock(ProcessorInterface::class);
         $processorMock->expects(self::exactly(2))
             ->method('process')
             ->withConsecutive([$subContextMock], [$subContextMock]);
 
-        /* @var $contextMock ContextInterface */
-        /* @var $processorMock ProcessorInterface */
         $processor = new ComplexCollection($processorMock);
         $processor->process($contextMock);
     }
@@ -66,7 +64,7 @@ class ComplexCollectionTest extends TestCase
     {
         $arrayData = [];
 
-        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock = $this->createMock(ContextInterface::class);
         $contextMock->expects(self::once())
             ->method('getCurrentValue')
             ->willReturn($arrayData);
@@ -75,13 +73,32 @@ class ComplexCollectionTest extends TestCase
         $contextMock->expects(self::once())
             ->method('setDeserialized')
         ->with([]);
-        $processorMock = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processorMock = $this->createMock(ProcessorInterface::class);
         $processorMock->expects(self::exactly(0))
             ->method('process');
 
-        /* @var $contextMock ContextInterface */
-        /* @var $processorMock ProcessorInterface */
         $processor = new ComplexCollection($processorMock);
         $processor->process($contextMock);
+    }
+
+    /**
+     *
+     */
+    public function testResolveRecursiveProcessors(): void
+    {
+        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor->expects(self::once())
+            ->method('resolveRecursiveProcessors');
+
+        $processorMock = $this->createMock(CachedProcessorInterface::class);
+        $processorMock->expects(self::once())
+            ->method('getProcessor')
+            ->willReturn($subProcessor);
+
+        $processor = new ComplexCollection($processorMock);
+        $processor->resolveRecursiveProcessors();
+
+        // lazy resolve test
+        $processor->resolveRecursiveProcessors();
     }
 }

@@ -39,6 +39,10 @@ final class ReflectionExtractor implements ExtractorInterface
      */
     public function extract($data)
     {
+        if ($data === null) {
+            return null;
+        }
+
         return $this->reflectionProperty->getValue($data);
     }
 }

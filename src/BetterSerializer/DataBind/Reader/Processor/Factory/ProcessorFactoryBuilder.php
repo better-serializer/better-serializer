@@ -62,12 +62,12 @@ final class ProcessorFactoryBuilder
     }
 
     /**
-     * @return ProcessorFactory
+     * @return ProcessorFactoryInterface
      * @throws LogicException
      */
-    public function build(): ProcessorFactory
+    public function build(): ProcessorFactoryInterface
     {
-        $factory = new ProcessorFactory();
+        $factory = new RecursiveProcessorFactory(new ProcessorFactory());
         $metaDataObject = new ComplexNestedMember($factory, $this->injectorFactory);
         $metaDataSimple = new SimpleMember($this->converterFactory, $this->injectorFactory);
         $typeArrayMember = new CollectionMember($this->converterFactory, $factory);

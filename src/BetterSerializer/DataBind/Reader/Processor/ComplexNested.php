@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
+use RuntimeException;
 
 /**
  * Class ObjectProperty
@@ -24,24 +25,33 @@ final class ComplexNested extends NestedProcessor
     private $injector;
 
     /**
-     * @var ComplexNestedProcessorInterface
+     * @var ComplexNestedProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
      */
-    private $complexNestedProcessor;
+    private $processor;
 
     /**
      * Property constructor.
      * @param InjectorInterface $injector
-     * @param ComplexNestedProcessorInterface $complNestedProcessor
+     * @param ProcessorInterface $processor
      * @param string $inputKey
+     * @throws RuntimeException
      */
     public function __construct(
         InjectorInterface $injector,
-        ComplexNestedProcessorInterface $complNestedProcessor,
+        ProcessorInterface $processor,
         string $inputKey
     ) {
+        if (!$processor instanceof ComplexNestedProcessorInterface
+            && !$processor instanceof CollectionProcessorInterface
+            && !$processor instanceof CachedProcessorInterface) {
+            throw new RuntimeException(
+                sprintf('Unexpected processor instance: %s', get_class($processor))
+            );
+        }
+
         parent::__construct($inputKey);
         $this->injector = $injector;
-        $this->complexNestedProcessor = $complNestedProcessor;
+        $this->processor = $processor;
     }
 
     /**
@@ -55,8 +65,28 @@ final class ComplexNested extends NestedProcessor
             return;
         }
 
-        $this->complexNestedProcessor->process($subContext);
+        $this->processor->process($subContext);
         $deserialized = $context->getDeserialized();
         $this->injector->inject($deserialized, $subContext->getDeserialized());
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if (!$this->processor instanceof CachedProcessorInterface) {
+            return;
+        }
+
+        $this->processor = $this->processor->getProcessor();
+
+        if (!$this->processor instanceof ComplexNestedProcessorInterface) {
+            throw new RuntimeException(
+                sprintf('Unexpected processor instance: %s', get_class($this->processor))
+            );
+        }
+
+        $this->processor->resolveRecursiveProcessors();
     }
 }

@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor;
 
 use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\ProcessingInstantiatorInterface;
 
 /**
  * Class Object
@@ -27,6 +28,11 @@ final class Object implements ComplexNestedProcessorInterface
      * @var ProcessorInterface[]
      */
     private $processors;
+
+    /**
+     * @var bool
+     */
+    private $resolved = false;
 
     /**
      * Object constructor.
@@ -50,5 +56,37 @@ final class Object implements ComplexNestedProcessorInterface
         foreach ($this->processors as $processor) {
             $processor->process($context);
         }
+    }
+
+    /**
+     *
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if ($this->resolved) {
+            return;
+        }
+
+        $processors = [];
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof CachedProcessorInterface) {
+                $processor = $processor->getProcessor();
+            }
+
+            if ($processor instanceof ComplexNestedProcessorInterface) {
+                $processor->resolveRecursiveProcessors();
+            }
+
+            $processors[] = $processor;
+        }
+
+        $this->processors = $processors;
+
+        if ($this->instantiator instanceof ProcessingInstantiatorInterface) {
+            $this->instantiator->resolveRecursiveProcessors();
+        }
+
+        $this->resolved = true;
     }
 }

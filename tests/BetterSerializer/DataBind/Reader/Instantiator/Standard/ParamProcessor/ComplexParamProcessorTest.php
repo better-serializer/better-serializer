@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Processor\CachedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
@@ -26,27 +28,67 @@ class ComplexParamProcessorTest extends TestCase
     public function testProcessParam(): void
     {
         $key = 'test';
-        $testObj = $this->getMockBuilder(CarInterface::class)->getMock();
+        $testObj = $this->createMock(CarInterface::class);
 
-        $subContext = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $subContext = $this->createMock(ContextInterface::class);
         $subContext->expects(self::once())
             ->method('getDeserialized')
             ->willReturn($testObj);
 
-        $context = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $context = $this->createMock(ContextInterface::class);
         $context->expects(self::once())
             ->method('readSubContext')
             ->willReturn($subContext);
 
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processor = $this->createMock(ProcessorInterface::class);
         $processor->expects(self::once())
             ->method('process');
 
-        /* @var $processor ProcessorInterface */
-        /* @var $context ContextInterface */
         $paramProcessor = new ComplexParamProcessor($key, $processor);
         $processedObj = $paramProcessor->processParam($context);
 
         self::assertSame($testObj, $processedObj);
+    }
+
+    /**
+     *
+     */
+    public function testProcessParamReturnsNull(): void
+    {
+        $key = 'test';
+
+        $context = $this->createMock(ContextInterface::class);
+        $context->expects(self::once())
+            ->method('readSubContext')
+            ->willReturn(null);
+
+        $processor = $this->createMock(ProcessorInterface::class);
+
+        $paramProcessor = new ComplexParamProcessor($key, $processor);
+        $processedObj = $paramProcessor->processParam($context);
+
+        self::assertNull($processedObj);
+    }
+
+    /**
+     *
+     */
+    public function testResolveRecursiveProcessors(): void
+    {
+        $key = 'test';
+        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor->expects(self::once())
+            ->method('resolveRecursiveProcessors');
+
+        $processor = $this->createMock(CachedProcessorInterface::class);
+        $processor->expects(self::once())
+            ->method('getProcessor')
+            ->willReturn($subProcessor);
+
+        $paramProcessor = new ComplexParamProcessor($key, $processor);
+        $paramProcessor->resolveRecursiveProcessors();
+
+        // lazy resolve test
+        $paramProcessor->resolveRecursiveProcessors();
     }
 }

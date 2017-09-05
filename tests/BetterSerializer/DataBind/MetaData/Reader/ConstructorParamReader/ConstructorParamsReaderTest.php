@@ -81,6 +81,28 @@ class ConstructorParamsReaderTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function testGetConstructorParamsMetadataReturnsEmptyWhenNoConstructor(): void
+    {
+        $propertiesMetaData = [];
+
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+        $reflClass->expects(self::once())
+            ->method('getConstructor')
+            ->willReturn(null);
+
+        $combiner = $this->createMock(Combiner\PropertyWithConstructorParamCombinerInterface::class);
+        $typeReader = $this->createMock(TypeReaderInterface::class);
+
+        $reader = new ConstructorParamsReader($combiner, $typeReader);
+        $constrParamsMetaData = $reader->getConstructorParamsMetadata($reflClass, $propertiesMetaData);
+
+        self::assertInternalType('array', $constrParamsMetaData);
+        self::assertCount(0, $constrParamsMetaData);
+    }
+
+    /**
      * @expectedException RuntimeException
      * @expectedExceptionMessageRegExp /Parameter type missing for '[a-zA-Z0-9]+'/
      */

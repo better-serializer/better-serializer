@@ -11,6 +11,7 @@ use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Class NestedObjectTest
@@ -26,14 +27,14 @@ class ComplexNestedTest extends TestCase
     public function testProcess(): void
     {
         $inputKey = 'key';
-        $deserialized = $this->getMockBuilder(CarInterface::class)->getMock();
+        $deserialized = $this->createMock(CarInterface::class);
         $deserialized2 = 'test';
-        $subContextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $subContextMock = $this->createMock(ContextInterface::class);
         $subContextMock->expects(self::once())
             ->method('getDeserialized')
             ->willReturn($deserialized2);
 
-        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock = $this->createMock(ContextInterface::class);
         $contextMock->expects(self::once())
             ->method('readSubContext')
             ->with($inputKey)
@@ -42,19 +43,16 @@ class ComplexNestedTest extends TestCase
             ->method('getDeserialized')
             ->willReturn($deserialized);
 
-        $injectorMock = $this->getMockBuilder(InjectorInterface::class)->getMock();
+        $injectorMock = $this->createMock(InjectorInterface::class);
         $injectorMock->expects(self::once())
             ->method('inject')
             ->with($deserialized, $deserialized2);
 
-        $complexNestedMock = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
         $complexNestedMock->expects(self::once())
             ->method('process')
             ->with($contextMock);
 
-        /* @var $injectorMock InjectorInterface */
-        /* @var $complexNestedMock ComplexNestedProcessorInterface */
-        /* @var $contextMock ContextInterface */
         $processor = new ComplexNested($injectorMock, $complexNestedMock, $inputKey);
         $processor->process($contextMock);
     }
@@ -65,22 +63,76 @@ class ComplexNestedTest extends TestCase
     public function testProcessNull(): void
     {
         $inputKey = 'key';
-        $contextMock = $this->getMockBuilder(ContextInterface::class)->getMock();
+        $contextMock = $this->createMock(ContextInterface::class);
         $contextMock->expects(self::once())
             ->method('readSubContext')
             ->with($inputKey)
             ->willReturn(null);
 
-        $injectorMock = $this->getMockBuilder(InjectorInterface::class)->getMock();
+        $injectorMock = $this->createMock(InjectorInterface::class);
 
-        $complexNestedMock = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
         $complexNestedMock->expects(self::exactly(0))
             ->method('process');
 
-        /* @var $injectorMock InjectorInterface */
-        /* @var $complexNestedMock ComplexNestedProcessorInterface */
-        /* @var $contextMock ContextInterface */
         $processor = new ComplexNested($injectorMock, $complexNestedMock, $inputKey);
         $processor->process($contextMock);
+    }
+
+    /**
+     *
+     */
+    public function testResolveRecursiveProcessors(): void
+    {
+        $inputKey = 'key';
+        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor->expects(self::once())
+            ->method('resolveRecursiveProcessors');
+
+        $processorMock = $this->createMock(CachedProcessorInterface::class);
+        $processorMock->expects(self::once())
+            ->method('getProcessor')
+            ->willReturn($subProcessor);
+
+        $injectorMock = $this->createMock(InjectorInterface::class);
+
+        $processor = new ComplexNested($injectorMock, $processorMock, $inputKey);
+        $processor->resolveRecursiveProcessors();
+
+        // lazy resolve test
+        $processor->resolveRecursiveProcessors();
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp /Unexpected processor instance: [a-zA-Z0-9_\\]+/
+     */
+    public function testConstructionThrowsRuntimeException(): void
+    {
+        $inputKey = 'key';
+        $processorMock = $this->createMock(ProcessorInterface::class);
+        $injectorMock = $this->createMock(InjectorInterface::class);
+
+        new ComplexNested($injectorMock, $processorMock, $inputKey);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessageRegExp /Unexpected processor instance: [a-zA-Z0-9_\\]+/
+     */
+    public function testResolveRecursiveProcessorsThrowsRuntimeException(): void
+    {
+        $inputKey = 'key';
+        $subProcessor = $this->createMock(ProcessorInterface::class);
+
+        $processorMock = $this->createMock(CachedProcessorInterface::class);
+        $processorMock->expects(self::once())
+            ->method('getProcessor')
+            ->willReturn($subProcessor);
+
+        $injectorMock = $this->createMock(InjectorInterface::class);
+
+        $processor = new ComplexNested($injectorMock, $processorMock, $inputKey);
+        $processor->resolveRecursiveProcessors();
     }
 }

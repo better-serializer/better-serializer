@@ -327,4 +327,25 @@ class ReflectionClassTest extends TestCase
         $reflClass = new ReflectionClass($nativeReflClass, $useStatements);
         $reflClass->getMethod('test');
     }
+
+    /**
+     *
+     */
+    public function testGetConstructorReturnsNull(): void
+    {
+        $nativeReflClass = $this->getMockBuilder(NativeReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $nativeReflClass->expects(self::once())
+            ->method('getConstructor')
+            ->willReturn(null);
+
+        $useStatements = $this->createMock(UseStatementsInterface::class);
+
+        /* @var $nativeReflClass NativeReflectionClass */
+        $reflClass = new ReflectionClass($nativeReflClass, $useStatements);
+        $constructor = $reflClass->getConstructor();
+
+        self::assertNull($constructor);
+    }
 }

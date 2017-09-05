@@ -10,8 +10,11 @@ namespace Integration\Deserialization;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Car2;
+use BetterSerializer\Dto\Category;
 use BetterSerializer\Dto\Nested\CarFactory;
 use Integration\AbstractIntegrationTest;
+use DateTimeImmutable;
+use DateTime;
 
 /**
  * Class Json
@@ -51,6 +54,7 @@ final class JsonTest extends AbstractIntegrationTest
             $this->getStringsInArray(),
             $this->getOverridenNameTuple(),
             $this->getNamespaceFeatureTupleWithDateTimes(),
+            $this->getRecursiveDataTuple(),
         ];
     }
 
@@ -147,5 +151,18 @@ final class JsonTest extends AbstractIntegrationTest
         $json = '{"cars":[' . $carJson .'],"cars2":['. $car2Json .']}';
 
         return [$json, CarFactory::class];
+    }
+
+    /**
+     * @return array
+     */
+    private function getRecursiveDataTuple(): array
+    {
+        $dateTime = (new DateTimeImmutable())->format(DateTime::ATOM);
+
+        $categoryJson = '{"id":2,"parent":{"id":1,"parent":null,"children":[],"createdAt":"' . $dateTime
+            . '","updatedAt":null},"children":[],"createdAt":"' . $dateTime . '","updatedAt":null}';
+
+        return [$categoryJson, Category::class];
     }
 }

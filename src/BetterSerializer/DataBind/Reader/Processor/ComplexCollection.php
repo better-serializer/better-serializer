@@ -15,7 +15,7 @@ use Iterator;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor
  */
-final class ComplexCollection implements CollectionProcessorInterface
+final class ComplexCollection implements CollectionProcessorInterface, ComplexNestedProcessorInterface
 {
 
     /**
@@ -54,5 +54,21 @@ final class ComplexCollection implements CollectionProcessorInterface
         }
 
         $context->setDeserialized($deserialized);
+    }
+
+    /**
+     *
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if (!$this->processor instanceof CachedProcessorInterface) {
+            return;
+        }
+
+        $this->processor = $this->processor->getProcessor();
+
+        if ($this->processor instanceof ComplexNestedProcessorInterface) {
+            $this->processor->resolveRecursiveProcessors();
+        }
     }
 }

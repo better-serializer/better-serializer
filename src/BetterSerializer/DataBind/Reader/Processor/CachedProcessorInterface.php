@@ -8,14 +8,14 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Processor;
 
 /**
- * Interface ObjectProcessorInterface
+ * Interface CachedProcessorInterface
  * @package BetterSerializer\DataBind\Reader\Processor
  */
-interface ComplexNestedProcessorInterface extends ProcessorInterface
+interface CachedProcessorInterface extends ProcessorInterface
 {
 
     /**
-     * @return void
+     * @return ProcessorInterface
      */
-    public function resolveRecursiveProcessors(): void;
+    public function getProcessor(): ProcessorInterface;
 }

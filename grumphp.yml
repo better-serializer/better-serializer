@@ -12,19 +12,18 @@ parameters:
         sniffs: []
         triggered_by: [php]
       phpcsfixer2:
-        allow_risky: false
-        cache_file: ~
-        config: ~
-        rules:
-          - '@@PSR2'
+        allow_risky: true
+        cache_file: .php_cs.cache
+        config: .php_cs
         using_cache: true
-        verbose: false
-        diff: true
+        config_contains_finder: false
+        verbose: true
+        diff: false
         triggered_by: ['php']
       phplint: ~
       phpmd:
         exclude: []
-        ruleset: ['unusedcode', 'design', 'controversial', 'naming', 'codesize', 'cleancode']
+        ruleset: ['dev/phpmd.ruleset.xml']
         triggered_by: ['php']
       phpparser: ~
       phpstan:

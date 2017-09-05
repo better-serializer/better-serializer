@@ -69,40 +69,6 @@ class ComplexNestedMemberTest extends TestCase
     }
 
     /**
-     * @expectedException LogicException
-     * @expectedExceptionMessageRegExp /Invalid processor type: '[a-zA-Z0-9_]+'/
-     */
-    public function testCreateThrowsException(): void
-    {
-        $type = new ObjectType(Car::class);
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
-        $propertyMetaData->expects(self::exactly(2))
-            ->method('getType')
-            ->willReturn($type);
-
-        $objProcessor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
-
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
-        $processorFactory->expects(self::once())
-            ->method('createFromType')
-            ->with($type)
-            ->willReturn($objProcessor);
-
-        $extractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
-
-        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
-        $extractorFactory->expects(self::once())
-            ->method('newExtractor')
-            ->willReturn($extractor);
-
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $extractorFactory ExtractorFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
-        $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
-        $complexNestedMember->create($propertyMetaData);
-    }
-
-    /**
      *
      */
     public function testCreateReturnsNull(): void

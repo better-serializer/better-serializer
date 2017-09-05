@@ -9,13 +9,14 @@ namespace BetterSerializer\DataBind\Writer\Processor;
 
 use BetterSerializer\DataBind\Writer\Context\ContextInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
+use RuntimeException;
 
 /**
  * Class ObjectProperty
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class ComplexNested extends NestedProcessor
+final class ComplexNested extends NestedProcessor implements ComplexNestedProcessorInterface
 {
 
     /**
@@ -24,24 +25,33 @@ final class ComplexNested extends NestedProcessor
     private $extractor;
 
     /**
-     * @var ComplexNestedProcessorInterface
+     * @var ComplexNestedProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
      */
-    private $complexNestedProcessor;
+    private $processor;
 
     /**
      * Property constructor.
      * @param ExtractorInterface $extractor
-     * @param ComplexNestedProcessorInterface $complNestedProcessor
+     * @param ProcessorInterface $processor
      * @param string $outputKey
+     * @throws RuntimeException
      */
     public function __construct(
         ExtractorInterface $extractor,
-        ComplexNestedProcessorInterface $complNestedProcessor,
+        ProcessorInterface $processor,
         string $outputKey
     ) {
+        if (!$processor instanceof ComplexNestedProcessorInterface
+            && !$processor instanceof CollectionProcessorInterface
+            && !$processor instanceof CachedProcessorInterface) {
+            throw new RuntimeException(
+                sprintf('Unexpected processor instance: %s', get_class($processor))
+            );
+        }
+
         parent::__construct($outputKey);
         $this->extractor = $extractor;
-        $this->complexNestedProcessor = $complNestedProcessor;
+        $this->processor = $processor;
     }
 
     /**
@@ -58,8 +68,35 @@ final class ComplexNested extends NestedProcessor
 
         $subContext = $context->createSubContext();
         $value = $this->extractor->extract($data);
-        $this->complexNestedProcessor->process($subContext, $value);
+
+        if ($value === null) {
+            $context->write($this->outputKey, null);
+
+            return;
+        }
+
+        $this->processor->process($subContext, $value);
 
         $context->mergeSubContext($this->outputKey, $subContext);
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if (!$this->processor instanceof CachedProcessorInterface) {
+            return;
+        }
+
+        $this->processor = $this->processor->getProcessor();
+
+        if (!$this->processor instanceof ComplexNestedProcessorInterface) {
+            throw new RuntimeException(
+                sprintf('Unexpected processor instance: %s', get_class($this->processor))
+            );
+        }
+
+        $this->processor->resolveRecursiveProcessors();
     }
 }

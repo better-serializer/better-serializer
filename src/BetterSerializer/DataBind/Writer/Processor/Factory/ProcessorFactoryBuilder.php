@@ -55,11 +55,11 @@ final class ProcessorFactoryBuilder
     }
 
     /**
-     * @return ProcessorFactory
+     * @return ProcessorFactoryInterface
      */
-    public function build(): ProcessorFactory
+    public function build(): ProcessorFactoryInterface
     {
-        $factory = new ProcessorFactory();
+        $factory = new RecursiveProcessorFactory(new ProcessorFactory());
         $metaDataObject = new ComplexNestedMember($factory, $this->extractorFactory);
         $metaDataSimple = new SimpleMember($this->converterFactory, $this->extractorFactory);
         $typeArrayMember = new CollectionMember($this->converterFactory, $factory);

@@ -8,7 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Standard;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
-use BetterSerializer\DataBind\Reader\Instantiator\InstantiatorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\ProcessingInstantiatorInterface;
+use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -18,7 +19,7 @@ use ReflectionException;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Instantiator
  */
-final class StandardInstantiator implements InstantiatorInterface
+final class StandardInstantiator implements ProcessingInstantiatorInterface
 {
 
     /**
@@ -30,6 +31,11 @@ final class StandardInstantiator implements InstantiatorInterface
      * @var ParamProcessorInterface[]
      */
     private $paramProcessors;
+
+    /**
+     * @var bool
+     */
+    private $processorsResolved = false;
 
     /**
      * ReflectionConstructor constructor.
@@ -54,5 +60,23 @@ final class StandardInstantiator implements InstantiatorInterface
         }, $this->paramProcessors);
 
         return $this->reflectionClass->newInstanceArgs($params);
+    }
+
+    /**
+     *
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if ($this->processorsResolved) {
+            return;
+        }
+
+        foreach ($this->paramProcessors as $processor) {
+            if ($processor instanceof ComplexParamProcessorInterface) {
+                $processor->resolveRecursiveProcessors();
+            }
+        }
+
+        $this->processorsResolved = true;
     }
 }

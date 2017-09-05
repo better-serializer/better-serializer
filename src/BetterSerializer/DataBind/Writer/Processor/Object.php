@@ -23,6 +23,11 @@ final class Object implements ComplexNestedProcessorInterface
     private $processors;
 
     /**
+     * @var bool
+     */
+    private $resolved = false;
+
+    /**
      * Object constructor.
      * @param ProcessorInterface[] $processors
      */
@@ -40,5 +45,32 @@ final class Object implements ComplexNestedProcessorInterface
         foreach ($this->processors as $processor) {
             $processor->process($context, $data);
         }
+    }
+
+    /**
+     *
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if ($this->resolved) {
+            return;
+        }
+
+        $processors = [];
+
+        foreach ($this->processors as $processor) {
+            if ($processor instanceof CachedProcessorInterface) {
+                $processor = $processor->getProcessor();
+            }
+
+            if ($processor instanceof ComplexNestedProcessorInterface) {
+                $processor->resolveRecursiveProcessors();
+            }
+
+            $processors[] = $processor;
+        }
+
+        $this->processors = $processors;
+        $this->resolved = true;
     }
 }

@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
+use BetterSerializer\DataBind\Reader\Processor\CachedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**
@@ -15,7 +17,7 @@ use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor
  */
-final class ComplexParamProcessor implements ParamProcessorInterface
+final class ComplexParamProcessor implements ComplexParamProcessorInterface
 {
 
     /**
@@ -46,8 +48,29 @@ final class ComplexParamProcessor implements ParamProcessorInterface
     public function processParam(ContextInterface $context)
     {
         $subContext = $context->readSubContext($this->key);
+
+        if ($subContext === null) {
+            return null;
+        }
+
         $this->processor->process($subContext);
 
         return $subContext->getDeserialized();
+    }
+
+    /**
+     *
+     */
+    public function resolveRecursiveProcessors(): void
+    {
+        if (!$this->processor instanceof CachedProcessorInterface) {
+            return;
+        }
+
+        $this->processor = $this->processor->getProcessor();
+
+        if ($this->processor instanceof ComplexNestedProcessorInterface) {
+            $this->processor->resolveRecursiveProcessors();
+        }
     }
 }

@@ -46,9 +46,9 @@ final class ReflectionClass implements ReflectionClassInterface
     private $methods;
 
     /**
-     * @var ReflectionMethod
+     * @var ReflectionMethod|null|string
      */
-    private $constructor;
+    private $constructor = '';
 
     /**
      * @var ReflectionProperty[]
@@ -257,13 +257,21 @@ final class ReflectionClass implements ReflectionClassInterface
      * has no constructor.
      * @since 5.0
      */
-    public function getConstructor(): ReflectionMethodInterface
+    public function getConstructor(): ?ReflectionMethodInterface
     {
-        if ($this->constructor !== null) {
+        if ($this->constructor !== '') {
             return $this->constructor;
         }
 
-        $this->constructor = new ReflectionMethod($this->nativeReflClass->getConstructor(), $this);
+        $nativeConstructor = $this->nativeReflClass->getConstructor();
+
+        if (!$nativeConstructor) {
+            $this->constructor = null;
+
+            return $this->constructor;
+        }
+
+        $this->constructor = new ReflectionMethod($nativeConstructor, $this);
 
         return $this->constructor;
     }

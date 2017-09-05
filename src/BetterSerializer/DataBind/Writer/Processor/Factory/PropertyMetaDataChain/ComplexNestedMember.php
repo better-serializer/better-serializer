@@ -66,12 +66,8 @@ final class ComplexNestedMember extends ExtractingChainMember
     protected function createProcessor(PropertyMetaDataInterface $metaData): ProcessorInterface
     {
         $extractor = $this->extractorFactory->newExtractor($metaData);
-        $objectProcessor = $this->processorFactory->createFromType($metaData->getType());
+        $nestedProcessor = $this->processorFactory->createFromType($metaData->getType());
 
-        if (!$objectProcessor instanceof ComplexNestedProcessorInterface) {
-            throw new LogicException("Invalid processor type: '" . get_class($objectProcessor) . "'");
-        }
-
-        return new ComplexNested($extractor, $objectProcessor, $metaData->getOutputKey());
+        return new ComplexNested($extractor, $nestedProcessor, $metaData->getOutputKey());
     }
 }
