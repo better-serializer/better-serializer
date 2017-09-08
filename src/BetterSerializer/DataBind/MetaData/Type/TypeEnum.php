@@ -7,6 +7,8 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 use MabeEnum\Enum;
+use MabeEnum\EnumSerializableTrait;
+use Serializable;
 
 /**
  * Class Type
@@ -22,8 +24,9 @@ use MabeEnum\Enum;
  * @method static TypeEnum UNKNOWN
  * @method static TypeEnum DATETIME
  */
-final class TypeEnum extends Enum
+final class TypeEnum extends Enum implements Serializable
 {
+    use EnumSerializableTrait;
 
     /**
      * @const string

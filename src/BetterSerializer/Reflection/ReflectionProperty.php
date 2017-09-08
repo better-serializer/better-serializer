@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Reflection;
 
 use ReflectionProperty as NativeReflectionProperty;
+use ReflectionException;
 
 /**
  * Class ReflectionProperty
@@ -28,6 +29,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
     private $declaringClass;
 
     /**
+     * @var string
+     */
+    private $propertyName;
+
+    /**
      * ReflectionProperty constructor.
      * @param NativeReflectionProperty $nativeReflProperty
      * @param ReflectionClassInterface $declaringClass
@@ -35,14 +41,23 @@ final class ReflectionProperty implements ReflectionPropertyInterface
     public function __construct(NativeReflectionProperty $nativeReflProperty, ReflectionClassInterface $declaringClass)
     {
         $this->nativeReflProperty = $nativeReflProperty;
+        $this->nativeReflProperty->setAccessible(true);
         $this->declaringClass = $declaringClass;
+        $this->propertyName = $nativeReflProperty->getName();
     }
 
     /**
      * @return NativeReflectionProperty
+     * @throws ReflectionException
      */
     public function getNativeReflProperty(): NativeReflectionProperty
     {
+        if ($this->nativeReflProperty === null) {
+            $this->nativeReflProperty =
+                new NativeReflectionProperty($this->declaringClass->getName(), $this->propertyName);
+            $this->nativeReflProperty->setAccessible(true);
+        }
+
         return $this->nativeReflProperty;
     }
 
@@ -51,10 +66,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.getname.php
      * @return string The name of the reflected property.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function getName(): string
     {
-        return $this->nativeReflProperty->getName();
+        return $this->getNativeReflProperty()->getName();
     }
 
     /**
@@ -68,10 +84,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * </p>
      * @return mixed The current value of the property.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function getValue($object)
     {
-        return $this->nativeReflProperty->getValue($object);
+        return $this->getNativeReflProperty()->getValue($object);
     }
 
     /**
@@ -87,10 +104,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * </p>
      * @return void No value is returned.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function setValue($object, $value): void
     {
-        $this->nativeReflProperty->setValue($object, $value);
+        $this->getNativeReflProperty()->setValue($object, $value);
     }
 
     /**
@@ -98,10 +116,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.ispublic.php
      * @return bool <b>TRUE</b> if the property is public, <b>FALSE</b> otherwise.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function isPublic(): bool
     {
-        return $this->nativeReflProperty->isPublic();
+        return $this->getNativeReflProperty()->isPublic();
     }
 
     /**
@@ -109,10 +128,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.isprivate.php
      * @return bool <b>TRUE</b> if the property is private, <b>FALSE</b> otherwise.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function isPrivate(): bool
     {
-        return $this->nativeReflProperty->isPrivate();
+        return $this->getNativeReflProperty()->isPrivate();
     }
 
     /**
@@ -120,10 +140,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.isprotected.php
      * @return bool <b>TRUE</b> if the property is protected, <b>FALSE</b> otherwise.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function isProtected(): bool
     {
-        return $this->nativeReflProperty->isProtected();
+        return $this->getNativeReflProperty()->isProtected();
     }
 
     /**
@@ -131,10 +152,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.isstatic.php
      * @return bool <b>TRUE</b> if the property is static, <b>FALSE</b> otherwise.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function isStatic(): bool
     {
-        return $this->nativeReflProperty->isStatic();
+        return $this->getNativeReflProperty()->isStatic();
     }
 
     /**
@@ -143,10 +165,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @return bool <b>TRUE</b> if the property was declared at compile-time, or <b>FALSE</b> if
      * it was created at run-time.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function isDefault(): bool
     {
-        return $this->nativeReflProperty->isDefault();
+        return $this->getNativeReflProperty()->isDefault();
     }
 
     /**
@@ -154,10 +177,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.getmodifiers.php
      * @return int A numeric representation of the modifiers.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function getModifiers(): int
     {
-        return $this->nativeReflProperty->getModifiers();
+        return $this->getNativeReflProperty()->getModifiers();
     }
 
     /**
@@ -165,6 +189,7 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.getdeclaringclass.php
      * @return ReflectionClassInterface A <b>ReflectionClass</b> object.
      * @since 5.0
+     * @throws ReflectionException
      */
     public function getDeclaringClass(): ReflectionClassInterface
     {
@@ -176,10 +201,11 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * @link http://php.net/manual/en/reflectionproperty.getdoccomment.php
      * @return string The doc comment.
      * @since 5.1.0
+     * @throws ReflectionException
      */
     public function getDocComment(): string
     {
-        return $this->nativeReflProperty->getDocComment();
+        return $this->getNativeReflProperty()->getDocComment();
     }
 
     /**
@@ -190,9 +216,29 @@ final class ReflectionProperty implements ReflectionPropertyInterface
      * </p>
      * @return void No value is returned.
      * @since 5.3.0
+     * @throws ReflectionException
      */
     public function setAccessible(bool $accessible): void
     {
-        $this->nativeReflProperty->setAccessible($accessible);
+        $this->getNativeReflProperty()->setAccessible($accessible);
+    }
+
+    /**
+     *
+     */
+    public function __sleep()
+    {
+        return [
+            'declaringClass',
+            'propertyName',
+        ];
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function __wakeup()
+    {
+        $this->getNativeReflProperty();
     }
 }

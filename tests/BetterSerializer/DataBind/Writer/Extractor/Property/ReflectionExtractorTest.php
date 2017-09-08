@@ -30,8 +30,7 @@ class ReflectionExtractorTest extends TestCase
         $nativeReflProperty = $this->getMockBuilder(ReflectionProperty::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $nativeReflProperty->expects(self::once())
-            ->method('getValue')
+        $nativeReflProperty->method('getValue')
             ->willReturn($value);
 
         $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
@@ -56,5 +55,25 @@ class ReflectionExtractorTest extends TestCase
         $extracted = $extractor->extract(null);
 
         self::assertNull($extracted);
+    }
+
+    /**
+     *
+     */
+    public function testDeserialize(): void
+    {
+        $nativeReflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
+        $reflPropertyStub->expects(self::atLeast(1))
+            ->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty);
+
+        $extractor = new ReflectionExtractor($reflPropertyStub);
+
+        $serialized = serialize($extractor);
+        unserialize($serialized);
     }
 }

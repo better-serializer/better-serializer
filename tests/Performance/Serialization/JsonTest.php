@@ -36,12 +36,8 @@ final class JsonTest extends AbstractIntegrationTest
             $this->markTestIncomplete('Implement caching to see difference.');
         }
 
-        $serializer = $this->getSerializer();
-        $jmsSerializer = SerializerBuilder::create()->build();
-
-        // opcache warmup
-        $jmsSerializer->serialize($data, 'json');
-        $serializer->serialize($data, SerializationType::JSON());
+        $serializer = $this->getCachedSerializer();
+        $jmsSerializer = $this->getJmsSerializer();
 
         $start = microtime(true);
         $serializer->serialize($data, SerializationType::JSON());
@@ -75,7 +71,7 @@ final class JsonTest extends AbstractIntegrationTest
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
 
-        return [$car, 1.0];
+        return [$car, 1.01];
     }
 
     /**

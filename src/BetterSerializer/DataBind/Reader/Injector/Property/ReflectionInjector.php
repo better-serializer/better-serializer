@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Injector\Property;
 
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
-use ReflectionProperty;
+use ReflectionProperty as NativeReflectionProperty;
 
 /**
  * Class ReflectionInjector
@@ -20,9 +20,14 @@ final class ReflectionInjector implements InjectorInterface
 {
 
     /**
-     * @var ReflectionProperty
+     * @var ReflectionPropertyInterface
      */
     private $reflectionProperty;
+
+    /**
+     * @var NativeReflectionProperty
+     */
+    private $nativeReflectionProperty;
 
     /**
      * ReflectionInjector constructor.
@@ -30,7 +35,8 @@ final class ReflectionInjector implements InjectorInterface
      */
     public function __construct(ReflectionPropertyInterface $reflectionProperty)
     {
-        $this->reflectionProperty = $reflectionProperty->getNativeReflProperty();
+        $this->reflectionProperty = $reflectionProperty;
+        $this->nativeReflectionProperty = $reflectionProperty->getNativeReflProperty();
     }
 
     /**
@@ -40,6 +46,14 @@ final class ReflectionInjector implements InjectorInterface
      */
     public function inject($object, $data): void
     {
-        $this->reflectionProperty->setValue($object, $data);
+        $this->nativeReflectionProperty->setValue($object, $data);
+    }
+
+    /**
+     *
+     */
+    public function __wakeup()
+    {
+        $this->nativeReflectionProperty = $this->reflectionProperty->getNativeReflProperty();
     }
 }

@@ -43,6 +43,6 @@ final class ClassReader implements ClassReaderInterface
     {
         $classAnnotations = $this->annotationReader->getClassAnnotations($reflectionClass->getNativeReflClass());
 
-        return new ClassMetaData($reflectionClass->getName(), $classAnnotations);
+        return new ClassMetaData($reflectionClass, $classAnnotations);
     }
 }

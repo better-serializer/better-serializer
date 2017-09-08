@@ -6,6 +6,8 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Model\ClassModel;
 
+use BetterSerializer\Reflection\ReflectionClassInterface;
+
 /**
  * Class ClassMetadata
  *
@@ -14,6 +16,11 @@ namespace BetterSerializer\DataBind\MetaData\Model\ClassModel;
  */
 interface ClassMetaDataInterface
 {
+
+    /**
+     * @return ReflectionClassInterface
+     */
+    public function getReflectionClass(): ReflectionClassInterface;
 
     /**
      * @return string

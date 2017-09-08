@@ -46,8 +46,7 @@ final class StandardInstantiatorFactory implements ChainedInstantiatorFactoryInt
      */
     public function newInstantiator(MetaDataInterface $metaData): InstantiatorResultInterface
     {
-        $className = $metaData->getClassMetadata()->getClassName();
-        $reflClass = new ReflectionClass($className);
+        $reflClass = $metaData->getClassMetadata()->getReflectionClass();
         $processorFactory = $this->paramProcessorFactory;
         $excludedProperties = [];
         $paramProcessors = [];

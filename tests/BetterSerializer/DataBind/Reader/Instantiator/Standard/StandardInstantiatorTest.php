@@ -12,6 +12,7 @@ use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\Comple
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\Dto\CarInterface;
 use BetterSerializer\Dto\RadioInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -31,22 +32,26 @@ class StandardInstantiatorTest extends TestCase
         $radio = $this->getMockBuilder(RadioInterface::class)->getMock();
         $car = $this->getMockBuilder(CarInterface::class)->getMock();
 
-        $reflClass = $this->getMockBuilder(ReflectionClass::class)
+        $nativeReflClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $reflClass->expects(self::once())
+        $nativeReflClass->expects(self::once())
             ->method('newInstanceArgs')
             ->willReturn($car);
 
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+        $reflClass->expects(self::once())
+            ->method('getNativeReflClass')
+            ->willReturn($nativeReflClass);
+
         $context = $this->createMock(ContextInterface::class);
 
-        $paramProcessor = $this->getMockBuilder(ParamProcessorInterface::class)->getMock();
+        $paramProcessor = $this->createMock(ParamProcessorInterface::class);
         $paramProcessor->expects(self::once())
             ->method('processParam')
             ->with($context)
             ->willReturn($radio);
 
-        /* @var $reflClass ReflectionClass */
         $instantiator = new StandardInstantiator($reflClass, [$paramProcessor]);
         $instantiated = $instantiator->instantiate($context);
 
@@ -58,19 +63,42 @@ class StandardInstantiatorTest extends TestCase
      */
     public function testResolveRecursiveProcessors(): void
     {
-        $reflClass = $this->getMockBuilder(ReflectionClass::class)
+        $nativeReflClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+        $reflClass->expects(self::once())
+            ->method('getNativeReflClass')
+            ->willReturn($nativeReflClass);
 
-        $paramProcessor = $this->getMockBuilder(ComplexParamProcessorInterface::class)->getMock();
+        $paramProcessor = $this->createMock(ComplexParamProcessorInterface::class);
         $paramProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 
-        /* @var $reflClass ReflectionClass */
         $instantiator = new StandardInstantiator($reflClass, [$paramProcessor]);
         $instantiator->resolveRecursiveProcessors();
 
         // test lazyness
         $instantiator->resolveRecursiveProcessors();
+    }
+
+    /**
+     *
+     */
+    public function testUnserializeResolvesNativeReflectionClass(): void
+    {
+        $nativeReflClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+        $reflClass->expects(self::atLeast(1))
+            ->method('getNativeReflClass')
+            ->willReturn($nativeReflClass);
+
+        $paramProcessor = $this->createMock(ComplexParamProcessorInterface::class);
+
+        $instantiator = new StandardInstantiator($reflClass, [$paramProcessor]);
+        $serialized = serialize($instantiator);
+        unserialize($serialized);
     }
 }

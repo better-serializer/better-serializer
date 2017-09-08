@@ -348,4 +348,25 @@ class ReflectionClassTest extends TestCase
 
         self::assertNull($constructor);
     }
+
+    /**
+     *
+     */
+    public function testUnserialize(): void
+    {
+        $nativeReflClass = $this->getMockBuilder(NativeReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $nativeReflClass->expects(self::once())
+            ->method('getName')
+            ->willReturn(Car::class);
+
+        $useStatements = $this->createMock(UseStatementsInterface::class);
+
+        /* @var $nativeReflClass NativeReflectionClass */
+        $reflClass = new ReflectionClass($nativeReflClass, $useStatements);
+
+        $serialized = serialize($reflClass);
+        unserialize($serialized);
+    }
 }

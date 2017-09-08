@@ -15,7 +15,7 @@ use BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorResultInte
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\ParamProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\StandardInstantiator;
-use BetterSerializer\Dto\Car;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,14 +31,16 @@ class StandardInstantiatorFactoryTest extends TestCase
      */
     public function testNewInstantiator(): void
     {
-        $clasName = Car::class;
-        $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
-        $classMetaData = $this->getMockBuilder(ClassMetaDataInterface::class)->getMock();
-        $classMetaData->expects(self::once())
-            ->method('getClassName')
-            ->willReturn($clasName);
+        $tuple = $this->createMock(PropertyWithConstructorParamTupleInterface::class);
 
-        $metaData = $this->getMockBuilder(MetaDataInterface::class)->getMock();
+        $reflectionClass = $this->createMock(ReflectionClassInterface::class);
+
+        $classMetaData = $this->createMock(ClassMetaDataInterface::class);
+        $classMetaData->expects(self::once())
+            ->method('getReflectionClass')
+            ->willReturn($reflectionClass);
+
+        $metaData = $this->createMock(MetaDataInterface::class);
         $metaData->expects(self::once())
             ->method('getClassMetaData')
             ->willReturn($classMetaData);
@@ -46,9 +48,9 @@ class StandardInstantiatorFactoryTest extends TestCase
             ->method('getPropertyWithConstructorParamTuples')
             ->willReturn([$tuple, $tuple]);
 
-        $paramProcessor = $this->getMockBuilder(ParamProcessorInterface::class)->getMock();
+        $paramProcessor = $this->createMock(ParamProcessorInterface::class);
 
-        $procFactory = $this->getMockBuilder(ParamProcessorFactoryInterface::class)->getMock();
+        $procFactory = $this->createMock(ParamProcessorFactoryInterface::class);
         $procFactory->expects(self::exactly(2))
             ->method('newParamProcessor')
             ->with($tuple)
@@ -70,12 +72,12 @@ class StandardInstantiatorFactoryTest extends TestCase
      */
     public function testIsApplicable(bool $expectedResult): void
     {
-        $metaData = $this->getMockBuilder(MetaDataInterface::class)->getMock();
+        $metaData = $this->createMock(MetaDataInterface::class);
         $metaData->expects(self::once())
             ->method('isInstantiableByConstructor')
             ->willReturn($expectedResult);
 
-        $procFactory = $this->getMockBuilder(ParamProcessorFactoryInterface::class)->getMock();
+        $procFactory = $this->createMock(ParamProcessorFactoryInterface::class);
 
         /* @var $procFactory ParamProcessorFactoryInterface */
         /* @var $metaData MetaDataInterface */

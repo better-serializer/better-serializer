@@ -31,6 +31,11 @@ final class ReflectionClass implements ReflectionClassInterface
     private $nativeReflClass;
 
     /**
+     * @var string
+     */
+    private $className;
+
+    /**
      * @var ReflectionClass|null
      */
     private $parentClass;
@@ -79,15 +84,21 @@ final class ReflectionClass implements ReflectionClassInterface
         ReflectionClassInterface $parentClass = null
     ) {
         $this->nativeReflClass = $nativeReflClass;
+        $this->className = $nativeReflClass->getName();
         $this->useStatements = $useStatements;
         $this->parentClass = $parentClass;
     }
 
     /**
      * @return NativeReflectionClass
+     * @throws ReflectionException
      */
     public function getNativeReflClass(): NativeReflectionClass
     {
+        if ($this->nativeReflClass === null) {
+            $this->nativeReflClass = new NativeReflectionClass($this->className);
+        }
+
         return $this->nativeReflClass;
     }
 
@@ -119,7 +130,7 @@ final class ReflectionClass implements ReflectionClassInterface
             $this->properties = $parentClass->getProperties();
         }
 
-        foreach ($this->nativeReflClass->getProperties() as $property) {
+        foreach ($this->getNativeReflClass()->getProperties() as $property) {
             $this->properties[] = $this->indexedProperties[$property->getName()]
                 = new ReflectionProperty($property, $this);
         }
@@ -156,7 +167,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getName(): string
     {
-        return $this->nativeReflClass->getName();
+        return $this->getNativeReflClass()->getName();
     }
 
     /**
@@ -167,7 +178,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isInternal(): bool
     {
-        return $this->nativeReflClass->isInternal();
+        return $this->getNativeReflClass()->isInternal();
     }
 
     /**
@@ -178,7 +189,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isUserDefined(): bool
     {
-        return $this->nativeReflClass->isUserDefined();
+        return $this->getNativeReflClass()->isUserDefined();
     }
 
     /**
@@ -189,7 +200,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isInstantiable(): bool
     {
-        return $this->nativeReflClass->isInstantiable();
+        return $this->getNativeReflClass()->isInstantiable();
     }
 
     /**
@@ -200,7 +211,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isCloneable(): bool
     {
-        return $this->nativeReflClass->isCloneable();
+        return $this->getNativeReflClass()->isCloneable();
     }
 
     /**
@@ -213,7 +224,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getFileName(): string
     {
-        return $this->nativeReflClass->getFileName();
+        return $this->getNativeReflClass()->getFileName();
     }
 
     /**
@@ -224,7 +235,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getStartLine(): int
     {
-        return $this->nativeReflClass->getStartLine();
+        return $this->getNativeReflClass()->getStartLine();
     }
 
     /**
@@ -235,7 +246,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getEndLine(): int
     {
-        return $this->nativeReflClass->getEndLine();
+        return $this->getNativeReflClass()->getEndLine();
     }
 
     /**
@@ -246,7 +257,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getDocComment(): string
     {
-        return $this->nativeReflClass->getDocComment();
+        return $this->getNativeReflClass()->getDocComment();
     }
 
     /**
@@ -263,7 +274,7 @@ final class ReflectionClass implements ReflectionClassInterface
             return $this->constructor;
         }
 
-        $nativeConstructor = $this->nativeReflClass->getConstructor();
+        $nativeConstructor = $this->getNativeReflClass()->getConstructor();
 
         if (!$nativeConstructor) {
             $this->constructor = null;
@@ -340,7 +351,7 @@ final class ReflectionClass implements ReflectionClassInterface
         $this->methods = [];
         $this->indexedMethods = [];
 
-        foreach ($this->nativeReflClass->getMethods($filter) as $method) {
+        foreach ($this->getNativeReflClass()->getMethods($filter) as $method) {
             $this->methods[] = $this->indexedMethods[$method->getName()] = new ReflectionMethod($method, $this);
         }
 
@@ -414,7 +425,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function hasConstant(string $name): bool
     {
-        return $this->nativeReflClass->hasConstant($name);
+        return $this->getNativeReflClass()->hasConstant($name);
     }
 
     /**
@@ -426,7 +437,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getConstants(): array
     {
-        return $this->nativeReflClass->getConstants();
+        return $this->getNativeReflClass()->getConstants();
     }
 
     /**
@@ -440,7 +451,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getConstant(string $name)
     {
-        return $this->nativeReflClass->getConstant($name);
+        return $this->getNativeReflClass()->getConstant($name);
     }
 
     /**
@@ -452,7 +463,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getInterfaces(): array
     {
-        return $this->nativeReflClass->getInterfaces();
+        return $this->getNativeReflClass()->getInterfaces();
     }
 
     /**
@@ -463,7 +474,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getInterfaceNames(): array
     {
-        return $this->nativeReflClass->getInterfaceNames();
+        return $this->getNativeReflClass()->getInterfaceNames();
     }
 
     /**
@@ -473,7 +484,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isAnonymous(): bool
     {
-        return $this->nativeReflClass->isAnonymous();
+        return $this->getNativeReflClass()->isAnonymous();
     }
 
     /**
@@ -484,7 +495,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isInterface(): bool
     {
-        return $this->nativeReflClass->isInterface();
+        return $this->getNativeReflClass()->isInterface();
     }
 
     /**
@@ -497,7 +508,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getTraits(): ?array
     {
-        return $this->nativeReflClass->getTraits();
+        return $this->getNativeReflClass()->getTraits();
     }
 
     /**
@@ -509,7 +520,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getTraitNames(): ?array
     {
-        return $this->nativeReflClass->getTraitNames();
+        return $this->getNativeReflClass()->getTraitNames();
     }
 
     /**
@@ -522,7 +533,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getTraitAliases(): ?array
     {
-        return $this->nativeReflClass->getTraitAliases();
+        return $this->getNativeReflClass()->getTraitAliases();
     }
 
     /**
@@ -534,7 +545,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isTrait(): ?bool
     {
-        return $this->nativeReflClass->isTrait();
+        return $this->getNativeReflClass()->isTrait();
     }
 
     /**
@@ -545,7 +556,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isAbstract(): bool
     {
-        return $this->nativeReflClass->isAbstract();
+        return $this->getNativeReflClass()->isAbstract();
     }
 
     /**
@@ -556,7 +567,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isFinal(): bool
     {
-        return $this->nativeReflClass->isFinal();
+        return $this->getNativeReflClass()->isFinal();
     }
 
     /**
@@ -568,7 +579,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getModifiers(): int
     {
-        return $this->nativeReflClass->getModifiers();
+        return $this->getNativeReflClass()->getModifiers();
     }
 
     /**
@@ -582,7 +593,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isInstance($object): bool
     {
-        return $this->nativeReflClass->isInstance($object);
+        return $this->getNativeReflClass()->isInstance($object);
     }
 
     /**
@@ -598,7 +609,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function newInstance($args = null, $optional = null)
     {
-        return $this->nativeReflClass->newInstance($args, $optional);
+        return $this->getNativeReflClass()->newInstance($args, $optional);
     }
 
     /**
@@ -609,7 +620,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function newInstanceWithoutConstructor()
     {
-        return $this->nativeReflClass->newInstanceWithoutConstructor();
+        return $this->getNativeReflClass()->newInstanceWithoutConstructor();
     }
 
     /**
@@ -623,7 +634,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function newInstanceArgs(array $args = null)
     {
-        return $this->nativeReflClass->newInstanceArgs($args);
+        return $this->getNativeReflClass()->newInstanceArgs($args);
     }
 
     /**
@@ -637,7 +648,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isSubclassOf(string $class): bool
     {
-        return $this->nativeReflClass->isSubclassOf($class);
+        return $this->getNativeReflClass()->isSubclassOf($class);
     }
 
     /**
@@ -648,7 +659,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getStaticProperties(): array
     {
-        return $this->nativeReflClass->getStaticProperties();
+        return $this->getNativeReflClass()->getStaticProperties();
     }
 
     /**
@@ -664,7 +675,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getStaticPropertyValue(string $name, string $default = null)
     {
-        return $this->nativeReflClass->getStaticPropertyValue($name, $default);
+        return $this->getNativeReflClass()->getStaticPropertyValue($name, $default);
     }
 
     /**
@@ -681,7 +692,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function setStaticPropertyValue(string $name, string $value): void
     {
-        $this->nativeReflClass->setStaticPropertyValue($name, $value);
+        $this->getNativeReflClass()->setStaticPropertyValue($name, $value);
     }
 
     /**
@@ -696,7 +707,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getDefaultProperties(): array
     {
-        return $this->nativeReflClass->getDefaultProperties();
+        return $this->getNativeReflClass()->getDefaultProperties();
     }
 
     /**
@@ -707,7 +718,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function isIterateable(): bool
     {
-        return $this->nativeReflClass->isIterateable();
+        return $this->getNativeReflClass()->isIterateable();
     }
 
     /**
@@ -721,7 +732,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function implementsInterface(string $interface): bool
     {
-        return $this->nativeReflClass->implementsInterface($interface);
+        return $this->getNativeReflClass()->implementsInterface($interface);
     }
 
     /**
@@ -734,7 +745,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getExtension(): ReflectionExtension
     {
-        return $this->nativeReflClass->getExtension();
+        return $this->getNativeReflClass()->getExtension();
     }
 
     /**
@@ -745,7 +756,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getExtensionName(): string
     {
-        return $this->nativeReflClass->getExtensionName();
+        return $this->getNativeReflClass()->getExtensionName();
     }
 
     /**
@@ -756,7 +767,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function inNamespace(): bool
     {
-        return $this->nativeReflClass->inNamespace();
+        return $this->getNativeReflClass()->inNamespace();
     }
 
     /**
@@ -767,7 +778,7 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getNamespaceName(): string
     {
-        return $this->nativeReflClass->getNamespaceName();
+        return $this->getNativeReflClass()->getNamespaceName();
     }
 
     /**
@@ -778,6 +789,31 @@ final class ReflectionClass implements ReflectionClassInterface
      */
     public function getShortName(): string
     {
-        return $this->nativeReflClass->getShortName();
+        return $this->getNativeReflClass()->getShortName();
+    }
+
+    /**
+     *
+     */
+    public function __sleep()
+    {
+        return [
+            'className',
+            'parentClass',
+            'properties',
+            'methods',
+            'constructor',
+            'indexedProperties',
+            'indexedMethods',
+            'useStatements',
+        ];
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function __wakeup()
+    {
+        $this->getNativeReflClass();
     }
 }

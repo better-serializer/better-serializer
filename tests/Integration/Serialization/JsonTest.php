@@ -43,6 +43,21 @@ final class JsonTest extends AbstractIntegrationTest
     }
 
     /**
+     * @dataProvider getTestTuples
+     * @group integration
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @param mixed $data
+     * @param string $expectedJson
+     */
+    public function testSerializationCached($data, string $expectedJson): void
+    {
+        $serializer = $this->getCachedSerializer();
+
+        $json = $serializer->serialize($data, SerializationType::JSON());
+        self::assertSame($expectedJson, $json);
+    }
+
+    /**
      * @return array
      */
     public function getTestTuples(): array

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Model\ClassModel;
 
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,10 +24,14 @@ class ClassMetaDataTest extends TestCase
     public function testEverything(): void
     {
         $className = 'test';
+        $reflectionClass = $this->createMock(ReflectionClassInterface::class);
+        $reflectionClass->method('getName')
+            ->willReturn($className);
         $annotations = [];
 
-        $classMetaData = new ClassMetaData($className, $annotations);
+        $classMetaData = new ClassMetaData($reflectionClass, $annotations);
 
+        self::assertSame($reflectionClass, $classMetaData->getReflectionClass());
         self::assertSame($className, $classMetaData->getClassName());
         self::assertSame($annotations, $classMetaData->getAnnotations());
     }

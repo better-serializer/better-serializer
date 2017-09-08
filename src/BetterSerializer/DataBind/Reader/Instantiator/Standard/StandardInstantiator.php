@@ -11,7 +11,8 @@ use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\ProcessingInstantiatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
-use ReflectionClass;
+use BetterSerializer\Reflection\ReflectionClassInterface;
+use ReflectionClass as NativeReflectionClass;
 use ReflectionException;
 
 /**
@@ -23,9 +24,14 @@ final class StandardInstantiator implements ProcessingInstantiatorInterface
 {
 
     /**
-     * @var ReflectionClass
+     * @var ReflectionClassInterface
      */
     private $reflectionClass;
+
+    /**
+     * @var NativeReflectionClass
+     */
+    private $nativeReflectionClass;
 
     /**
      * @var ParamProcessorInterface[]
@@ -39,14 +45,15 @@ final class StandardInstantiator implements ProcessingInstantiatorInterface
 
     /**
      * ReflectionConstructor constructor.
-     * @param ReflectionClass $reflectionClass
+     * @param ReflectionClassInterface $reflectionClass
      * @param ParamProcessorInterface[] $paramProcessors
      * @throws ReflectionException
      */
-    public function __construct(ReflectionClass $reflectionClass, array $paramProcessors)
+    public function __construct(ReflectionClassInterface $reflectionClass, array $paramProcessors)
     {
         $this->reflectionClass = $reflectionClass;
         $this->paramProcessors = $paramProcessors;
+        $this->nativeReflectionClass = $reflectionClass->getNativeReflClass();
     }
 
     /**
@@ -59,7 +66,7 @@ final class StandardInstantiator implements ProcessingInstantiatorInterface
             return $paramProcessor->processParam($context);
         }, $this->paramProcessors);
 
-        return $this->reflectionClass->newInstanceArgs($params);
+        return $this->nativeReflectionClass->newInstanceArgs($params);
     }
 
     /**
@@ -78,5 +85,13 @@ final class StandardInstantiator implements ProcessingInstantiatorInterface
         }
 
         $this->processorsResolved = true;
+    }
+
+    /**
+     *
+     */
+    public function __wakeup()
+    {
+        $this->nativeReflectionClass = $this->reflectionClass->getNativeReflClass();
     }
 }

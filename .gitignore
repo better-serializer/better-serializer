@@ -6,3 +6,4 @@
 !bin/setup-dev.sh
 /vendor/
 /log/
+/cache

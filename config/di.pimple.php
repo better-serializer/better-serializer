@@ -27,6 +27,14 @@ $container[BetterSerializer\DataBind\Reader\ReaderInterface::class] = function (
 
 $container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::class] =
     function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\CachedProcessorFactory(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory::class],
+            $c[Doctrine\Common\Cache\Cache::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory::class] =
+    function (Container $c) {
         return $c[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder::class]->build();
     };
 
@@ -67,9 +75,17 @@ $container[BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface::cla
     return new BetterSerializer\DataBind\Writer\Context\ContextFactory();
 };
 
-$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class] =
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory::class] =
     function (Container $c) {
         return $c[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class]->build();
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\CachedProcessorFactory(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory::class],
+            $c[Doctrine\Common\Cache\Cache::class]
+        );
     };
 
 $container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class] =
@@ -89,12 +105,19 @@ $container[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInt
     return new BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactory();
 };
 
-$container[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class] = function (Container $c) {
+$container[BetterSerializer\DataBind\MetaData\Reader\Reader::class] = function (Container $c) {
     return new BetterSerializer\DataBind\MetaData\Reader\Reader(
-        $c[\BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class],
+        $c[BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class],
         $c[BetterSerializer\DataBind\MetaData\Reader\ClassReader\ClassReaderInterface::class],
         $c[BetterSerializer\DataBind\MetaData\Reader\PropertyReader\PropertiesReaderInterface::class],
         $c[BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\ConstructorParamsReaderInterface::class]
+    );
+};
+
+$container[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Reader\CachedReader(
+        $c[BetterSerializer\DataBind\MetaData\Reader\Reader::class],
+        $c[Doctrine\Common\Cache\Cache::class]
     );
 };
 
@@ -209,25 +232,47 @@ $container[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface:
     return new BetterSerializer\DataBind\Writer\Converter\ConverterFactory();
 };
 
-$container[\BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class] = function (Container $c) {
-    return new \BetterSerializer\Reflection\Factory\ReflectionClassFactory(
-        $c[\BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class]
+$container[BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class] = function (Container $c) {
+    return new BetterSerializer\Reflection\Factory\ReflectionClassFactory(
+        $c[BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class]
     );
 };
 
-$container[\BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class] = function (Container $c) {
+$container[BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class] = function (Container $c) {
     return new \BetterSerializer\Reflection\UseStatement\UseStatementsExtractor(
-        $c[\BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class],
-        $c[\BetterSerializer\Reflection\UseStatement\ParserInterface::class]
+        $c[BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class],
+        $c[BetterSerializer\Reflection\UseStatement\ParserInterface::class]
     );
 };
 
-$container[\BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class] = function () {
-    return new \BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactory();
+$container[BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactoryInterface::class] = function () {
+    return new BetterSerializer\Reflection\UseStatement\Factory\CodeReaderFactory();
 };
 
-$container[\BetterSerializer\Reflection\UseStatement\ParserInterface::class] = function () {
-    return new \BetterSerializer\Reflection\UseStatement\Parser();
+$container[BetterSerializer\Reflection\UseStatement\ParserInterface::class] = function () {
+    return new BetterSerializer\Reflection\UseStatement\Parser();
 };
+
+$container[Doctrine\Common\Cache\Cache::class] = function (Container $c) {
+    $cacheProviders = [
+        $c[Doctrine\Common\Cache\ArrayCache::class],
+    ];
+
+    if ($c['Doctrine\Common\Cache\FilesystemCache|Directory'] !== '') {
+        $cacheProviders[] = $c[Doctrine\Common\Cache\FilesystemCache::class];
+    }
+
+    return new Doctrine\Common\Cache\ChainCache($cacheProviders);
+};
+
+$container[Doctrine\Common\Cache\ArrayCache::class] = function () {
+    return new Doctrine\Common\Cache\ArrayCache();
+};
+
+$container[Doctrine\Common\Cache\FilesystemCache::class] = function (Container $c) {
+    return new Doctrine\Common\Cache\FilesystemCache($c['Doctrine\Common\Cache\FilesystemCache|Directory']);
+};
+
+$container['Doctrine\Common\Cache\FilesystemCache|Directory'] = '';
 
 return $container;

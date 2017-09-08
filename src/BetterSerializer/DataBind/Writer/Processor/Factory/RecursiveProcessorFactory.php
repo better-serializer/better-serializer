@@ -24,13 +24,8 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor\Factory
  */
-final class RecursiveProcessorFactory implements ProcessorFactoryInterface
+final class RecursiveProcessorFactory extends AbstractProcessorFactory implements ProcessorFactoryInterface
 {
-
-    /**
-     * @var ProcessorFactoryInterface
-     */
-    private $processorFactory;
 
     /**
      * @var array
@@ -41,24 +36,6 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
      * @var Cache
      */
     private $cache;
-
-    /**
-     * RecursiveProcessorFactory constructor.
-     * @param ProcessorFactoryInterface $processorFactory
-     */
-    public function __construct(ProcessorFactoryInterface $processorFactory)
-    {
-        $this->processorFactory = $processorFactory;
-    }
-
-    /**
-     * @param PropertyMetaDataInterface $metaData
-     * @return ProcessorInterface
-     */
-    public function createFromMetaData(PropertyMetaDataInterface $metaData): ProcessorInterface
-    {
-        return $this->processorFactory->createFromMetaData($metaData);
-    }
 
     /**
      * @param TypeInterface $type
@@ -72,29 +49,13 @@ final class RecursiveProcessorFactory implements ProcessorFactoryInterface
         $processor = $this->getCachedProcessor($stringCacheKey);
 
         if (!$processor) {
-            $processor = $this->processorFactory->createFromType($type);
+            $processor = parent::createFromType($type);
             $this->storeProcessor($stringCacheKey, $processor);
         }
 
         $this->commit($stringCacheKey, $processor);
 
         return $processor;
-    }
-
-    /**
-     * @param MetaDataMember $chainMember
-     */
-    public function addMetaDataChainMember(MetaDataMember $chainMember): void
-    {
-        $this->processorFactory->addMetaDataChainMember($chainMember);
-    }
-
-    /**
-     * @param TypeMember $chainMember
-     */
-    public function addTypeChainMember(TypeMember $chainMember): void
-    {
-        $this->processorFactory->addTypeChainMember($chainMember);
     }
 
     /**

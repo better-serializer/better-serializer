@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Extractor\Property;
 
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
-use ReflectionProperty;
+use ReflectionProperty as NativeReflectionProperty;
 
 /**
  * Class ReflectionExtractor
@@ -20,9 +20,14 @@ final class ReflectionExtractor implements ExtractorInterface
 {
 
     /**
-     * @var ReflectionProperty
+     * @var ReflectionPropertyInterface
      */
     private $reflectionProperty;
+
+    /**
+     * @var NativeReflectionProperty
+     */
+    private $nativeReflectionProperty;
 
     /**
      * ReflectionExtractor constructor.
@@ -30,7 +35,8 @@ final class ReflectionExtractor implements ExtractorInterface
      */
     public function __construct(ReflectionPropertyInterface $reflectionProperty)
     {
-        $this->reflectionProperty = $reflectionProperty->getNativeReflProperty();
+        $this->reflectionProperty = $reflectionProperty;
+        $this->nativeReflectionProperty = $reflectionProperty->getNativeReflProperty();
     }
 
     /**
@@ -43,6 +49,14 @@ final class ReflectionExtractor implements ExtractorInterface
             return null;
         }
 
-        return $this->reflectionProperty->getValue($data);
+        return $this->nativeReflectionProperty->getValue($data);
+    }
+
+    /**
+     *
+     */
+    public function __wakeup()
+    {
+        $this->nativeReflectionProperty = $this->reflectionProperty->getNativeReflProperty();
     }
 }

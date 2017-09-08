@@ -6,6 +6,8 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Model\ClassModel;
 
+use BetterSerializer\Reflection\ReflectionClassInterface;
+
 /**
  * Class ClassMetadata
  *
@@ -16,9 +18,9 @@ final class ClassMetaData implements ClassMetaDataInterface
 {
 
     /**
-     * @var string
+     * @var ReflectionClassInterface
      */
-    private $className;
+    private $reflectionClass;
 
     /**
      * @var array<ClassMetadata>
@@ -28,13 +30,21 @@ final class ClassMetaData implements ClassMetaDataInterface
     /**
      * ClassMetadata constructor.
      *
-     * @param string $className
+     * @param ReflectionClassInterface $reflectionClass
      * @param array $annotations
      */
-    public function __construct(string $className, array $annotations)
+    public function __construct(ReflectionClassInterface $reflectionClass, array $annotations)
     {
-        $this->className = $className;
+        $this->reflectionClass = $reflectionClass;
         $this->annotations = $annotations;
+    }
+
+    /**
+     * @return ReflectionClassInterface
+     */
+    public function getReflectionClass(): ReflectionClassInterface
+    {
+        return $this->reflectionClass;
     }
 
     /**
@@ -42,7 +52,7 @@ final class ClassMetaData implements ClassMetaDataInterface
      */
     public function getClassName(): string
     {
-        return $this->className;
+        return $this->reflectionClass->getName();
     }
 
     /**

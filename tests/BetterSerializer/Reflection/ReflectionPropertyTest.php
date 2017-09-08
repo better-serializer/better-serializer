@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Reflection;
 
+use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty as NativeReflectionProperty;
@@ -61,7 +62,7 @@ class ReflectionPropertyTest extends TestCase
             ->willReturn($modifiers);
         $nativeReflProperty->method('getDocComment')
             ->willReturn($docComment);
-        $nativeReflProperty->expects(self::once())
+        $nativeReflProperty->expects(self::exactly(2))
             ->method('setAccessible');
 
         $reflClass = $this->createMock(ReflectionClassInterface::class);
@@ -83,5 +84,28 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($isStatic, $reflProperty->isStatic());
         self::assertSame($docComment, $reflProperty->getDocComment());
         $reflProperty->setAccessible($accessible);
+    }
+
+    /**
+     *
+     */
+    public function testDeserialize(): void
+    {
+        $nativeReflProperty = $this->getMockBuilder(NativeReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $nativeReflProperty->expects(self::once())
+            ->method('getName')
+            ->willReturn('title');
+
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+        $reflClass->method('getName')
+            ->willReturn(Car::class);
+
+        /* @var $nativeReflProperty NativeReflectionProperty */
+        $reflProperty = new ReflectionProperty($nativeReflProperty, $reflClass);
+
+        $serialized = serialize($reflProperty);
+        unserialize($serialized);
     }
 }

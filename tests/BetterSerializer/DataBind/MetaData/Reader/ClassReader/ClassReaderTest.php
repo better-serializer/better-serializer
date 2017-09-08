@@ -7,9 +7,10 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ClassReader;
 
 use BetterSerializer\DataBind\MetaData\Model\ClassModel\ClassMetaData;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
-use BetterSerializer\Reflection\ReflectionClassInterface;
+use ReflectionClass;
 
 /**
  * Class ClassReaderTest
@@ -32,10 +33,15 @@ class ClassReaderTest extends TestCase
         $annotationReaderStub->expects(self::once())
             ->method('getClassAnnotations')
             ->willReturn([]);
+
+        $nativeReflectionClass = $this->getMockBuilder(ReflectionClass::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $reflectionClassStub = $this->createMock(ReflectionClassInterface::class);
         $reflectionClassStub->expects(self::once())
-            ->method('getName')
-            ->willReturn('test');
+            ->method('getNativeReflClass')
+            ->willReturn($nativeReflectionClass);
 
         /* @var $annotationReaderStub AnnotationReader */
         $reader = new ClassReader($annotationReaderStub);
