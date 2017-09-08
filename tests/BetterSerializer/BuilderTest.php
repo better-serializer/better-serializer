@@ -25,6 +25,7 @@ class BuilderTest extends TestCase
     {
         $builder = new Builder();
         $builder->setCacheDir(__DIR__);
+        $builder->enableApcuCache();
         $serializer = $builder->createSerializer();
 
         self::assertInstanceOf(Serializer::class, $serializer);

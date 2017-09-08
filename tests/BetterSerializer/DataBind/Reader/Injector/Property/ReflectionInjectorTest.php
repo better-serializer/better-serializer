@@ -44,4 +44,25 @@ class ReflectionInjectorTest extends TestCase
         $injector = new ReflectionInjector($reflPropertyStub);
         $injector->inject($objectStub, $value);
     }
+
+    /**
+     *
+     */
+    public function testDeserialize(): void
+    {
+        $nativeReflProperty = $this->getMockBuilder(ReflectionProperty::class)
+            ->disableOriginalConstructor()
+            ->disableProxyingToOriginalMethods()
+            ->getMock();
+
+        $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
+        $reflPropertyStub->expects(self::atLeastOnce())
+            ->method('getNativeReflProperty')
+            ->willReturn($nativeReflProperty);
+
+        $injector = new ReflectionInjector($reflPropertyStub);
+
+        $serialized = serialize($injector);
+        unserialize($serialized);
+    }
 }

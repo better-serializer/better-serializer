@@ -52,6 +52,13 @@ abstract class AbstractIntegrationTest extends TestCase
     {
         self::$builder = new Builder();
         self::$builderCached = new Builder();
+
+        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
+            self::$builderCached->enableApcuCache();
+
+            return;
+        }
+
         self::$builderCached->setCacheDir(dirname(__DIR__, 2) . '/cache/better-serializer');
     }
 

@@ -42,6 +42,14 @@ final class Builder
     }
 
     /**
+     *
+     */
+    public function enableApcuCache(): void
+    {
+        $this->container['Doctrine\Common\Cache\ApcuCache|Enable'] = true;
+    }
+
+    /**
      * @param string $directory
      * @throws RuntimeException
      */
