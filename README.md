@@ -91,6 +91,9 @@ BetterSerializer: Done!
 +------------------+----------------+--------+
 ```
 
+**This means that you can now effectively de/serialize 4x more entities (e.g. in API results) using the same 
+amount of time than before!**
+
 Regarding the performance gains - I'd like someone to check the measured values, since the results seem quite great
 and I'm suspicious myself :).
 
