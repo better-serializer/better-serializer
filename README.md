@@ -21,10 +21,75 @@ the best features from JmsSerializer and from [Jackson](https://github.com/Faste
 Currently, only JSON de/serialization is implemented. It's possible to de/serialize complex nested data structures
 (objects and arrays). Only arrays are supported as collection types for now.
 
-For now the code is only a proof of concept, but it already yields interesting results. Without implementing
+## Performance
+
+For now the code is only a proof of concept, but it is stabilizing more and more each day. 
+It already yields interesting results. Without implementing
 metadata caching, the serialization process is already 
-[5-6x faster](tests/Performance/Serialization/JsonTest.php) than using JmsSerializer. 
+[4-6x faster](tests/Performance/Serialization/JsonTest.php) than using JmsSerializer. 
 The deserialization process is also faster, but only [cca 3.5x faster](tests/Performance/Deserialization/JsonTest.php).
+
+There is also another benchmark, which compares JMS Serializer, [Ivory Serializer]() and Better Serialier. 
+It also integrates Symfony serializer, but I needed to comment it out, because it was 100-300x slower 
+than Better Serializer.
+You can find a fork of it [here](https://github.com/better-serializer/ivory-serializer-benchmark) and try it 
+on your own. For best results, please disable XDebug while running the tests.
+
+Here are some of the results:
+
+```bash
+$ php bin/benchmark  --iteration 1000 --horizontal-complexity 2 --vertical-complexity 2                                                                                                                                                                                                                             23:18  rasta@Rasta
+Ivory: Done!
+JMS: Done!
+BetterSerializer: Done!
+
++------------------+----------------+--------+
+| Serializer       | Duration (sec) | Factor |
++------------------+----------------+--------+
+| BetterSerializer | 0.001188s      | 1.00x  |
+| Ivory            | 0.002222s      | 1.87x  |
+| JMS              | 0.002901s      | 2.44x  |
++------------------+----------------+--------+
+
+$ php bin/benchmark  --iteration 100 --horizontal-complexity 10 --vertical-complexity 10                                                                                                                                                                                                                            23:19  rasta@Rasta
+Ivory: Done!
+JMS: Done!
+BetterSerializer: Done!
+
++------------------+----------------+--------+
+| Serializer       | Duration (sec) | Factor |
++------------------+----------------+--------+
+| BetterSerializer | 0.011377s      | 1.00x  |
+| Ivory            | 0.037377s      | 3.29x  |
+| JMS              | 0.046837s      | 4.12x  |
++------------------+----------------+--------+
+
+$ php bin/benchmark  --iteration 1 --horizontal-complexity 100 --vertical-complexity 200                                                                                                                                                                                                                            22:53  rasta@Rasta
+Ivory: Done!
+JMS: Done!
+BetterSerializer: Done!
+
++------------------+----------------+--------+
+| Serializer       | Duration (sec) | Factor |
++------------------+----------------+--------+
+| BetterSerializer | 1.040695s      | 1.00x  |
+| Ivory            | 4.191479s      | 4.03x  |
+| JMS              | 4.466160s      | 4.29x  |
++------------------+----------------+--------+
+
+$ php bin/benchmark  --iteration 1 --horizontal-complexity 200 --vertical-complexity 200                                                                                                                                                                                                                            22:52  rasta@Rasta
+Ivory: Done!
+JMS: Done!
+BetterSerializer: Done!
+
++------------------+----------------+--------+
+| Serializer       | Duration (sec) | Factor |
++------------------+----------------+--------+
+| BetterSerializer | 4.523851s      | 1.00x  |
+| Ivory            | 15.580491s     | 3.44x  |
+| JMS              | 18.571867s     | 4.11x  |
++------------------+----------------+--------+
+```
 
 Regarding the performance gains - I'd like someone to check the measured values, since the results seem quite great
 and I'm suspicious myself :).
@@ -45,7 +110,7 @@ The usage is described [here](doc/Usage.md).
 The de/serializaton annotations are described [here](doc/Annotations.md).
 
 ## Future Plans
-- metadata caching
+- ~~metadata caching~~
 - XML and YAML support
 - various collection classes support (Doctrine collections, internal PHP collections like SplStack)
 - data injection using class constructors (~~internal~~ and static), which should improve performance even more
