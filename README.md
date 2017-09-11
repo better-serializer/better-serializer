@@ -38,7 +38,7 @@ on your own. For best results, please disable XDebug while running the tests.
 Here are some of the results:
 
 ```bash
-$ php bin/benchmark  --iteration 1000 --horizontal-complexity 2 --vertical-complexity 2                                                                                                                                                                                                                             23:18  rasta@Rasta
+$ php bin/benchmark  --iteration 1000 --horizontal-complexity 2 --vertical-complexity 2
 Ivory: Done!
 JMS: Done!
 BetterSerializer: Done!
@@ -51,7 +51,7 @@ BetterSerializer: Done!
 | JMS              | 0.002901s      | 2.44x  |
 +------------------+----------------+--------+
 
-$ php bin/benchmark  --iteration 100 --horizontal-complexity 10 --vertical-complexity 10                                                                                                                                                                                                                            23:19  rasta@Rasta
+$ php bin/benchmark  --iteration 100 --horizontal-complexity 10 --vertical-complexity 10
 Ivory: Done!
 JMS: Done!
 BetterSerializer: Done!
@@ -64,7 +64,7 @@ BetterSerializer: Done!
 | JMS              | 0.046837s      | 4.12x  |
 +------------------+----------------+--------+
 
-$ php bin/benchmark  --iteration 1 --horizontal-complexity 100 --vertical-complexity 200                                                                                                                                                                                                                            22:53  rasta@Rasta
+$ php bin/benchmark  --iteration 1 --horizontal-complexity 100 --vertical-complexity 200
 Ivory: Done!
 JMS: Done!
 BetterSerializer: Done!
@@ -77,7 +77,7 @@ BetterSerializer: Done!
 | JMS              | 4.466160s      | 4.29x  |
 +------------------+----------------+--------+
 
-$ php bin/benchmark  --iteration 1 --horizontal-complexity 200 --vertical-complexity 200                                                                                                                                                                                                                            22:52  rasta@Rasta
+$ php bin/benchmark  --iteration 1 --horizontal-complexity 200 --vertical-complexity 200
 Ivory: Done!
 JMS: Done!
 BetterSerializer: Done!
