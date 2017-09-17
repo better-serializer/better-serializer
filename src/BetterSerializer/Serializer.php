@@ -8,6 +8,8 @@ namespace BetterSerializer;
 
 use BetterSerializer\Common\SerializationTypeInterface;
 use BetterSerializer\DataBind\Reader\ReaderInterface;
+use BetterSerializer\DataBind\Writer\SerializationContext;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\DataBind\Writer\WriterInterface;
 use LogicException;
 use ReflectionException;
@@ -61,13 +63,21 @@ final class Serializer
     /**
      * @param mixed             $data
      * @param SerializationTypeInterface $type
+     * @param SerializationContextInterface $context
      * @return string
      * @throws LogicException
      * @throws ReflectionException
      * @throws RuntimeException
      */
-    public function serialize($data, SerializationTypeInterface $type): string
-    {
-        return $this->writer->writeValueAsString($data, $type);
+    public function serialize(
+        $data,
+        SerializationTypeInterface $type,
+        SerializationContextInterface $context = null
+    ): string {
+        if (!$context) {
+            $context = new SerializationContext();
+        }
+
+        return $this->writer->writeValueAsString($data, $type, $context);
     }
 }

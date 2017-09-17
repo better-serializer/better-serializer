@@ -17,8 +17,13 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\BoundToProperty::KEY_ARGUMENT_NAME, type="string"),
  * })
  */
-final class BoundToProperty implements BoundToPropertyInterface
+final class BoundToProperty extends AbstractAnnotation implements BoundToPropertyInterface
 {
+
+    /**
+     * @const string
+     */
+    public const ANNOTATION_NAME = 'BoundToProperty';
 
     /**
      * @const string

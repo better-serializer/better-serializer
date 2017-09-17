@@ -7,6 +7,8 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
+use BetterSerializer\DataBind\MetaData\Annotations\Groups;
+use BetterSerializer\DataBind\MetaData\Annotations\Property;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use LogicException;
@@ -36,10 +38,11 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
      *
      * @param AnnotationInterface[] $annotations
      * @param TypeInterface         $type
+     * @throws RuntimeException
      */
     public function __construct(array $annotations, TypeInterface $type)
     {
-        $this->annotations = $annotations;
+        $this->setAnnotations($annotations);
         $this->type = $type;
     }
 
@@ -58,18 +61,12 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
      */
     public function getOutputKey(): string
     {
-        $propertyAnnotations = array_filter($this->annotations, function ($annotation) {
-            return $annotation instanceof PropertyInterface;
-        });
-
-        if (count($propertyAnnotations) !== 1) {
-            throw new LogicException(
-                sprintf('Invalid property annotation count - %d.', count($propertyAnnotations))
-            );
+        if (!isset($this->annotations[Property::ANNOTATION_NAME])) {
+            throw new LogicException('Property annotation missing.');
         }
 
         /* @var  $propertyAnnotation PropertyInterface */
-        $propertyAnnotation = $propertyAnnotations[0];
+        $propertyAnnotation = $this->annotations[Property::ANNOTATION_NAME];
         $outputKey = $propertyAnnotation->getName();
 
         if (!$outputKey) {
@@ -77,5 +74,29 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
         }
 
         return $outputKey;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getGroups(): array
+    {
+        /* @var $groupsAnnotation Groups */
+        $groupsAnnotation = $this->annotations[Groups::ANNOTATION_NAME];
+
+        return $groupsAnnotation->getGroups();
+    }
+
+    /**
+     * @param array $annotations
+     * @throws RuntimeException
+     */
+    private function setAnnotations(array $annotations): void
+    {
+        if (!isset($annotations[Groups::ANNOTATION_NAME])) {
+            throw new RuntimeException('Groups annotation missing.');
+        }
+
+        $this->annotations = $annotations;
     }
 }

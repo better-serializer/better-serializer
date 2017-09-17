@@ -14,6 +14,7 @@ use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Property;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
  * Class SimpleMember
@@ -54,10 +55,14 @@ final class SimpleMember extends ExtractingChainMember
 
     /**
      * @param PropertyMetaDataInterface $metaData
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createProcessor(PropertyMetaDataInterface $metaData): ProcessorInterface
-    {
+    protected function createProcessor(
+        PropertyMetaDataInterface $metaData,
+        SerializationContextInterface $context
+    ): ProcessorInterface {
         $converter = $this->converterFactory->newConverter($metaData->getType());
         $extractor = $this->extractorFactory->newExtractor($metaData);
 

@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
 use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Reader\ReaderInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
+use BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember;
@@ -34,7 +34,7 @@ final class ProcessorFactoryBuilder
     private $extractorFactory;
 
     /**
-     * @var ReaderInterface
+     * @var ContextualReaderInterface
      */
     private $metaDataReader;
 
@@ -42,12 +42,12 @@ final class ProcessorFactoryBuilder
      * ProcessorFactoryBuilder constructor.
      * @param ConverterFactoryInterface $converterFactory
      * @param ExtractorFactoryInterface $extractorFactory
-     * @param ReaderInterface $metaDataReader
+     * @param ContextualReaderInterface $metaDataReader
      */
     public function __construct(
         ConverterFactoryInterface $converterFactory,
         ExtractorFactoryInterface $extractorFactory,
-        ReaderInterface $metaDataReader
+        ContextualReaderInterface $metaDataReader
     ) {
         $this->converterFactory = $converterFactory;
         $this->extractorFactory = $extractorFactory;

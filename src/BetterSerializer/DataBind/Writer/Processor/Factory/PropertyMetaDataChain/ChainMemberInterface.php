@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataCha
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
  * Class ChainMember
@@ -19,7 +20,11 @@ interface ChainMemberInterface
 {
     /**
      * @param PropertyMetaDataInterface $metaData
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface|null
      */
-    public function create(PropertyMetaDataInterface $metaData): ?ProcessorInterface;
+    public function create(
+        PropertyMetaDataInterface $metaData,
+        SerializationContextInterface $context
+    ): ?ProcessorInterface;
 }

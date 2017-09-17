@@ -43,13 +43,14 @@ class BoundToPropertyTest extends TestCase
         $propName = 'test';
         $argumentName = 'test2';
 
-        $property = new BoundToProperty([
+        $b2p = new BoundToProperty([
             BoundToProperty::KEY_PROPERTY_NAME => $propName,
             BoundToProperty::KEY_ARGUMENT_NAME => $argumentName
         ]);
 
-        self::assertSame($propName, $property->getPropertyName());
-        self::assertSame($argumentName, $property->getArgumentName());
+        self::assertSame($propName, $b2p->getPropertyName());
+        self::assertSame($argumentName, $b2p->getArgumentName());
+        self::assertSame(BoundToProperty::ANNOTATION_NAME, $b2p->getAnnotationName());
     }
 
     /**

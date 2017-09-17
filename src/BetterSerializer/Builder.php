@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer;
 
+use Doctrine\Common\Cache\Cache;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use RuntimeException;
@@ -60,6 +61,14 @@ final class Builder
         }
 
         $this->container['Doctrine\Common\Cache\FilesystemCache|Directory'] = $directory;
+    }
+
+    /**
+     *
+     */
+    public function clearCache(): void
+    {
+        $this->container[Cache::class]->deleteAll();
     }
 
     /**

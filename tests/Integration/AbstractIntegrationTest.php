@@ -80,6 +80,7 @@ abstract class AbstractIntegrationTest extends TestCase
     protected function getCachedSerializer(): Serializer
     {
         if (self::$cachedSerializer === null) {
+            self::$builderCached->clearCache();
             self::$cachedSerializer = self::$builderCached->createSerializer();
         }
 

@@ -26,4 +26,9 @@ interface PropertyMetaDataInterface
      * @return string
      */
     public function getOutputKey(): string;
+
+    /**
+     * @return string[]
+     */
+    public function getGroups(): array;
 }

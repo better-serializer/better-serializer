@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
  * Class ChainMember
@@ -20,15 +21,16 @@ abstract class ChainMember implements ChainMemberInterface
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface|null
      */
-    public function create(TypeInterface $type): ?ProcessorInterface
+    public function create(TypeInterface $type, SerializationContextInterface $context): ?ProcessorInterface
     {
         if (!$this->isCreatable($type)) {
             return null;
         }
 
-        return $this->createProcessor($type);
+        return $this->createProcessor($type, $context);
     }
 
     /**
@@ -39,7 +41,11 @@ abstract class ChainMember implements ChainMemberInterface
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      */
-    abstract protected function createProcessor(TypeInterface $type): ProcessorInterface;
+    abstract protected function createProcessor(
+        TypeInterface $type,
+        SerializationContextInterface $context
+    ): ProcessorInterface;
 }

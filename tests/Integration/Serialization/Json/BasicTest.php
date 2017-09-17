@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Serialization;
+namespace Integration\Serialization\Json;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
@@ -24,7 +24,7 @@ use DateTimeImmutable;
  * @author mfris
  * @package Integration\Serialization
  */
-final class JsonTest extends AbstractIntegrationTest
+final class BasicTest extends AbstractIntegrationTest
 {
 
     /**

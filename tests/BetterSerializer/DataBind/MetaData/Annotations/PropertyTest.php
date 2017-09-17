@@ -36,6 +36,7 @@ class PropertyTest extends TestCase
 
         self::assertSame('test', $property->getName());
         self::assertSame('string', $property->getType());
+        self::assertSame(Property::ANNOTATION_NAME, $property->getAnnotationName());
     }
 
     /**

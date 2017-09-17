@@ -88,12 +88,29 @@ $container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryIn
         );
     };
 
+$container[BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface::class] = function (Container $c) {
+    return $c[BetterSerializer\DataBind\Writer\MetaData\CachedContextualReader::class];
+};
+
+$container[BetterSerializer\DataBind\Writer\MetaData\CachedContextualReader::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\Writer\MetaData\CachedContextualReader(
+        $c[BetterSerializer\DataBind\Writer\MetaData\ContextualReader::class],
+        $c[Doctrine\Common\Cache\Cache::class]
+    );
+};
+
+$container[BetterSerializer\DataBind\Writer\MetaData\ContextualReader::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\Writer\MetaData\ContextualReader(
+        $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
+    );
+};
+
 $container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class] =
     function (Container $c) {
         return new BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder(
             $c[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class],
             $c[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class],
-            $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
+            $c[BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface::class]
         );
     };
 

@@ -81,3 +81,57 @@ class Car
 
 In this case, the serializer knows, that the `specialTitle` constructor argument is being assigned to the `title`
 class property.
+
+### @Groups
+
+Applicable only with serialization. You can define serialization groups into a serialization context, which will 
+only serialize object properties, which belong to the defined groups. This feature is helpful when you don't 
+want to serialize everything from a given object. If a property doesn't have any group defined, it automatically
+belongs to the `default` group. If a property belongs to a different group, it has to have the `default` group
+assigned as well, to be able to serialize it without using serialization context.
+
+Example:
+
+```php
+use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
+use BetterSerializer\DataBind\Writer\SerializationContext;
+
+class Car
+{
+
+    /**
+     * @var string
+     * @Serializer\Groups({"group1","default"})
+     */
+    private $title;
+    
+    /**
+     * @var string
+     * @Serializer\Groups({"group2","default"})
+     */
+    private $color;
+    
+    /**
+     * @var string
+     * @Serializer\Groups({"group1","group2"})
+     */
+    private $serialNr;
+    
+    /**
+     * @var int
+     */
+    private $year;
+}
+
+$serializer->serialize($data, SerializationType::JSON(), new SerializationContext(['group1']));
+// will contain title, serialNr
+
+$serializer->serialize($data, SerializationType::JSON(), new SerializationContext(['group2']));
+// will contain color, serialNr
+
+$serializer->serialize($data, SerializationType::JSON(), new SerializationContext(['group1', 'group2']));
+// will contain title, color, serialNr
+
+$serializer->serialize($data, SerializationType::JSON());
+// will contain title, color, year
+```

@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
+use BetterSerializer\DataBind\MetaData\Annotations\Groups;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -40,14 +42,22 @@ class RecursiveProcessorFactoryTest extends TestCase
             ->method('resolveRecursiveProcessors');
 
         $nestedFactory = $this->createMock(ProcessorFactoryInterface::class);
+        $context = $this->createMock(SerializationContextInterface::class);
+        $context->method('getGroups')
+            ->willReturn([Groups::DEFAULT_GROUP]);
 
         $processorFactory = new RecursiveProcessorFactory($nestedFactory);
 
         $nestedFactory->method('createFromMetaData')
             ->with($propertyMetaData)
             ->willReturnCallback(
-                function (PropertyMetaDataInterface $propMetaData) use ($processorFactory, $type, $nestedProcessor) {
-                    $processorFactory->createFromType($type);
+                function (PropertyMetaDataInterface $propMetaData) use (
+                    $processorFactory,
+                    $type,
+                    $nestedProcessor,
+                    $context
+                ) {
+                    $processorFactory->createFromType($type, $context);
 
                     return $nestedProcessor;
                 }
@@ -56,12 +66,12 @@ class RecursiveProcessorFactoryTest extends TestCase
         $nestedFactory->method('createFromType')
             ->with($type)
             ->willReturnCallback(
-                function (TypeInterface $type) use ($processorFactory, $propertyMetaData) {
-                    return $processorFactory->createFromMetaData($propertyMetaData);
+                function (TypeInterface $type) use ($processorFactory, $propertyMetaData, $context) {
+                    return $processorFactory->createFromMetaData($propertyMetaData, $context);
                 }
             );
 
-        $processor = $processorFactory->createFromType($type);
+        $processor = $processorFactory->createFromType($type, $context);
 
         self::assertSame($nestedProcessor, $processor);
     }

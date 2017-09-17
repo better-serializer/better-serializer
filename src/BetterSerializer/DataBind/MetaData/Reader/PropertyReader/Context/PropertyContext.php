@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context;
 
 use BetterSerializer\DataBind\MetaData\Annotations\AnnotationInterface;
+use BetterSerializer\DataBind\MetaData\Annotations\Groups;
+use BetterSerializer\DataBind\MetaData\Annotations\Property;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\Reflection\ReflectionClassInterface;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
@@ -48,7 +50,7 @@ final class PropertyContext implements PropertyContextInterface
     ) {
         $this->reflectionClass = $reflectionClass;
         $this->reflectionProperty = $reflectionProperty;
-        $this->annotations = $annotations;
+        $this->annotations = $this->filterAndIndexAnnotations($annotations);
     }
 
     /**
@@ -88,15 +90,33 @@ final class PropertyContext implements PropertyContextInterface
      */
     public function getPropertyAnnotation(): ?PropertyInterface
     {
-        $propertyAnnotation = null;
-
-        foreach ($this->annotations as $annotation) {
-            if ($annotation instanceof PropertyInterface) {
-                $propertyAnnotation = $annotation;
-                break;
-            }
+        if (!isset($this->annotations[Property::ANNOTATION_NAME])) {
+            return null;
         }
 
-        return $propertyAnnotation;
+        return $this->annotations[Property::ANNOTATION_NAME];
+    }
+
+    /**
+     * @param array $annotations
+     * @return AnnotationInterface[]
+     */
+    private function filterAndIndexAnnotations(array $annotations): array
+    {
+        $indexed = [];
+
+        foreach ($annotations as $annotation) {
+            if (!$annotation instanceof AnnotationInterface) {
+                continue;
+            }
+
+            $indexed[$annotation->getAnnotationName()] = $annotation;
+        }
+
+        if (!isset($indexed[Groups::ANNOTATION_NAME])) {
+            $indexed[Groups::ANNOTATION_NAME] = new Groups();
+        }
+
+        return $indexed;
     }
 }

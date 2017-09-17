@@ -83,7 +83,7 @@ final class PropertiesReader implements PropertiesReaderInterface
             $propertyClassName = $type instanceof ObjectType ?
                                     ObjectPropertyMetaData::class : ReflectionPropertyMetadata::class;
 
-            $metaData[$propertyName] = new $propertyClassName($reflectionProperty, $annotations, $type);
+            $metaData[$propertyName] = new $propertyClassName($reflectionProperty, $context->getAnnotations(), $type);
         }
 
         return $metaData;

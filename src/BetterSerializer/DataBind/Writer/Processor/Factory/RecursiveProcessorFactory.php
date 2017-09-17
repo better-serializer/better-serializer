@@ -15,6 +15,7 @@ use BetterSerializer\DataBind\Writer\Processor\Cached;
 use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\Recursive\Cache;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -39,17 +40,18 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws ReflectionException|LogicException|RuntimeException
      */
-    public function createFromType(TypeInterface $type): ProcessorInterface
+    public function createFromType(TypeInterface $type, SerializationContextInterface $context): ProcessorInterface
     {
-        $stringCacheKey = (string) $type;
+        $stringCacheKey = $this->getCacheKey($type, $context);
         $this->begin($stringCacheKey);
         $processor = $this->getCachedProcessor($stringCacheKey);
 
         if (!$processor) {
-            $processor = parent::createFromType($type);
+            $processor = parent::createFromType($type, $context);
             $this->storeProcessor($stringCacheKey, $processor);
         }
 
@@ -114,5 +116,15 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
             $processor->resolveRecursiveProcessors();
             unset($this->nestings[$key]);
         }
+    }
+
+    /**
+     * @param TypeInterface $type
+     * @param SerializationContextInterface $context
+     * @return string
+     */
+    private function getCacheKey(TypeInterface $type, SerializationContextInterface $context): string
+    {
+        return $type . '||' . json_encode($context->getGroups());
     }
 }

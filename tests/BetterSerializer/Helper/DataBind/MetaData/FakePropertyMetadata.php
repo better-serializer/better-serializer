@@ -7,11 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Helper\DataBind\MetaData;
 
+use BetterSerializer\DataBind\MetaData\Annotations\Groups;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\Dto\Car;
-use ReflectionProperty;
 
 /**
  * Class FakePropertyMetadata
@@ -43,5 +42,13 @@ final class FakePropertyMetaData implements PropertyMetaDataInterface
     public function getOutputKey(): string
     {
         return 'fake';
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getGroups(): array
+    {
+        return [Groups::DEFAULT_GROUP];
     }
 }

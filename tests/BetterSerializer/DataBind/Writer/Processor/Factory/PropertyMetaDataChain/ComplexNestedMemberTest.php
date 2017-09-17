@@ -16,6 +16,7 @@ use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 use LogicException;
@@ -36,7 +37,7 @@ class ComplexNestedMemberTest extends TestCase
     public function testCreate(): void
     {
         $type = new ObjectType(Car::class);
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
@@ -44,26 +45,25 @@ class ComplexNestedMemberTest extends TestCase
             ->method('getOutputKey')
             ->willReturn('test');
 
-        $objProcessor = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $objProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $processorFactory->expects(self::once())
             ->method('createFromType')
             ->with($type)
             ->willReturn($objProcessor);
 
-        $extractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
+        $extractor = $this->createMock(ExtractorInterface::class);
 
-        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
+        $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
         $extractorFactory->expects(self::once())
             ->method('newExtractor')
             ->willReturn($extractor);
 
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $extractorFactory ExtractorFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
-        $processor = $complexNestedMember->create($propertyMetaData);
+        $processor = $complexNestedMember->create($propertyMetaData, $context);
 
         self::assertInstanceOf(ComplexNested::class, $processor);
     }
@@ -74,19 +74,17 @@ class ComplexNestedMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $type = new StringType();
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
-        $extractorFactory = $this->getMockBuilder(ExtractorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
+        $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
+        $context = $this->createMock(SerializationContextInterface::class);
 
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $extractorFactory ExtractorFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
-        $shouldBeNull = $complexNestedMember->create($propertyMetaData);
+        $shouldBeNull = $complexNestedMember->create($propertyMetaData, $context);
 
         self::assertNull($shouldBeNull);
     }

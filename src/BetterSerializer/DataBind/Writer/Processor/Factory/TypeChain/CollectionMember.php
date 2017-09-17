@@ -15,6 +15,7 @@ use BetterSerializer\DataBind\Writer\Processor\ComplexCollection as ComplexColle
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\SimpleCollection as SimpleCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -58,12 +59,14 @@ final class CollectionMember extends RecursiveChainMember
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws LogicException
      * @throws ReflectionException
      * @throws RuntimeException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function createProcessor(TypeInterface $type): ProcessorInterface
+    protected function createProcessor(TypeInterface $type, SerializationContextInterface $context): ProcessorInterface
     {
         /* @var $type ArrayType */
         $nestedType = $type->getNestedType();
@@ -74,7 +77,7 @@ final class CollectionMember extends RecursiveChainMember
             return new SimpleCollectionProcessor($converter);
         }
 
-        $nestedProcessor = $this->processorFactory->createFromType($nestedType);
+        $nestedProcessor = $this->processorFactory->createFromType($nestedType, $context);
 
         return new ComplexCollectionProcessor($nestedProcessor);
     }

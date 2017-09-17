@@ -12,6 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use PHPUnit\Framework\TestCase;
 use LogicException;
 
@@ -29,18 +30,20 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testCreateFromMetaData(): void
     {
-        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $metaData = $this->createMock(PropertyMetaDataInterface::class);
+        $processor = $this->createMock(ProcessorInterface::class);
 
-        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember = $this->createMock(MetaDataMember::class);
         $chainMember->expects(self::exactly(2))
             ->method('create')
             ->with($metaData)
             ->willReturnOnConsecutiveCalls(null, $processor);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory([$chainMember, $chainMember]);
         /* @var $metaData PropertyMetaDataInterface */
-        $newProcessor = $factory->createFromMetaData($metaData);
+        $newProcessor = $factory->createFromMetaData($metaData, $context);
 
         self::assertSame($processor, $newProcessor);
     }
@@ -51,21 +54,23 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testCreateFromMetaDataThrowsException(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $metaData = $this->createMock(PropertyMetaDataInterface::class);
         $metaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember = $this->createMock(MetaDataMember::class);
         $chainMember->expects(self::once())
             ->method('create')
             ->with($metaData)
             ->willReturn(null);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory([$chainMember]);
         /* @var $metaData PropertyMetaDataInterface */
-        $factory->createFromMetaData($metaData);
+        $factory->createFromMetaData($metaData, $context);
     }
 
     /**
@@ -73,30 +78,32 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testAddMetaDataChainMember(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $metaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $metaData = $this->createMock(PropertyMetaDataInterface::class);
         $metaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processor = $this->createMock(ProcessorInterface::class);
 
-        $chainMember = $this->getMockBuilder(MetaDataMember::class)->getMock();
+        $chainMember = $this->createMock(MetaDataMember::class);
         $chainMember->expects(self::once())
             ->method('create')
             ->with($metaData)
             ->willReturn($processor);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory();
 
         try {
             /* @var $metaData PropertyMetaDataInterface */
-            $factory->createFromMetaData($metaData);
+            $factory->createFromMetaData($metaData, $context);
         } catch (LogicException $e) {
         }
 
         /* @var $chainMember MetaDataMember */
         $factory->addMetaDataChainMember($chainMember);
-        $newProcessor = $factory->createFromMetaData($metaData);
+        $newProcessor = $factory->createFromMetaData($metaData, $context);
 
         self::assertSame($processor, $newProcessor);
     }
@@ -106,18 +113,19 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testCreateFromType(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $processor = $this->createMock(ProcessorInterface::class);
 
-        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember = $this->createMock(TypeMember::class);
         $chainMember->expects(self::exactly(2))
             ->method('create')
             ->with($type)
             ->willReturnOnConsecutiveCalls(null, $processor);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory([], [$chainMember, $chainMember]);
-        /* @var $type TypeInterface */
-        $newProcessor = $factory->createFromType($type);
+        $newProcessor = $factory->createFromType($type, $context);
 
         self::assertSame($processor, $newProcessor);
     }
@@ -128,17 +136,19 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testCreateFromTypeThrowsException(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
-        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember = $this->createMock(TypeMember::class);
         $chainMember->expects(self::once())
             ->method('create')
             ->with($type)
             ->willReturn(null);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory([], [$chainMember]);
         /* @var $type TypeInterface */
-        $factory->createFromType($type);
+        $factory->createFromType($type, $context);
     }
 
     /**
@@ -146,26 +156,28 @@ class ProcessorFactoryTest extends TestCase
      */
     public function testAddTypeChainMember(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $processor = $this->createMock(ProcessorInterface::class);
 
-        $chainMember = $this->getMockBuilder(TypeMember::class)->getMock();
+        $chainMember = $this->createMock(TypeMember::class);
         $chainMember->expects(self::once())
             ->method('create')
             ->with($type)
             ->willReturn($processor);
 
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $factory = new ProcessorFactory();
 
         try {
             /* @var $type TypeInterface */
-            $factory->createFromType($type);
+            $factory->createFromType($type, $context);
         } catch (LogicException $e) {
         }
 
         /* @var $chainMember TypeMember */
         $factory->addTypeChainMember($chainMember);
-        $newProcessor = $factory->createFromType($type);
+        $newProcessor = $factory->createFromType($type, $context);
 
         self::assertSame($processor, $newProcessor);
     }

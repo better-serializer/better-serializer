@@ -21,6 +21,7 @@ class Car implements CarInterface
     /**
      * @var string
      * @Serializer\Property(type="string")
+     * @Serializer\Groups({"group1","group2","default"})
      * @JmsSerializer\Type("string")
      */
     private $title;
@@ -28,18 +29,21 @@ class Car implements CarInterface
     /**
      * @var string
      * @JmsSerializer\Type("string")
+     * @Serializer\Groups({"group1","group2","default"})
      */
     private $color;
 
     /**
      * @var Radio|null
      * @JmsSerializer\Type("BetterSerializer\Dto\Radio")
+     * @Serializer\Groups({"group1","default"})
      */
     private $radio;
 
     /**
      * @var Door[]
      * @Serializer\Property(type="array<Door>")
+     * @Serializer\Groups({"group2","default"})
      * @JmsSerializer\Type("array<BetterSerializer\Dto\Door>")
      */
     private $doors;

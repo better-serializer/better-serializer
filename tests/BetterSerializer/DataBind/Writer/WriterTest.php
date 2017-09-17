@@ -35,41 +35,40 @@ class WriterTest extends TestCase
         $serializationType = SerializationType::NONE();
         $serializedData = 'serialized';
 
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
-        $typeExtractor = $this->getMockBuilder(ExtractorInterface::class)->getMock();
+        $typeExtractor = $this->createMock(ExtractorInterface::class);
         $typeExtractor->expects(self::once())
             ->method('extract')
             ->with($toSerialize)
             ->willReturn($type);
 
-        $context = $this->getMockBuilder(ContextInterface::class)->getMock();
-        $context->expects(self::once())
+        $typeContext = $this->createMock(ContextInterface::class);
+        $typeContext->expects(self::once())
             ->method('getData')
             ->willReturn($serializedData);
 
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
+        $processor = $this->createMock(ProcessorInterface::class);
         $processor->expects(self::once())
             ->method('process')
-            ->with($context, $toSerialize);
+            ->with($typeContext, $toSerialize);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $processorFactory->expects(self::once())
             ->method('createFromType')
             ->with($type)
             ->willReturn($processor);
 
-        $contextFactory = $this->getMockBuilder(ContextFactoryInterface::class)->getMock();
+        $contextFactory = $this->createMock(ContextFactoryInterface::class);
         $contextFactory->expects(self::once())
             ->method('createContext')
             ->with($serializationType)
-            ->willReturn($context);
+            ->willReturn($typeContext);
 
-        /* @var $typeExtractor ExtractorInterface */
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $contextFactory ContextFactoryInterface */
+        $context = $this->createMock(SerializationContextInterface::class);
+
         $writer = new Writer($typeExtractor, $processorFactory, $contextFactory);
-        $output = $writer->writeValueAsString($toSerialize, $serializationType);
+        $output = $writer->writeValueAsString($toSerialize, $serializationType, $context);
 
         self::assertSame($serializedData, $output);
     }

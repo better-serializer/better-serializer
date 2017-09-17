@@ -13,6 +13,7 @@ use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\Cha
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -48,13 +49,16 @@ final class ProcessorFactory implements ProcessorFactoryInterface
 
     /**
      * @param PropertyMetaDataInterface $metaData
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws LogicException
      */
-    public function createFromMetaData(PropertyMetaDataInterface $metaData): ProcessorInterface
-    {
+    public function createFromMetaData(
+        PropertyMetaDataInterface $metaData,
+        SerializationContextInterface $context
+    ): ProcessorInterface {
         foreach ($this->metaDataChainMembers as $chainMember) {
-            $processor = $chainMember->create($metaData);
+            $processor = $chainMember->create($metaData, $context);
 
             if ($processor) {
                 return $processor;
@@ -66,15 +70,16 @@ final class ProcessorFactory implements ProcessorFactoryInterface
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws ReflectionException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function createFromType(TypeInterface $type): ProcessorInterface
+    public function createFromType(TypeInterface $type, SerializationContextInterface $context): ProcessorInterface
     {
         foreach ($this->typeChainMembers as $chainMember) {
-            $processor = $chainMember->create($type);
+            $processor = $chainMember->create($type, $context);
 
             if ($processor) {
                 return $processor;

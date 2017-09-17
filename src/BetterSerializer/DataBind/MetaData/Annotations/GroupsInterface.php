@@ -1,21 +1,21 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * @author Martin Fris <rasta@lj.sk>
  */
+
 namespace BetterSerializer\DataBind\MetaData\Annotations;
 
 /**
- * Interface AnnotationInterface
- *
+ * Class Property
+ * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Annotations
  */
-interface AnnotationInterface
+interface GroupsInterface extends AnnotationInterface
 {
-
     /**
-     * @return string
+     * @return string[]
      */
-    public function getAnnotationName(): string;
+    public function getGroups(): array;
 }

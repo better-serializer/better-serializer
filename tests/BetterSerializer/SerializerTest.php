@@ -8,6 +8,7 @@ namespace BetterSerializer;
 
 use BetterSerializer\Common\SerializationTypeInterface;
 use BetterSerializer\DataBind\Reader\ReaderInterface;
+use BetterSerializer\DataBind\Writer\SerializationContext;
 use BetterSerializer\DataBind\Writer\WriterInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
@@ -27,21 +28,18 @@ class SerializerTest extends TestCase
     public function testReadValueFromString(): void
     {
         $toDeserialize = '{"a":"a"}';
-        $serializationType = $this->getMockBuilder(SerializationTypeInterface::class)->getMock();
+        $serializationType = $this->createMock(SerializationTypeInterface::class);
         $stringType = CarInterface::class;
-        $desertializedData = $this->getMockBuilder(CarInterface::class)->getMock();
+        $desertializedData = $this->createMock(CarInterface::class);
 
-        $reader = $this->getMockBuilder(ReaderInterface::class)->getMock();
+        $reader = $this->createMock(ReaderInterface::class);
         $reader->expects(self::once())
             ->method('readValue')
             ->with($toDeserialize, $stringType, $serializationType)
             ->willReturn($desertializedData);
 
-        $writer = $this->getMockBuilder(WriterInterface::class)->getMock();
+        $writer = $this->createMock(WriterInterface::class);
 
-        /* @var $reader ReaderInterface */
-        /* @var $writer WriterInterface */
-        /* @var $serializationType SerializationTypeInterface */
         $serializer = new Serializer($reader, $writer);
         $output = $serializer->deserialize($toDeserialize, $stringType, $serializationType);
 
@@ -53,21 +51,18 @@ class SerializerTest extends TestCase
      */
     public function testWriteValueAsString(): void
     {
-        $toSerialize = $this->getMockBuilder(CarInterface::class)->getMock();
-        $serializationType = $this->getMockBuilder(SerializationTypeInterface::class)->getMock();
+        $toSerialize = $this->createMock(CarInterface::class);
+        $serializationType = $this->createMock(SerializationTypeInterface::class);
         $serializedData = 'serialized';
 
-        $reader = $this->getMockBuilder(ReaderInterface::class)->getMock();
+        $reader = $this->createMock(ReaderInterface::class);
 
-        $writer = $this->getMockBuilder(WriterInterface::class)->getMock();
+        $writer = $this->createMock(WriterInterface::class);
         $writer->expects(self::once())
             ->method('writeValueAsString')
             ->with($toSerialize, $serializationType)
             ->willReturn($serializedData);
 
-        /* @var $reader ReaderInterface */
-        /* @var $writer WriterInterface */
-        /* @var $serializationType SerializationTypeInterface */
         $serializer = new Serializer($reader, $writer);
         $output = $serializer->serialize($toSerialize, $serializationType);
 

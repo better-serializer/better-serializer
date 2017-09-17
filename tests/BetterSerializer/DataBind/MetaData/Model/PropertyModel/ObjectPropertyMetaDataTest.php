@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 
+use BetterSerializer\DataBind\MetaData\Annotations\Groups;
+use BetterSerializer\DataBind\MetaData\Annotations\GroupsInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use BetterSerializer\Dto\Car;
@@ -29,9 +31,13 @@ class ObjectPropertyMetaDataTest extends TestCase
         $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
         $reflProperty->expects(self::once())
             ->method('setAccessible');
+
+        $groupsAnnotation = $this->createMock(GroupsInterface::class);
+        $annotations = [Groups::ANNOTATION_NAME => $groupsAnnotation];
+
         $type = new ObjectType(Car::class);
 
-        $metaData = new ObjectPropertyMetaData($reflProperty, [], $type);
+        $metaData = new ObjectPropertyMetaData($reflProperty, $annotations, $type);
         self::assertSame($type, $metaData->getType());
         self::assertInstanceOf(ObjectType::class, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());

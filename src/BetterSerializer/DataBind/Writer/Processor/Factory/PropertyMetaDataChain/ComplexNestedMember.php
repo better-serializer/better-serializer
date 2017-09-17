@@ -15,6 +15,7 @@ use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface
 use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
@@ -58,15 +59,18 @@ final class ComplexNestedMember extends ExtractingChainMember
 
     /**
      * @param PropertyMetaDataInterface $metaData
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws LogicException
      * @throws ReflectionException
      * @throws RuntimeException
      */
-    protected function createProcessor(PropertyMetaDataInterface $metaData): ProcessorInterface
-    {
+    protected function createProcessor(
+        PropertyMetaDataInterface $metaData,
+        SerializationContextInterface $context
+    ): ProcessorInterface {
         $extractor = $this->extractorFactory->newExtractor($metaData);
-        $nestedProcessor = $this->processorFactory->createFromType($metaData->getType());
+        $nestedProcessor = $this->processorFactory->createFromType($metaData->getType(), $context);
 
         return new ComplexNested($extractor, $nestedProcessor, $metaData->getOutputKey());
     }

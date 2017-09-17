@@ -12,6 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use ReflectionException;
 use LogicException;
 use RuntimeException;
@@ -40,21 +41,25 @@ abstract class AbstractProcessorFactory
 
     /**
      * @param PropertyMetaDataInterface $metaData
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      */
-    public function createFromMetaData(PropertyMetaDataInterface $metaData): ProcessorInterface
-    {
-        return $this->processorFactory->createFromMetaData($metaData);
+    public function createFromMetaData(
+        PropertyMetaDataInterface $metaData,
+        SerializationContextInterface $context
+    ): ProcessorInterface {
+        return $this->processorFactory->createFromMetaData($metaData, $context);
     }
 
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface
      * @throws ReflectionException|LogicException|RuntimeException
      */
-    public function createFromType(TypeInterface $type): ProcessorInterface
+    public function createFromType(TypeInterface $type, SerializationContextInterface $context): ProcessorInterface
     {
-        return $this->processorFactory->createFromType($type);
+        return $this->processorFactory->createFromType($type, $context);
     }
 
     /**

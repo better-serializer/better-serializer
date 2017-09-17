@@ -42,5 +42,6 @@ class RootNameTest extends TestCase
         $rootName = new RootName([RootName::KEY_VALUE => 'root']);
 
         self::assertSame('root', $rootName->getValue());
+        self::assertSame(RootName::ANNOTATION_NAME, $rootName->getAnnotationName());
     }
 }

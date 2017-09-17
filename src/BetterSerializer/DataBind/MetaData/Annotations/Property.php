@@ -17,8 +17,13 @@ namespace BetterSerializer\DataBind\MetaData\Annotations;
  *   @Attribute(BetterSerializer\DataBind\MetaData\Annotations\Property::KEY_TYPE, type="string"),
  * })
  */
-final class Property implements PropertyInterface
+final class Property extends AbstractAnnotation implements PropertyInterface
 {
+
+    /**
+     * @const string
+     */
+    public const ANNOTATION_NAME = 'Property';
 
     /**
      * @const string

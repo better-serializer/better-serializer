@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
+use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
  * Class ChainMember
@@ -19,7 +20,8 @@ interface ChainMemberInterface
 {
     /**
      * @param TypeInterface $type
+     * @param SerializationContextInterface $context
      * @return ProcessorInterface|null
      */
-    public function create(TypeInterface $type): ?ProcessorInterface;
+    public function create(TypeInterface $type, SerializationContextInterface $context): ?ProcessorInterface;
 }

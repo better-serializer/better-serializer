@@ -56,18 +56,22 @@ final class Writer implements WriterInterface
     /**
      * @param mixed             $data
      * @param SerializationTypeInterface $serializationType
+     * @param SerializationContextInterface $context
      * @return string
      * @throws RuntimeException
      * @throws ReflectionException
      * @throws LogicException
      */
-    public function writeValueAsString($data, SerializationTypeInterface $serializationType): string
-    {
-        $context = $this->contextFactory->createContext($serializationType);
+    public function writeValueAsString(
+        $data,
+        SerializationTypeInterface $serializationType,
+        SerializationContextInterface $context
+    ): string {
+        $typeContext = $this->contextFactory->createContext($serializationType);
         $type = $this->typeExtractor->extract($data);
-        $processor = $this->processorFactory->createFromType($type);
-        $processor->process($context, $data);
+        $processor = $this->processorFactory->createFromType($type, $context);
+        $processor->process($typeContext, $data);
 
-        return $context->getData();
+        return $typeContext->getData();
     }
 }
