@@ -271,35 +271,11 @@ $container[BetterSerializer\Reflection\UseStatement\ParserInterface::class] = fu
 };
 
 $container[Doctrine\Common\Cache\Cache::class] = function (Container $c) {
-    $cacheProviders = [
-        $c[Doctrine\Common\Cache\ArrayCache::class],
-    ];
-
-    if ($c['Doctrine\Common\Cache\ApcuCache|Enable']) {
-        $cacheProviders[] = $c[Doctrine\Common\Cache\ApcuCache::class];
-    } elseif ($c['Doctrine\Common\Cache\FilesystemCache|Directory'] !== '') {
-        $cacheProviders[] = $c[Doctrine\Common\Cache\FilesystemCache::class];
-    }
-
-    $cache = new Doctrine\Common\Cache\ChainCache($cacheProviders);
-    $cache->setNamespace('better-serializer');
-
-    return $cache;
+    return $c[BetterSerializer\Cache\Factory::class]->getCache();
 };
 
-$container[Doctrine\Common\Cache\ArrayCache::class] = function () {
-    return new Doctrine\Common\Cache\ArrayCache();
+$container[BetterSerializer\Cache\Factory::class] = function () {
+    return new BetterSerializer\Cache\Factory();
 };
-
-$container[Doctrine\Common\Cache\FilesystemCache::class] = function (Container $c) {
-    return new Doctrine\Common\Cache\FilesystemCache($c['Doctrine\Common\Cache\FilesystemCache|Directory']);
-};
-
-$container[Doctrine\Common\Cache\ApcuCache::class] = function () {
-    return new Doctrine\Common\Cache\ApcuCache();
-};
-
-$container['Doctrine\Common\Cache\FilesystemCache|Directory'] = '';
-$container['Doctrine\Common\Cache\ApcuCache|Enable'] = false;
 
 return $container;

@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer;
 
+use BetterSerializer\Cache\Factory;
 use Doctrine\Common\Cache\Cache;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
@@ -24,6 +25,11 @@ final class Builder
      * @var Container
      */
     private $container;
+
+    /**
+     * @var Factory
+     */
+    private $cacheFactory;
 
     /**
      * Builder constructor.
@@ -47,7 +53,7 @@ final class Builder
      */
     public function enableApcuCache(): void
     {
-        $this->container['Doctrine\Common\Cache\ApcuCache|Enable'] = true;
+        $this->getCacheFactory()->enableApcuCache();
     }
 
     /**
@@ -56,11 +62,7 @@ final class Builder
      */
     public function setCacheDir(string $directory): void
     {
-        if (!file_exists($directory) || !is_dir($directory)) {
-            throw new RuntimeException(sprintf('Invalid directory: %s', $directory));
-        }
-
-        $this->container['Doctrine\Common\Cache\FilesystemCache|Directory'] = $directory;
+        $this->getCacheFactory()->setCacheDir($directory);
     }
 
     /**
@@ -77,5 +79,17 @@ final class Builder
     private function initContainer(): void
     {
         $this->container = require dirname(__DIR__) . '/../config/di.pimple.php';
+    }
+
+    /**
+     * @return Factory
+     */
+    private function getCacheFactory(): Factory
+    {
+        if (!$this->cacheFactory) {
+            $this->cacheFactory = $this->container[Factory::class];
+        }
+
+        return $this->cacheFactory;
     }
 }
