@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-/**
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
@@ -71,8 +71,7 @@ final class DateTimeType extends AbstractObjectType implements DateTimeTypeInter
      */
     public function equals(TypeInterface $type): bool
     {
-        /* @var $type DateTimeType */
-        return $type instanceof DateTimeType && parent::equals($type) && $this->format === $type->getFormat();
+        return $type instanceof self && parent::equals($type) && $this->format === $type->getFormat();
     }
 
     /**
@@ -82,7 +81,7 @@ final class DateTimeType extends AbstractObjectType implements DateTimeTypeInter
     public function isCompatibleWith(TypeInterface $type): bool
     {
         return (
-            ($type instanceof DateTimeType && $this->getClassName() === $type->getClassName())
+            ($type instanceof self && $this->getClassName() === $type->getClassName())
             || parent::isCompatibleWith($type)
             || $type instanceof UnknownType
         );

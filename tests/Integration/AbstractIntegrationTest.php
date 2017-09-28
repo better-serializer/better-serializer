@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/**
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 
@@ -13,7 +13,7 @@ use JMS\Serializer\Serializer as JmsSerializer;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
 
-/**
+/*
  * @author mfris
  * @package Integration
  */

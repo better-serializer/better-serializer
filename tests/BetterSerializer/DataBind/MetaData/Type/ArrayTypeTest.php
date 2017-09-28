@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/**
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 
@@ -68,8 +68,8 @@ class ArrayTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(
-           TypeEnum::ARRAY . '<' . TypeEnum::STRING . '>',
-           (string) new ArrayType(new StringType())
+            TypeEnum::ARRAY . '<' . TypeEnum::STRING . '>',
+            (string) new ArrayType(new StringType())
         );
     }
 

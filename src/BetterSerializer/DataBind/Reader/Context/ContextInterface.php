@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/**
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Reader\Context;
@@ -13,7 +13,6 @@ namespace BetterSerializer\DataBind\Reader\Context;
  */
 interface ContextInterface
 {
-
     /**
      * @return mixed
      */
@@ -35,7 +34,7 @@ interface ContextInterface
      */
     public function getDeserialized();
 
-        /**
+    /**
      * @param mixed $key
      * @return ContextInterface|null
      */

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-/**
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 
@@ -24,7 +24,7 @@ class TypeFactoryBuilderTest extends TestCase
     {
         $builder = new TypeFactoryBuilder();
         $factory = $builder->build();
-        
+
         self::assertInstanceOf(TypeFactoryInterface::class, $factory);
     }
 }
