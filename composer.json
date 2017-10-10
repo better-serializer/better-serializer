@@ -48,5 +48,11 @@
             "BetterSerializer\\": "tests/BetterSerializer/",
             "Integration\\": "tests/Integration/"
         }
+    },
+
+    "config": {
+        "platform": {
+            "php": "7.1"
+        }
     }
 }
