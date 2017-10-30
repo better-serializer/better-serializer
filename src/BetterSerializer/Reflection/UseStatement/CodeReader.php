@@ -44,6 +44,8 @@ final class CodeReader implements CodeReaderInterface
      */
     public function readUseStatementsSource(ReflectionClass $reflectionClass): string
     {
-        return $this->fileReader->getFirstXLines($reflectionClass->getFileName());
+        $fileName = str_replace(dirname($reflectionClass->getFileName()), '', $reflectionClass->getFileName());
+
+        return $this->fileReader->getFirstXLines($fileName);
     }
 }

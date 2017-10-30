@@ -25,13 +25,14 @@ class CodeReaderTest extends TestCase
     public function testEverything(): void
     {
         $content = 'xxx';
+        $dirName = '/';
         $fileName = 'file.php';
 
         $reflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
             ->getMock();
         $reflectionClass->method('getFileName')
-            ->willReturn($fileName);
+            ->willReturn($dirName . $fileName);
         /* @var $reflectionClass ReflectionClass */
 
         $fileReader = $this->getMockBuilder(Filesystem::class)

@@ -39,7 +39,7 @@ class UseStatementsExtractorTest extends TestCase
 
         $codeReaderFactory = $this->createMock(CodeReaderFactoryInterface::class);
         $codeReaderFactory->method('newCodeReader')
-            ->with($startLine)
+            ->with($reflectionClass)
             ->willReturn($codeReader);
 
         $parser = $this->createMock(ParserInterface::class);

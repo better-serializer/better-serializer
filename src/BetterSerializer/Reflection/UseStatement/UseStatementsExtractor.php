@@ -52,8 +52,8 @@ final class UseStatementsExtractor implements UseStatementsExtractorInterface
         if (!$reflectionClass->isUserDefined()) {
             return new UseStatements([]);
         }
-        
-        $codeReader = $this->codeReaderFactory->newCodeReader($reflectionClass->getStartLine());
+
+        $codeReader = $this->codeReaderFactory->newCodeReader($reflectionClass);
         $usedStatementsSrc = $codeReader->readUseStatementsSource($reflectionClass);
         $statementsArray = $this->parser->parseUseStatements($usedStatementsSrc);
 

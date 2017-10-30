@@ -9,6 +9,7 @@ namespace BetterSerializer\Reflection\UseStatement\Factory;
 
 use BetterSerializer\Reflection\UseStatement\CodeReaderInterface;
 use LogicException;
+use ReflectionClass;
 
 /**
  * Class CodeReaderFactory
@@ -18,9 +19,9 @@ use LogicException;
 interface CodeReaderFactoryInterface
 {
     /**
-     * @param int $classOffset
+     * @param ReflectionClass $reflectionClass
      * @return CodeReaderInterface
      * @throws LogicException
      */
-    public function newCodeReader(int $classOffset): CodeReaderInterface;
+    public function newCodeReader(ReflectionClass $reflectionClass): CodeReaderInterface;
 }
