@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Processor\CachedProcessorInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\ComplexProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
@@ -76,7 +76,7 @@ class ComplexParamProcessorTest extends TestCase
     public function testResolveRecursiveProcessors(): void
     {
         $key = 'test';
-        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor = $this->createMock(ComplexProcessorInterface::class);
         $subProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 

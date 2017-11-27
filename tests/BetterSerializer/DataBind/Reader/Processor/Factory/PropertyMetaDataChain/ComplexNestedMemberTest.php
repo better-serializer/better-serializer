@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\ComplexProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ComplexNested;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -44,7 +44,7 @@ class ComplexNestedMemberTest extends TestCase
             ->method('getOutputKey')
             ->willReturn('test');
 
-        $objProcessor = $this->getMockBuilder(ComplexNestedProcessorInterface::class)->getMock();
+        $objProcessor = $this->getMockBuilder(ComplexProcessorInterface::class)->getMock();
 
         $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
         $processorFactory->expects(self::once())

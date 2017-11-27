@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\Writer\Context\ContextInterface;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class Object implements ComplexNestedProcessorInterface
+final class Object implements ComplexProcessorInterface
 {
 
     /**
@@ -63,7 +63,7 @@ final class Object implements ComplexNestedProcessorInterface
                 $processor = $processor->getProcessor();
             }
 
-            if ($processor instanceof ComplexNestedProcessorInterface) {
+            if ($processor instanceof ComplexProcessorInterface) {
                 $processor->resolveRecursiveProcessors();
             }
 

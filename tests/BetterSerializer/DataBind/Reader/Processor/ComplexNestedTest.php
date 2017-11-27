@@ -48,7 +48,7 @@ class ComplexNestedTest extends TestCase
             ->method('inject')
             ->with($deserialized, $deserialized2);
 
-        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
+        $complexNestedMock = $this->createMock(ComplexProcessorInterface::class);
         $complexNestedMock->expects(self::once())
             ->method('process')
             ->with($contextMock);
@@ -71,7 +71,7 @@ class ComplexNestedTest extends TestCase
 
         $injectorMock = $this->createMock(InjectorInterface::class);
 
-        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
+        $complexNestedMock = $this->createMock(ComplexProcessorInterface::class);
         $complexNestedMock->expects(self::exactly(0))
             ->method('process');
 
@@ -85,7 +85,7 @@ class ComplexNestedTest extends TestCase
     public function testResolveRecursiveProcessors(): void
     {
         $inputKey = 'key';
-        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor = $this->createMock(ComplexProcessorInterface::class);
         $subProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 

@@ -75,7 +75,7 @@ class ComplexCollectionTest extends TestCase
      */
     public function testResolveRecursiveProcessors(): void
     {
-        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor = $this->createMock(ComplexProcessorInterface::class);
         $subProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 

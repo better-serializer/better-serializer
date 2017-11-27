@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\ComplexProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ComplexNested;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use LogicException;
@@ -68,7 +68,7 @@ final class ComplexNestedMember extends InjectingChainMember
         $injector = $this->injectorFactory->newInjector($metaData);
         $objectProcessor = $this->processorFactory->createFromType($metaData->getType());
 
-        if (!$objectProcessor instanceof ComplexNestedProcessorInterface) {
+        if (!$objectProcessor instanceof ComplexProcessorInterface) {
             throw new LogicException("Invalid processor type: '" . get_class($objectProcessor) . "'");
         }
 

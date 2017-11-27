@@ -20,7 +20,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\Cache
  */
-final class Factory
+final class Factory implements FactoryInterface
 {
 
     /**

@@ -33,7 +33,7 @@ class SimpleMemberTest extends TestCase
     public function testCreate(): void
     {
         $type = new StringType();
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
@@ -41,23 +41,20 @@ class SimpleMemberTest extends TestCase
             ->method('getOutputKey')
             ->willReturn('test');
 
-        $injector = $this->getMockBuilder(InjectorInterface::class)->getMock();
+        $injector = $this->createMock(InjectorInterface::class);
 
-        $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
         $injectorFactory->expects(self::once())
             ->method('newInjector')
             ->willReturn($injector);
 
-        $converter = $this->getMockBuilder(ConverterInterface::class)->getMock();
+        $converter = $this->createMock(ConverterInterface::class);
 
-        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $converterFactory = $this->createMock(ConverterFactoryInterface::class);
         $converterFactory->expects(self::once())
             ->method('newConverter')
             ->willReturn($converter);
 
-        /* @var $injectorFactory InjectorFactoryInterface */
-        /* @var $converterFactory ConverterFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
         $simpleMember = new SimpleMember($converterFactory, $injectorFactory);
         $processor = $simpleMember->create($propertyMetaData);
 
@@ -70,17 +67,14 @@ class SimpleMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $type = new ObjectType(Car::class);
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
-        $converterFactory = $this->getMockBuilder(ConverterFactoryInterface::class)->getMock();
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
+        $converterFactory = $this->createMock(ConverterFactoryInterface::class);
 
-        /* @var $injectorFactory InjectorFactoryInterface */
-        /* @var $converterFactory ConverterFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
         $simpleMember = new SimpleMember($converterFactory, $injectorFactory);
         $shouldBeNull = $simpleMember->create($propertyMetaData);
 

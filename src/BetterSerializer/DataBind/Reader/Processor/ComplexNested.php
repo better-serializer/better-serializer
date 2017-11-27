@@ -25,7 +25,7 @@ final class ComplexNested extends NestedProcessor
     private $injector;
 
     /**
-     * @var ComplexNestedProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
+     * @var ComplexProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
      */
     private $processor;
 
@@ -41,7 +41,7 @@ final class ComplexNested extends NestedProcessor
         ProcessorInterface $processor,
         string $inputKey
     ) {
-        if (!$processor instanceof ComplexNestedProcessorInterface
+        if (!$processor instanceof ComplexProcessorInterface
             && !$processor instanceof CollectionProcessorInterface
             && !$processor instanceof CachedProcessorInterface) {
             throw new RuntimeException(
@@ -81,7 +81,7 @@ final class ComplexNested extends NestedProcessor
 
         $this->processor = $this->processor->getProcessor();
 
-        if (!$this->processor instanceof ComplexNestedProcessorInterface) {
+        if (!$this->processor instanceof ComplexProcessorInterface) {
             throw new RuntimeException(
                 sprintf('Unexpected processor instance: %s', get_class($this->processor))
             );

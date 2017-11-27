@@ -12,8 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
+use BetterSerializer\DataBind\Writer\Processor\Complex;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
@@ -54,7 +53,8 @@ final class ComplexNestedMember extends ExtractingChainMember
     {
         $type = $metaData->getType();
 
-        return $type instanceof ObjectType || $type instanceof ArrayType;
+        return $type instanceof ObjectType ||
+               $type instanceof ArrayType;
     }
 
     /**
@@ -72,6 +72,6 @@ final class ComplexNestedMember extends ExtractingChainMember
         $extractor = $this->extractorFactory->newExtractor($metaData);
         $nestedProcessor = $this->processorFactory->createFromType($metaData->getType(), $context);
 
-        return new ComplexNested($extractor, $nestedProcessor, $metaData->getOutputKey());
+        return new Complex($extractor, $nestedProcessor, $metaData->getOutputKey());
     }
 }

@@ -45,12 +45,12 @@ class ComplexNestedTest extends TestCase
             ->with($instance)
             ->willReturn($subInstance);
 
-        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
+        $complexNestedMock = $this->createMock(ComplexProcessorInterface::class);
         $complexNestedMock->expects(self::once())
             ->method('process')
             ->with($subContextMock, $subInstance);
 
-        $processor = new ComplexNested($extractorMock, $complexNestedMock, $outputKey);
+        $processor = new Complex($extractorMock, $complexNestedMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 
@@ -68,11 +68,11 @@ class ComplexNestedTest extends TestCase
 
         $extractorMock = $this->createMock(ExtractorInterface::class);
 
-        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
+        $complexNestedMock = $this->createMock(ComplexProcessorInterface::class);
         $complexNestedMock->expects(self::exactly(0))
             ->method('process');
 
-        $processor = new ComplexNested($extractorMock, $complexNestedMock, $outputKey);
+        $processor = new Complex($extractorMock, $complexNestedMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 
@@ -98,11 +98,11 @@ class ComplexNestedTest extends TestCase
             ->with($instance)
             ->willReturn(null);
 
-        $complexNestedMock = $this->createMock(ComplexNestedProcessorInterface::class);
+        $complexNestedMock = $this->createMock(ComplexProcessorInterface::class);
         $complexNestedMock->expects(self::exactly(0))
             ->method('process');
 
-        $processor = new ComplexNested($extractorMock, $complexNestedMock, $outputKey);
+        $processor = new Complex($extractorMock, $complexNestedMock, $outputKey);
         $processor->process($contextMock, $instance);
     }
 
@@ -112,7 +112,7 @@ class ComplexNestedTest extends TestCase
     public function testResolveRecursiveProcessors(): void
     {
         $inputKey = 'key';
-        $subProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $subProcessor = $this->createMock(ComplexProcessorInterface::class);
         $subProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 
@@ -123,7 +123,7 @@ class ComplexNestedTest extends TestCase
 
         $extractorMock = $this->createMock(ExtractorInterface::class);
 
-        $processor = new ComplexNested($extractorMock, $processorMock, $inputKey);
+        $processor = new Complex($extractorMock, $processorMock, $inputKey);
         $processor->resolveRecursiveProcessors();
 
         // lazy resolve test
@@ -140,7 +140,7 @@ class ComplexNestedTest extends TestCase
         $processorMock = $this->createMock(ProcessorInterface::class);
         $extractorMock = $this->createMock(ExtractorInterface::class);
 
-        new ComplexNested($extractorMock, $processorMock, $inputKey);
+        new Complex($extractorMock, $processorMock, $inputKey);
     }
 
     /**
@@ -159,7 +159,7 @@ class ComplexNestedTest extends TestCase
 
         $extractorMock = $this->createMock(ExtractorInterface::class);
 
-        $processor = new ComplexNested($extractorMock, $processorMock, $inputKey);
+        $processor = new Complex($extractorMock, $processorMock, $inputKey);
         $processor->resolveRecursiveProcessors();
     }
 }

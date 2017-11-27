@@ -12,8 +12,8 @@ use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexNestedProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexNested;
+use BetterSerializer\DataBind\Writer\Processor\ComplexProcessorInterface;
+use BetterSerializer\DataBind\Writer\Processor\Complex;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
@@ -45,7 +45,7 @@ class ComplexNestedMemberTest extends TestCase
             ->method('getOutputKey')
             ->willReturn('test');
 
-        $objProcessor = $this->createMock(ComplexNestedProcessorInterface::class);
+        $objProcessor = $this->createMock(ComplexProcessorInterface::class);
 
         $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $processorFactory->expects(self::once())
@@ -65,7 +65,7 @@ class ComplexNestedMemberTest extends TestCase
         $complexNestedMember = new ComplexNestedMember($processorFactory, $extractorFactory);
         $processor = $complexNestedMember->create($propertyMetaData, $context);
 
-        self::assertInstanceOf(ComplexNested::class, $processor);
+        self::assertInstanceOf(Complex::class, $processor);
     }
 
     /**

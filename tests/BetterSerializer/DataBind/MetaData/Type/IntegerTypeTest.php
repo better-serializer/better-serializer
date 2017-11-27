@@ -6,6 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
+use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * Class IntegerTypeTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IntegerTypeTest extends TestCase
 {
@@ -52,6 +54,8 @@ class IntegerTypeTest extends TestCase
             [new ObjectType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
+            [new CustomType('MyType', new Parameters([])), false],
+            [new CustomObjectType(Car::class, new Parameters([])), false],
         ];
     }
 
@@ -89,6 +93,8 @@ class IntegerTypeTest extends TestCase
             [new ObjectType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
+            [new CustomType('MyType', new Parameters([])), false],
+            [new CustomObjectType(Car::class, new Parameters([])), false],
         ];
     }
 }

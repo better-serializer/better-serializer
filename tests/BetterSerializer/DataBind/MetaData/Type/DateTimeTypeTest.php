@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type;
 
+use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Radio;
 use BetterSerializer\Dto\SpecialCar;
@@ -95,6 +96,8 @@ class DateTimeTypeTest extends TestCase
             [new DateTimeType(DateTime::class), true],
             [new DateTimeType(DateTime::class, 'Y-m-d'), false],
             [new DateTimeType(DateTimeImmutable::class), false],
+            [new CustomType('MyType', new Parameters([])), false],
+            [new CustomObjectType(Car::class, new Parameters([])), false],
         ];
     }
 
@@ -129,6 +132,8 @@ class DateTimeTypeTest extends TestCase
             [new DateTimeType(DateTime::class), true],
             [new DateTimeType(DateTime::class, 'Y-m-d'), true],
             [new DateTimeType(DateTimeImmutable::class), false],
+            [new CustomType('MyType', new Parameters([])), false],
+            [new CustomObjectType(Car::class, new Parameters([])), false],
         ];
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Deserialization;
+namespace Integration\Deserialization\Json;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
@@ -21,7 +21,7 @@ use DateTime;
  * @author mfris
  * @package Integration\Deserialization
  */
-final class JsonTest extends AbstractIntegrationTest
+final class BasicTest extends AbstractIntegrationTest
 {
 
     /**
@@ -30,6 +30,10 @@ final class JsonTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param string $expectedJson
      * @param string $stringType
+     * @throws \LogicException
+     * @throws \Pimple\Exception\UnknownIdentifierException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testDeserialization(string $expectedJson, string $stringType): void
     {
@@ -47,6 +51,10 @@ final class JsonTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param string $expectedJson
      * @param string $stringType
+     * @throws \LogicException
+     * @throws \Pimple\Exception\UnknownIdentifierException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testDeserializationCached(string $expectedJson, string $stringType): void
     {

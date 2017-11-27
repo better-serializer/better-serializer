@@ -16,7 +16,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Writer\Processor
  */
-final class ComplexNested extends NestedProcessor implements ComplexNestedProcessorInterface
+final class Complex extends NestedProcessor implements ComplexProcessorInterface
 {
 
     /**
@@ -25,7 +25,7 @@ final class ComplexNested extends NestedProcessor implements ComplexNestedProces
     private $extractor;
 
     /**
-     * @var ComplexNestedProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
+     * @var ComplexProcessorInterface|CollectionProcessorInterface|CachedProcessorInterface|ProcessorInterface
      */
     private $processor;
 
@@ -41,7 +41,7 @@ final class ComplexNested extends NestedProcessor implements ComplexNestedProces
         ProcessorInterface $processor,
         string $outputKey
     ) {
-        if (!$processor instanceof ComplexNestedProcessorInterface
+        if (!$processor instanceof ComplexProcessorInterface
             && !$processor instanceof CollectionProcessorInterface
             && !$processor instanceof CachedProcessorInterface) {
             throw new RuntimeException(
@@ -91,7 +91,7 @@ final class ComplexNested extends NestedProcessor implements ComplexNestedProces
 
         $this->processor = $this->processor->getProcessor();
 
-        if (!$this->processor instanceof ComplexNestedProcessorInterface) {
+        if (!$this->processor instanceof ComplexProcessorInterface) {
             throw new RuntimeException(
                 sprintf('Unexpected processor instance: %s', get_class($this->processor))
             );

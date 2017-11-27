@@ -6,6 +6,7 @@ declare(strict_types=1);
  */
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader;
+use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor;
 use Pimple\Container;
 
 $container = new Container();
@@ -25,7 +26,19 @@ $container[BetterSerializer\DataBind\Reader\ReaderInterface::class] = function (
     );
 };
 
-$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::class] =
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactory::class] =
+    function () {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactory();
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactory::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\CachedProcessorFactory::class] =
     function (Container $c) {
         return new BetterSerializer\DataBind\Reader\Processor\Factory\CachedProcessorFactory(
             $c[BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory::class],
@@ -33,18 +46,109 @@ $container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryIn
         );
     };
 
-$container[BetterSerializer\DataBind\Reader\Processor\Factory\RecursiveProcessorFactory::class] =
+$container['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized'] =
     function (Container $c) {
-        return $c[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder::class]->build();
+        return $c[BetterSerializer\DataBind\Reader\Processor\Factory\CachedProcessorFactory::class];
     };
 
-$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder::class] =
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::class] =
     function (Container $c) {
-        return new BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryBuilder(
+        $factory = $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized'];
+
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\SimpleMember::class]
+        );
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember::class]
+        );
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\CustomTypeMember::class]
+        );
+        $factory->addTypeChainMember(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\CollectionMember::class]
+        );
+        $factory->addTypeChainMember(
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember::class]
+        );
+
+        return $factory;
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\SimpleMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\SimpleMember(
             $c[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface::class],
-            $c[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class],
+            $c[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember(
+            $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
+            $c[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\CustomTypeMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\CustomTypeMember(
+            $c[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\CollectionMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\CollectionMember(
+            $c[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface::class],
+            $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized']
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember(
+            $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
+            $c[BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface::class],
             $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
         );
+    };
+
+$container[ParamProcessor\ParamProcessorFactoryInterface::class] = function (Container $c) {
+    return new ParamProcessor\ParamProcessorFactory([
+        $c[ParamProcessor\Chain\SimpleParamProcessorFactory::class],
+        $c[ParamProcessor\Chain\ComplexParamProcessorFactory::class]
+    ]);
+};
+
+$container[ParamProcessor\Chain\SimpleParamProcessorFactory::class] = function () {
+    return new ParamProcessor\Chain\SimpleParamProcessorFactory();
+};
+
+$container[ParamProcessor\Chain\ComplexParamProcessorFactory::class] = function (Container $c) {
+    return new ParamProcessor\Chain\ComplexParamProcessorFactory(
+        $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized']
+    );
+};
+
+$container[BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactory([
+            $c[BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\StandardInstantiatorFactory::class],
+            $c[BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory::class]
+        ]);
+    };
+
+$container[BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\StandardInstantiatorFactory::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\StandardInstantiatorFactory(
+            $c[ParamProcessor\ParamProcessorFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory::class] =
+    function () {
+        return new \BetterSerializer\DataBind\Reader\Instantiator\Factory\Deserialize\DeserializeInstantiatorFactory();
     };
 
 $container[BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface::class] = function () {
@@ -75,16 +179,88 @@ $container[BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface::cla
     return new BetterSerializer\DataBind\Writer\Context\ContextFactory();
 };
 
-$container[BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory::class] =
-    function (Container $c) {
-        return $c[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class]->build();
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactory::class] =
+    function () {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactory();
     };
 
-$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class] =
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactory::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\CachedProcessorFactory::class] =
     function (Container $c) {
         return new BetterSerializer\DataBind\Writer\Processor\Factory\CachedProcessorFactory(
             $c[BetterSerializer\DataBind\Writer\Processor\Factory\RecursiveProcessorFactory::class],
             $c[Doctrine\Common\Cache\Cache::class]
+        );
+    };
+
+$container['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized'] =
+    function (Container $c) {
+        return $c[BetterSerializer\DataBind\Writer\Processor\Factory\CachedProcessorFactory::class];
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::class] =
+    function (Container $c) {
+        $factory = $c['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized'];
+
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember::class]
+        );
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember::class]
+        );
+        $factory->addMetaDataChainMember(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\CustomTypeMember::class]
+        );
+        $factory->addTypeChainMember(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember::class]
+        );
+        $factory->addTypeChainMember(
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember::class]
+        );
+
+        return $factory;
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ComplexNestedMember(
+            $c['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
+            $c[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\SimpleMember(
+            $c[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class],
+            $c[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class]
+        );
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember(
+            $c[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class],
+            $c['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized']
+        );
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\CustomTypeMember::class] =
+    function () {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\CustomTypeMember();
+    };
+
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember::class] =
+    function (Container $c) {
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember(
+            $c['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
+            $c[BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface::class]
         );
     };
 
@@ -104,15 +280,6 @@ $container[BetterSerializer\DataBind\Writer\MetaData\ContextualReader::class] = 
         $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
     );
 };
-
-$container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder::class] =
-    function (Container $c) {
-        return new BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryBuilder(
-            $c[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class],
-            $c[BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface::class],
-            $c[BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface::class]
-        );
-    };
 
 $container[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class] = function () {
     return new BetterSerializer\DataBind\Writer\Converter\ConverterFactory();
@@ -233,12 +400,57 @@ $container[phpDocumentor\Reflection\DocBlockFactoryInterface::class] = function 
     return phpDocumentor\Reflection\DocBlockFactory::createInstance();
 };
 
-$container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class] = function (Container $c) {
-    return $c[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder::class]->build();
+$container['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized'] = function () {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactory();
 };
 
-$container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder::class] = function () {
-    return new BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryBuilder();
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::class] = function (Container $c) {
+    $typeFactory = $c['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized'];
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DateTimeMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\CustomTypeMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ObjectMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ArrayMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DocBlockArrayMember::class]);
+    $typeFactory->addChainMember($c[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\MixedMember::class]);
+
+    return $typeFactory;
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ArrayMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ArrayMember(
+        $c['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized']
+    );
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\CustomTypeMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\CustomTypeMember(
+        $c[BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface::class]
+    );
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DateTimeMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DateTimeMember();
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DocBlockArrayMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\DocBlockArrayMember(
+        $c['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized']
+    );
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\MixedMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\MixedMember(
+        $c['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized']
+    );
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ObjectMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ObjectMember();
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember::class] = function (Container $c) {
+    return new BetterSerializer\DataBind\MetaData\Type\Factory\Chain\SimpleMember();
 };
 
 $container[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface::class] = function () {
@@ -276,6 +488,10 @@ $container[Doctrine\Common\Cache\Cache::class] = function (Container $c) {
 
 $container[BetterSerializer\Cache\Factory::class] = function () {
     return new BetterSerializer\Cache\Factory();
+};
+
+$container[BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface::class] = function () {
+    return new \BetterSerializer\DataBind\MetaData\Type\Parameters\Parser();
 };
 
 return $container;

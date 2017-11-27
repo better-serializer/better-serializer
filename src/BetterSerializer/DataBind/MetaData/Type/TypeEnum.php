@@ -23,6 +23,8 @@ use Serializable;
  * @method static TypeEnum NULL
  * @method static TypeEnum UNKNOWN
  * @method static TypeEnum DATETIME
+ * @method static TypeEnum CUSTOM_TYPE
+ * @method static TypeEnum CUSTOM_OBJECT
  */
 final class TypeEnum extends Enum implements Serializable
 {
@@ -72,4 +74,14 @@ final class TypeEnum extends Enum implements Serializable
      * @const string
      */
     const DATETIME = 'dateTime';
+
+    /**
+     * @const string
+     */
+    const CUSTOM_TYPE = 'customType';
+
+    /**
+     * @const string
+     */
+    const CUSTOM_OBJECT = 'customObject';
 }

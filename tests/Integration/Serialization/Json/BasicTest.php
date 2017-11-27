@@ -23,6 +23,7 @@ use DateTimeImmutable;
  * Class Json
  * @author mfris
  * @package Integration\Serialization
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class BasicTest extends AbstractIntegrationTest
 {
@@ -33,6 +34,9 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerialization($data, string $expectedJson): void
     {
@@ -48,6 +52,9 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerializationCached($data, string $expectedJson): void
     {
