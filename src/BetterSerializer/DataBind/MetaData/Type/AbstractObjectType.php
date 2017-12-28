@@ -17,7 +17,7 @@ abstract class AbstractObjectType extends AbstractType implements ObjectTypeInte
     /**
      * @var string
      */
-    private $className;
+    protected $className;
 
     /**
      * StringDataType constructor.
@@ -63,17 +63,67 @@ abstract class AbstractObjectType extends AbstractType implements ObjectTypeInte
      */
     public function isCompatibleWith(TypeInterface $type): bool
     {
-        return (
-            ($type instanceof ObjectType && $this->className === $type->getClassName())
-            || $type instanceof UnknownType
-        );
+        if ($type instanceof static) {
+            return $this->equals($type)
+                || $this->extendsClass($type) || $type->extendsClass($this);
+        } elseif ($type instanceof InterfaceType) {
+            return $this->implementsInterface($type);
+        } elseif ($type instanceof ExtensionTypeInterface) {
+            return $this->isCompatibleWithExtensionType($type);
+        }
+
+        return $type instanceof UnknownType;
     }
 
     /**
-     * @return string
+     * @param InterfaceType $interface
+     * @return bool
      */
-    public function __toString(): string
+    public function implementsInterface(InterfaceType $interface): bool
     {
-        return parent::__toString() . '<' . $this->className . '>';
+        return isset(class_implements($this->getClassName())[$interface->getInterfaceName()]);
+    }
+
+    /**
+     * @param string $interfaceName
+     * @return bool
+     */
+    public function implementsInterfaceAsString(string $interfaceName): bool
+    {
+        return isset(class_implements($this->getClassName())[$interfaceName]);
+    }
+
+    /**
+     * @param AbstractObjectType $class
+     * @return bool
+     */
+    public function extendsClass(AbstractObjectType $class): bool
+    {
+        return isset(class_parents($this->getClassName())[$class->getClassName()]);
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    public function extendsClassAsString(string $className): bool
+    {
+        return isset(class_parents($this->getClassName())[$className]);
+    }
+
+    /**
+     * @param ExtensionTypeInterface $extension
+     * @return bool
+     */
+    private function isCompatibleWithExtensionType(ExtensionTypeInterface $extension): bool
+    {
+        if ($extension->isClass()) {
+            return $this->className === $extension->getCustomType()
+                || $this->extendsClassAsString($extension->getCustomType()) || $extension->extendsClass($this);
+        } elseif ($extension->isInterface()) {
+            return $this->implementsInterfaceAsString($extension->getCustomType());
+        }
+
+        return false;
     }
 }

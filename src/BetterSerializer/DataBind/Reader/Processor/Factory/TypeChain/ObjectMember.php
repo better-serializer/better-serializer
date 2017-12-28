@@ -22,7 +22,7 @@ use ReflectionException;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor\Converter\TypeChain
  */
-final class ObjectMember extends ChainMember
+final class ObjectMember extends NestingChainMember
 {
 
     /**

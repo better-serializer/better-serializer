@@ -16,17 +16,23 @@ interface CollectionExtensionInterface extends ExtensionInterface
 {
 
     /**
+     * @param mixed $collection
+     * @return bool
+     */
+    public function isEmpty($collection): bool;
+
+    /**
      * return aan iterator wrapping the given collection
      *
-     * @param Object $object
-     * @return CollectionIteratorInterface
+     * @param Object $collection
+     * @return CollectionAdapterInterface
      */
-    public function getIterator($object): CollectionIteratorInterface;
+    public function getAdapter($collection): CollectionAdapterInterface;
 
     /**
      * return an unwrapped iterator with a new instance of wrapped collection
      *
-     * @return CollectionIteratorInterface
+     * @return CollectionAdapterInterface
      */
-    public function getNewIterator(): CollectionIteratorInterface;
+    public function getNewAdapter(): CollectionAdapterInterface;
 }

@@ -12,7 +12,7 @@ namespace BetterSerializer\Dto;
  * @author mfris
  * @package BetterSerializer\Dto
  */
-final class SpecialCar extends Car
+final class SpecialCar extends Car implements SpecialCarInterface
 {
 
     /**

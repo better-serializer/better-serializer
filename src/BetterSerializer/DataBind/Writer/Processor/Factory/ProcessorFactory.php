@@ -15,8 +15,6 @@ use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInte
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
-use ReflectionException;
-use RuntimeException;
 
 /**
  * Class ProcessorFactory
@@ -72,9 +70,7 @@ final class ProcessorFactory implements ProcessorFactoryInterface
      * @param TypeInterface $type
      * @param SerializationContextInterface $context
      * @return ProcessorInterface
-     * @throws ReflectionException
      * @throws LogicException
-     * @throws RuntimeException
      */
     public function createFromType(TypeInterface $type, SerializationContextInterface $context): ProcessorInterface
     {

@@ -24,6 +24,16 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     private $stringType;
 
     /**
+     * @var ContextStringFormType|null
+     */
+    private $collectionKeyType;
+
+    /**
+     * @var ContextStringFormType|null
+     */
+    private $collectionValueType;
+
+    /**
      * @var ReflectionClassInterface
      */
     private $reflectionClass;
@@ -36,7 +46,12 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     /**
      * @var bool
      */
-    private $isClass;
+    private $isClass = false;
+
+    /**
+     * @var bool
+     */
+    private $isInterface = false;
 
     /**
      * StringTypedPropertyContext constructor.
@@ -47,7 +62,7 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     public function __construct(string $stringType, ReflectionClassInterface $reflectionClass)
     {
         $this->reflectionClass = $reflectionClass;
-        $this->stringType = $this->getAnalyzedType($stringType);
+        $this->analyzeType($stringType);
     }
 
     /**
@@ -79,6 +94,22 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     }
 
     /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionKeyType(): ?ContextStringFormTypeInterface
+    {
+        return $this->collectionKeyType;
+    }
+
+    /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionValueType(): ?ContextStringFormTypeInterface
+    {
+        return $this->collectionValueType;
+    }
+
+    /**
      * @return bool
      */
     public function isClass(): bool
@@ -87,22 +118,50 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isInterface(): bool
+    {
+        return $this->isInterface;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClassOrInterface(): bool
+    {
+        return $this->isClass || $this->isInterface;
+    }
+
+    /**
      * @param string $stringType
-     * @return string
+     * @return void
      * @throws LogicException
      */
-    private function getAnalyzedType(string $stringType): string
+    private function analyzeType(string $stringType): void
     {
-        $this->isClass = false;
-        $isPotentialClass = preg_match("/^[a-zA-Z0-9_\\\]+[^\\]]$/", $stringType, $matches);
+        $isPotentialClass = preg_match(
+            "/^(?P<type>[a-zA-Z0-9_\\\]+[^\\\])(<(?P<keyOrValue>[A-Za-z][A-Za-z0-9_\\\]+[^\\\])"
+            . "(\s*,\s*(?P<value>[A-Za-z][A-Za-z0-9_\\\]+[^\\\]))?>)?$/",
+            $stringType,
+            $matches
+        );
 
         if (!$isPotentialClass) {
-            return $stringType;
+            $this->stringType = $stringType;
+
+            return;
         }
 
-        $potentialClass = $this->resolvePotentialClass($matches[0]);
+        $potentialClass = $this->resolvePotentialClass($matches['type']);
+        $this->stringType = $potentialClass !== '' ? $potentialClass : $stringType;
 
-        return $potentialClass !== '' ? $potentialClass : $stringType;
+        if (isset($matches['keyOrValue'], $matches['value'])) {
+            $this->collectionKeyType = new self($matches['keyOrValue'], $this->reflectionClass);
+            $this->collectionValueType = new self($matches['value'], $this->reflectionClass);
+        } elseif (isset($matches['keyOrValue'])) {
+            $this->collectionValueType = new self($matches['keyOrValue'], $this->reflectionClass);
+        }
     }
 
     /**
@@ -128,19 +187,42 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
         }
 
         $expectedClass = rtrim($expectedClass, '\\');
-        if (class_exists($expectedClass, false) || class_exists($expectedClass)) {
-            $this->isClass = true;
-
-            return $expectedClass;
-        }
-
         $potentialClass = rtrim($potentialClass, '\\');
-        if (class_exists($potentialClass, false) || class_exists($potentialClass)) {
-            $this->isClass = true;
 
-            return $potentialClass;
+        $classCandidates = [$expectedClass, $potentialClass];
+
+        foreach ($classCandidates as $classCandidate) {
+            if ($this->checkClassExistence($classCandidate)) {
+                $this->isClass = true;
+
+                return $classCandidate;
+            }
+
+            if ($this->checkInterfaceExistence($classCandidate)) {
+                $this->isInterface = true;
+
+                return $classCandidate;
+            }
         }
 
         return '';
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    private function checkClassExistence(string $className): bool
+    {
+        return(class_exists($className, false) || class_exists($className));
+    }
+
+    /**
+     * @param string $interfaceName
+     * @return bool
+     */
+    private function checkInterfaceExistence(string $interfaceName): bool
+    {
+        return(interface_exists($interfaceName, false) || interface_exists($interfaceName));
     }
 }

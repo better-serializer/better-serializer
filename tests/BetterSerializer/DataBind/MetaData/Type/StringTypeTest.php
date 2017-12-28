@@ -8,6 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
 
 use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -54,8 +55,9 @@ class StringTypeTest extends TestCase
             [new ObjectType(Car::class), false],
             [new StringType(), true],
             [new UnknownType(), false],
-            [new CustomType('MyType', new Parameters([])), false],
-            [new CustomObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
 
@@ -93,8 +95,9 @@ class StringTypeTest extends TestCase
             [new ObjectType(Car::class), false],
             [new StringType(), true],
             [new UnknownType(), true],
-            [new CustomType('MyType', new Parameters([])), false],
-            [new CustomObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
 }

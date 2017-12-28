@@ -9,26 +9,12 @@ namespace BetterSerializer;
 
 use BetterSerializer\Cache\Factory;
 use BetterSerializer\Cache\FactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\CustomTypeMember as CustomTypeFactory;
-use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ExtensibleChainMemberInterface as CustomTypeFactoryInterface;
-// @codingStandardsIgnoreStart
-use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\{
-    CustomTypeMember as ReaderProcessorFactory
-};
-use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\{
-    ExtensibleChainMemberInterface as ReaderProcessorFactoryInterface
-};
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\{
-    CustomTypeMember as WriterProcessorFactory
-};
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\{
-    ExtensibleChainMemberInterface as WriterProcessorFactoryInterface
-};
-// @codingStandardsIgnoreEnd
-use BetterSerializer\Helper\CustomTypeMockFactory;
+use BetterSerializer\Dto\Car;
+use BetterSerializer\Extension\Registry\ExtensionRegistryInterface;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
 use PHPUnit\Framework\TestCase;
+use Pimple\Container;
 use RuntimeException;
 
 /**
@@ -116,33 +102,21 @@ class BuilderTest extends TestCase
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     *
      */
     public function testAddExtensionWillIncludeItToCustomTypeFactories(): void
     {
-        $extension = CustomTypeMockFactory::createCustomTypeExcensionMock('CustomType');
-        $extensionClass = get_class($extension);
+        $extensionClass = Car::class;
 
         $container = require dirname(__DIR__, 2) . '/config/di.pimple.php';
 
-        $customTypeFactory = $this->createMock(CustomTypeFactoryInterface::class);
-        $customTypeFactory->expects(self::once())
-            ->method('addCustomTypeHandlerClass')
+        $extensionRegistry = $this->createMock(ExtensionRegistryInterface::class);
+        $extensionRegistry->expects(self::once())
+            ->method('registerExtension')
             ->with($extensionClass);
 
-        $readProcFactory = $this->createMock(ReaderProcessorFactoryInterface::class);
-        $readProcFactory->expects(self::once())
-            ->method('addCustomHandlerClass')
-            ->with($extensionClass);
-
-        $writeProcFactory = $this->createMock(WriterProcessorFactoryInterface::class);
-        $writeProcFactory->expects(self::once())
-            ->method('addCustomHandlerClass')
-            ->with($extensionClass);
-
-        $container[CustomTypeFactory::class] = $customTypeFactory;
-        $container[ReaderProcessorFactory::class] = $readProcFactory;
-        $container[WriterProcessorFactory::class] = $writeProcFactory;
+        $container[ExtensionRegistryInterface::class] = $extensionRegistry;
+        $container['InternalExtensions'] = [];
 
         $builder = new Builder($container);
         $builder->addExtension($extensionClass);

@@ -15,7 +15,7 @@ use Iterator;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor
  */
-final class ComplexCollection implements CollectionProcessorInterface, ComplexProcessorInterface
+final class ComplexCollection implements CollectionProcessorInterface, PropertyProcessorInterface
 {
 
     /**
@@ -67,7 +67,7 @@ final class ComplexCollection implements CollectionProcessorInterface, ComplexPr
 
         $this->processor = $this->processor->getProcessor();
 
-        if ($this->processor instanceof ComplexProcessorInterface) {
+        if ($this->processor instanceof PropertyProcessorInterface) {
             $this->processor->resolveRecursiveProcessors();
         }
     }

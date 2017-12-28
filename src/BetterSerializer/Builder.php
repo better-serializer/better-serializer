@@ -9,22 +9,8 @@ namespace BetterSerializer;
 
 use BetterSerializer\Cache\Factory;
 use BetterSerializer\Cache\FactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\CustomTypeMember as CustomTypeFactory;
-use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ExtensibleChainMemberInterface as ExtensibleTypeFactory;
-// @codingStandardsIgnoreStart
-use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\{
-    CustomTypeMember as CustomTypeReadProcessorFactory
-};
-use BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain\{
-    ExtensibleChainMemberInterface as ExtReadChainMemberInterface
-};
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\{
-    CustomTypeMember as CustomTypeWriteProcessorFactory
-};
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\{
-    ExtensibleChainMemberInterface as ExtWriteChainMemberInterface
-};
-// @codingStandardsIgnoreEnd
+use BetterSerializer\Extension\DoctrineCollection;
+use BetterSerializer\Extension\Registry\ExtensionRegistryInterface;
 use Doctrine\Common\Cache\Cache;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
@@ -47,19 +33,14 @@ final class Builder
     private $cacheFactory;
 
     /**
-     * @var ExtensibleTypeFactory
+     * @var ExtensionRegistryInterface
      */
-    private $extTypeFactory;
+    private $extensionRegistry;
 
     /**
-     * @var CustomTypeWriteProcessorFactory
+     * @var string[]
      */
-    private $extWriteProcessorFactory;
-
-    /**
-     * @var CustomTypeReadProcessorFactory
-     */
-    private $extReadProcessorFactory;
+    private static $internalExtensions = [];
 
     /**
      * Builder constructor.
@@ -73,6 +54,7 @@ final class Builder
         }
 
         $this->container = $container;
+        $this->registerExtensions();
     }
 
     /**
@@ -111,16 +93,10 @@ final class Builder
 
     /**
      * @param string $extensionClass
-     * @throws RuntimeException
      */
     public function addExtension(string $extensionClass): void
     {
-        $customTypeFactory = $this->getCustomTypeFactory();
-        $customTypeFactory->addCustomTypeHandlerClass($extensionClass);
-        $extWriteProcessorFactory = $this->getExtWriteProcessorFactory();
-        $extWriteProcessorFactory->addCustomHandlerClass($extensionClass);
-        $extReadProcessorFactory = $this->getExtReadProcessorFactory();
-        $extReadProcessorFactory->addCustomHandlerClass($extensionClass);
+        $this->getExtensionRegistry()->registerExtension($extensionClass);
     }
 
     /**
@@ -129,6 +105,18 @@ final class Builder
     private function initContainer(): Container
     {
         return require dirname(__DIR__) . '/../config/di.pimple.php';
+    }
+
+    /**
+     *
+     */
+    private function registerExtensions(): void
+    {
+        self::$internalExtensions = $this->container['InternalExtensions'];
+
+        foreach (self::$internalExtensions as $extensionClass) {
+            $this->addExtension($extensionClass);
+        }
     }
 
     /**
@@ -144,38 +132,14 @@ final class Builder
     }
 
     /**
-     * @return ExtensibleTypeFactory
+     * @return ExtensionRegistryInterface
      */
-    private function getCustomTypeFactory(): ExtensibleTypeFactory
+    private function getExtensionRegistry(): ExtensionRegistryInterface
     {
-        if ($this->extTypeFactory === null) {
-            $this->extTypeFactory = $this->container[CustomTypeFactory::class];
+        if ($this->extensionRegistry === null) {
+            $this->extensionRegistry = $this->container[ExtensionRegistryInterface::class];
         }
 
-        return $this->extTypeFactory;
-    }
-
-    /**
-     * @return ExtWriteChainMemberInterface
-     */
-    private function getExtWriteProcessorFactory(): ExtWriteChainMemberInterface
-    {
-        if ($this->extWriteProcessorFactory === null) {
-            $this->extWriteProcessorFactory = $this->container[CustomTypeWriteProcessorFactory::class];
-        }
-
-        return $this->extWriteProcessorFactory;
-    }
-
-    /**
-     * @return ExtReadChainMemberInterface
-     */
-    private function getExtReadProcessorFactory(): ExtReadChainMemberInterface
-    {
-        if ($this->extReadProcessorFactory === null) {
-            $this->extReadProcessorFactory = $this->container[CustomTypeReadProcessorFactory::class];
-        }
-
-        return $this->extReadProcessorFactory;
+        return $this->extensionRegistry;
     }
 }

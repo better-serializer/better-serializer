@@ -14,7 +14,6 @@ use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterfa
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\Reflection\ReflectionClassInterface;
 use LogicException;
 
 /**

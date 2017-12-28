@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Type\StringFormType;
 
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,15 +23,24 @@ class FqdnStringFormTypeTest extends TestCase
      * @param string $fqdn
      * @param string $namespace
      * @param bool $isClass
+     * @param bool $isInterface
+     * @param bool $isClassOrInterface
      * @dataProvider dataProvider
      */
-    public function testEverything(string $fqdn, string $namespace, bool $isClass): void
-    {
+    public function testEverything(
+        string $fqdn,
+        string $namespace,
+        bool $isClass,
+        bool $isInterface,
+        bool $isClassOrInterface
+    ): void {
         $strinFormType = new FqdnStringFormType($fqdn);
 
         self::assertSame($fqdn, $strinFormType->getStringType());
         self::assertSame($namespace, $strinFormType->getNamespace());
         self::assertSame($isClass, $strinFormType->isClass());
+        self::assertSame($isInterface, $strinFormType->isInterface());
+        self::assertSame($isClassOrInterface, $strinFormType->isClassOrInterface());
     }
 
     /**
@@ -39,11 +49,12 @@ class FqdnStringFormTypeTest extends TestCase
     public function dataProvider(): array
     {
         return [
-            [Car::class, 'BetterSerializer\Dto', true],
-            ['BetterSerializer\Dto\Car[]', '', false],
-            ['array<BetterSerializer\Dto\Car>', '', false],
-            ['int', '', false],
-            ['int[]', '', false],
+            [Car::class, 'BetterSerializer\Dto', true, false, true],
+            ['BetterSerializer\Dto\Car[]', '', false, false, false],
+            ['array<BetterSerializer\Dto\Car>', '', false, false, false],
+            ['int', '', false, false, false],
+            ['int[]', '', false, false, false],
+            [CarInterface::class, 'BetterSerializer\Dto', false, true, true],
         ];
     }
 }

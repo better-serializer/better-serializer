@@ -81,8 +81,7 @@ final class DateTimeType extends AbstractObjectType implements DateTimeTypeInter
     public function isCompatibleWith(TypeInterface $type): bool
     {
         return (
-            ($type instanceof self && $this->getClassName() === $type->getClassName())
-            || parent::isCompatibleWith($type)
+            ($type instanceof AbstractObjectType && $this->getClassName() === $type->getClassName())
             || $type instanceof UnknownType
         );
     }

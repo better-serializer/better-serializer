@@ -21,4 +21,14 @@ interface ContextStringFormTypeInterface extends StringFormTypeInterface
      * @return ReflectionClassInterface
      */
     public function getReflectionClass(): ReflectionClassInterface;
+
+    /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionKeyType(): ?ContextStringFormTypeInterface;
+
+    /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionValueType(): ?ContextStringFormTypeInterface;
 }

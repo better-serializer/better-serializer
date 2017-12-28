@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
 use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
 use BetterSerializer\DataBind\Writer\Processor\Cached;
-use BetterSerializer\DataBind\Writer\Processor\ComplexProcessorInterface;
+use BetterSerializer\DataBind\Writer\Processor\PropertyProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\Recursive\Cache;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
@@ -112,7 +112,7 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
     {
         $this->nestings[$key]--;
 
-        if ($this->nestings[$key] === 0 && $processor instanceof ComplexProcessorInterface) {
+        if ($this->nestings[$key] === 0 && $processor instanceof PropertyProcessorInterface) {
             $processor->resolveRecursiveProcessors();
             unset($this->nestings[$key]);
         }

@@ -19,12 +19,14 @@ use Serializable;
  * @method static TypeEnum FLOAT
  * @method static TypeEnum BOOLEAN
  * @method static TypeEnum OBJECT
+ * @method static TypeEnum INTERFACE
  * @method static TypeEnum ARRAY
  * @method static TypeEnum NULL
  * @method static TypeEnum UNKNOWN
  * @method static TypeEnum DATETIME
  * @method static TypeEnum CUSTOM_TYPE
  * @method static TypeEnum CUSTOM_OBJECT
+ * @method static TypeEnum CUSTOM_COLLECTION
  */
 final class TypeEnum extends Enum implements Serializable
 {
@@ -33,55 +35,65 @@ final class TypeEnum extends Enum implements Serializable
     /**
      * @const string
      */
-    const STRING = 'string';
+    public const STRING = 'string';
 
     /**
      * @const string
      */
-    const INTEGER = 'int';
+    public const INTEGER = 'int';
 
     /**
      * @const string
      */
-    const FLOAT = 'float';
+    public const FLOAT = 'float';
 
     /**
      * @const string
      */
-    const BOOLEAN = 'bool';
+    public const BOOLEAN = 'bool';
 
     /**
      * @const string
      */
-    const OBJECT = 'object';
+    public const OBJECT = 'object';
 
     /**
      * @const string
      */
-    const ARRAY = 'array';
+    public const INTERFACE = 'interface';
 
     /**
      * @const string
      */
-    const NULL = 'null';
+    public const ARRAY = 'array';
 
     /**
      * @const string
      */
-    const UNKNOWN = 'unknown';
+    public const NULL = 'null';
 
     /**
      * @const string
      */
-    const DATETIME = 'dateTime';
+    public const UNKNOWN = 'unknown';
 
     /**
      * @const string
      */
-    const CUSTOM_TYPE = 'customType';
+    public const DATETIME = 'dateTime';
 
     /**
      * @const string
      */
-    const CUSTOM_OBJECT = 'customObject';
+    public const CUSTOM_TYPE = 'customType';
+
+    /**
+     * @const string
+     */
+    public const CUSTOM_OBJECT = 'customObject';
+
+    /**
+     * @const string
+     */
+    public const CUSTOM_COLLECTION = 'customCollection';
 }

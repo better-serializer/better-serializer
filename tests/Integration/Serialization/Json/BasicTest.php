@@ -79,6 +79,7 @@ final class BasicTest extends AbstractIntegrationTest
             $this->getOverridenNameTuple(),
             $this->getNamespaceFeatureTupleWithDateTimes(),
             $this->getRecursiveDataTuple(),
+            $this->getPrimitiveDataTuple(),
         ];
     }
 
@@ -239,5 +240,13 @@ final class BasicTest extends AbstractIntegrationTest
             . '","updatedAt":null},"children":[],"createdAt":"' . $dateTime . '","updatedAt":null}';
 
         return [$category, $categoryJson];
+    }
+
+    /**
+     * @return array
+     */
+    private function getPrimitiveDataTuple(): array
+    {
+        return [6, 6];
     }
 }

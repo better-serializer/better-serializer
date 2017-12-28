@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use BetterSerializer\DataBind\Reader\Processor\CachedProcessorInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**
@@ -69,7 +69,7 @@ final class ComplexParamProcessor implements ComplexParamProcessorInterface
 
         $this->processor = $this->processor->getProcessor();
 
-        if ($this->processor instanceof ComplexProcessorInterface) {
+        if ($this->processor instanceof PropertyProcessorInterface) {
             $this->processor->resolveRecursiveProcessors();
         }
     }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
+use Doctrine\Common\Collections\Collection;
 
 /**
  *
@@ -16,18 +17,34 @@ final class Car3
 {
 
     /**
+     * @var Collection
+     * @Serializer\Property(type="Collection<Door>")
+     */
+    private $doors;
+
+    /**
      * @var bool
      * @Serializer\Property(type="BooleanString")
      */
     private $isForKids;
 
     /**
+     * @param Collection $doors
      * @param bool $isForKids
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function __construct(bool $isForKids = true)
+    public function __construct(Collection $doors, bool $isForKids = true)
     {
+        $this->doors = $doors;
         $this->isForKids = $isForKids;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDoors(): Collection
+    {
+        return $this->doors;
     }
 
     /**

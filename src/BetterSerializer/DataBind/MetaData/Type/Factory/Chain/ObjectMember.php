@@ -12,9 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory\Chain
+ *
  */
 final class ObjectMember extends ChainMember
 {

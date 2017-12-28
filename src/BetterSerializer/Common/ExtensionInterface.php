@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Common;
 
+use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+
 /**
  * Interface ExtensionInterface
  * @author mfris
@@ -14,6 +16,11 @@ namespace BetterSerializer\Common;
  */
 interface ExtensionInterface
 {
+
+    /**
+     * @param ParametersInterface $parameters
+     */
+    public function __construct(ParametersInterface $parameters);
 
     /**
      * fully classified class name of processed class (ClassName::class) or a custom type name

@@ -8,8 +8,11 @@ namespace BetterSerializer\DataBind\MetaData\Type;
 
 use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
+use BetterSerializer\Dto\CarInterface;
 use BetterSerializer\Dto\Radio;
 use BetterSerializer\Dto\SpecialCar;
+use BetterSerializer\Dto\SpecialCarInterface;
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,6 +32,23 @@ class ObjectTypeTest extends TestCase
         $object = new ObjectType(Car::class);
         self::assertInstanceOf(get_class(TypeEnum::OBJECT()), $object->getType());
         self::assertSame(Car::class, $object->getClassName());
+    }
+
+    /**
+     *
+     */
+    public function testBehaviour(): void
+    {
+        $object = new ObjectType(Car::class);
+        $interface = new InterfaceType(SpecialCarInterface::class);
+        $object2 = new ObjectType(SpecialCar::class);
+
+        self::assertFalse($object->extendsClass($object2));
+        self::assertFalse($object->extendsClassAsString(SpecialCar::class));
+        self::assertFalse($object->implementsInterface($interface));
+        self::assertTrue($object2->extendsClass($object));
+        self::assertTrue($object2->extendsClassAsString(Car::class));
+        self::assertTrue($object2->implementsInterface($interface));
     }
 
     /**
@@ -58,8 +78,9 @@ class ObjectTypeTest extends TestCase
             [new ObjectType(SpecialCar::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
-            [new CustomType('MyType', new Parameters([])), false],
-            [new CustomObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
 
@@ -98,11 +119,18 @@ class ObjectTypeTest extends TestCase
             [new IntegerType(), false],
             [new NullType(), false],
             [new ObjectType(Car::class), true],
+            [new ObjectType(SpecialCar::class), true],
             [new ObjectType(Radio::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
-            [new CustomType('MyType', new Parameters([])), false],
-            [new CustomObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionObjectType(Car::class, new Parameters([])), true],
+            [new ExtensionObjectType(CarInterface::class, new Parameters([])), true],
+            [new ExtensionObjectType(Radio::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
+            [new ExtensionCollectionType(Car::class, new StringType(), new Parameters([])), true],
+            [new InterfaceType(CarInterface::class), true],
+            [new InterfaceType(SpecialCarInterface::class), false],
         ];
     }
 }

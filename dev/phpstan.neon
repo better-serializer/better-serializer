@@ -5,6 +5,8 @@ parameters:
         - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getClassName\(\)#'
         - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getCustomType\(\)#'
         - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getParameters\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\StringFormType\\StringFormTypeInterface::getCollectionValueType\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getInterfaceName\(\)#'
 
     excludes_analyse:
         - %rootDir%/../../../tests/*

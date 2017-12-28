@@ -29,4 +29,14 @@ interface StringFormTypeInterface
      * @return bool
      */
     public function isClass(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isInterface(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isClassOrInterface(): bool;
 }

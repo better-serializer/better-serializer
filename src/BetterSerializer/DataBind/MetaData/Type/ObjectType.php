@@ -13,4 +13,12 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  */
 final class ObjectType extends AbstractObjectType
 {
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return parent::__toString() . '<' . $this->className . '>';
+    }
 }

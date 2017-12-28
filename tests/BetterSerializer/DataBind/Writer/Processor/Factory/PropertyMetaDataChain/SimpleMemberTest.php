@@ -14,7 +14,7 @@ use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Property;
+use BetterSerializer\DataBind\Writer\Processor\SimpleProperty;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
@@ -57,10 +57,10 @@ class SimpleMemberTest extends TestCase
             ->willReturn($extractor);
         $context = $this->createMock(SerializationContextInterface::class);
 
-        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
+        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
         $processor = $simpleMember->create($propertyMetaData, $context);
 
-        self::assertInstanceOf(Property::class, $processor);
+        self::assertInstanceOf(SimpleProperty::class, $processor);
     }
 
     /**
@@ -78,7 +78,7 @@ class SimpleMemberTest extends TestCase
         $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
         $context = $this->createMock(SerializationContextInterface::class);
 
-        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
+        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
         $shouldBeNull = $simpleMember->create($propertyMetaData, $context);
 
         self::assertNull($shouldBeNull);

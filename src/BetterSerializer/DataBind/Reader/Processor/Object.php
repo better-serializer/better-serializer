@@ -16,7 +16,7 @@ use BetterSerializer\DataBind\Reader\Instantiator\ProcessingInstantiatorInterfac
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor
  */
-final class Object implements ComplexProcessorInterface
+final class Object implements PropertyProcessorInterface
 {
 
     /**
@@ -74,7 +74,7 @@ final class Object implements ComplexProcessorInterface
                 $processor = $processor->getProcessor();
             }
 
-            if ($processor instanceof ComplexProcessorInterface) {
+            if ($processor instanceof PropertyProcessorInterface) {
                 $processor->resolveRecursiveProcessors();
             }
 

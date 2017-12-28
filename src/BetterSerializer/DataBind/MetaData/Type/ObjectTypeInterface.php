@@ -18,4 +18,28 @@ interface ObjectTypeInterface extends ComplexTypeInterface
      * @return string
      */
     public function getClassName(): string;
+
+    /**
+     * @param InterfaceType $interface
+     * @return bool
+     */
+    public function implementsInterface(InterfaceType $interface): bool;
+
+    /**
+     * @param string $interfaceName
+     * @return bool
+     */
+    public function implementsInterfaceAsString(string $interfaceName): bool;
+
+    /**
+     * @param AbstractObjectType $class
+     * @return bool
+     */
+    public function extendsClass(AbstractObjectType $class): bool;
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    public function extendsClassAsString(string $className): bool;
 }

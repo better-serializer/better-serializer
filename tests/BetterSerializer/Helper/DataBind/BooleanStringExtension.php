@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Helper\DataBind;
 
-use BetterSerializer\Common\CustomTypeExtensionInterface;
+use BetterSerializer\Common\TypeExtensionInterface;
 use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface as ReadContext;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
@@ -15,7 +15,7 @@ use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
 /**
  *
  */
-final class BooleanStringExtension implements CustomTypeExtensionInterface
+final class BooleanStringExtension implements TypeExtensionInterface
 {
 
     /**
@@ -51,23 +51,21 @@ final class BooleanStringExtension implements CustomTypeExtensionInterface
 
     /**
      * @param WriteContext $context
-     * @param string $key
      * @param mixed $data
      */
-    public function appendData(WriteContext $context, string $key, $data): void
+    public function appendData(WriteContext $context, $data): void
     {
         $value = $data ? self::TYPE_TRUE : self::TYPE_FALSE;
-        $context->write($key, $value);
+        $context->writeSimple($value);
     }
 
     /**
      * @param ReadContext $context
-     * @param string $key
      * @return mixed
      */
-    public function extractData(ReadContext $context, string $key)
+    public function extractData(ReadContext $context)
     {
-        $value = $context->getValue($key);
+        $value = $context->getCurrentValue();
 
         return $value === self::TYPE_TRUE;
     }

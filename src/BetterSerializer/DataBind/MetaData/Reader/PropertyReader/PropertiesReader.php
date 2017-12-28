@@ -11,12 +11,12 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContext;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use BetterSerializer\Reflection\ReflectionClassInterface;
+use ReflectionException;
 use RuntimeException;
 
 /**
@@ -69,6 +69,7 @@ final class PropertiesReader implements PropertiesReaderInterface
      * @param ReflectionClassInterface $reflectionClass
      * @return PropertyMetaDataInterface[]
      * @throws RuntimeException
+     * @throws ReflectionException
      */
     public function getPropertiesMetadata(ReflectionClassInterface $reflectionClass): array
     {

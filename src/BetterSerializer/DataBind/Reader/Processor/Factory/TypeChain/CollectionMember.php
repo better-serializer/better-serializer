@@ -24,7 +24,7 @@ use RuntimeException;
  * @author mfris
  * @package BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain
  */
-final class CollectionMember extends ChainMember
+final class CollectionMember extends NestingChainMember
 {
 
     /**

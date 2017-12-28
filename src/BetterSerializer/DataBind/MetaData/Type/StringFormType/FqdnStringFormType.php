@@ -31,6 +31,11 @@ final class FqdnStringFormType implements StringFormTypeInterface
     private $isClass;
 
     /**
+     * @var bool
+     */
+    private $isInterface;
+
+    /**
      * FqdnStringFormType constructor.
      * @param string $fqdn
      */
@@ -65,13 +70,30 @@ final class FqdnStringFormType implements StringFormTypeInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isInterface(): bool
+    {
+        return $this->isInterface;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClassOrInterface(): bool
+    {
+        return $this->isClass || $this->isInterface;
+    }
+
+    /**
      *
      */
     private function init(): void
     {
         $this->isClass = class_exists($this->fqdn);
+        $this->isInterface = interface_exists($this->fqdn);
 
-        if (!$this->isClass) {
+        if (!$this->isClass && !$this->isInterface) {
             $this->namespace = '';
 
             return;

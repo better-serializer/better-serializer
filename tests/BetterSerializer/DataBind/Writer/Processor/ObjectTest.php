@@ -41,7 +41,7 @@ class ObjectTest extends TestCase
      */
     public function testResolveRecursiveProcessors(): void
     {
-        $subProcessor = $this->createMock(ComplexProcessorInterface::class);
+        $subProcessor = $this->createMock(PropertyProcessorInterface::class);
         $subProcessor->expects(self::once())
             ->method('resolveRecursiveProcessors');
 
