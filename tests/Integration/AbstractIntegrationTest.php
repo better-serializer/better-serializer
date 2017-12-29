@@ -95,6 +95,7 @@ abstract class AbstractIntegrationTest extends TestCase
     /**
      * @return JmsSerializer
      * @throws \JMS\Serializer\Exception\InvalidArgumentException
+     * @throws \JMS\Serializer\Exception\RuntimeException
      */
     protected function getJmsSerializer(): JmsSerializer
     {

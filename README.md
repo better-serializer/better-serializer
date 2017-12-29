@@ -112,10 +112,13 @@ The usage is described [here](doc/Usage.md).
 
 The de/serializaton annotations are described [here](doc/Annotations.md).
 
+If you'd like to write custom extensions for special de/serialising of selected data types, 
+check the [extensions section](doc/Extensions.md)
+
 ## Future Plans
 - ~~metadata caching~~
 - XML and YAML support
-- various collection classes support (Doctrine collections, internal PHP collections like SplStack)
+- various collection classes support (~~Doctrine collections~~, internal PHP collections like SplStack)
 - data injection using class constructors (~~internal~~ and static), which should improve performance even more
 - various features import from JmsSerializer and Jackson
 - framework integrations
