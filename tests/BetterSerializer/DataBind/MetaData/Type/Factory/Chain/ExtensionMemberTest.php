@@ -9,9 +9,11 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionObjectType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionType;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Radio;
 use BetterSerializer\Helper\ExtensionMockFactory;
@@ -30,9 +32,9 @@ class ExtensionMemberTest extends TestCase
     public function testGetTypeWithCustomNonObject(): void
     {
         $customType = 'MyType';
-        $customObject = ExtensionMockFactory::createTypeExcensionMock($customType);
+        $extension = ExtensionMockFactory::createTypeExcensionMock($customType, TypeEnum::BOOLEAN);
 
-        $processorClass = get_class($customObject);
+        $processorClass = get_class($extension);
         $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->method('getStringType')
             ->willReturn($customType);
@@ -45,10 +47,17 @@ class ExtensionMemberTest extends TestCase
             ->with($stringFormType)
             ->willReturn($parameters);
 
-        $customObject = new ExtensionMember($parser, [$processorClass]);
-        $type = $customObject->getType($stringFormType);
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::once())
+            ->method('getType');
 
+        $extensionMember = new ExtensionMember($typeFactory, $parser, [$processorClass]);
+        $type = $extensionMember->getType($stringFormType);
+
+        /* @var $type ExtensionType */
         self::assertInstanceOf(ExtensionType::class, $type);
+        self::assertSame($customType, $type->getCustomType());
+        self::assertSame($parameters, $type->getParameters());
     }
 
     /**
@@ -57,9 +66,9 @@ class ExtensionMemberTest extends TestCase
     public function testGetTypeWithCustomObject(): void
     {
         $customType = Car::class;
-        $customObject = ExtensionMockFactory::createTypeExcensionMock($customType);
+        $extension = ExtensionMockFactory::createTypeExcensionMock($customType);
 
-        $processorClass = get_class($customObject);
+        $processorClass = get_class($extension);
         $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->method('getStringType')
             ->willReturn($customType);
@@ -72,10 +81,17 @@ class ExtensionMemberTest extends TestCase
             ->with($stringFormType)
             ->willReturn($parameters);
 
-        $customObject = new ExtensionMember($parser, [$processorClass]);
-        $type = $customObject->getType($stringFormType);
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
 
+        $extensionMember = new ExtensionMember($typeFactory, $parser, [$processorClass]);
+        $type = $extensionMember->getType($stringFormType);
+
+        /* @var $type ExtensionObjectType */
         self::assertInstanceOf(ExtensionObjectType::class, $type);
+        self::assertSame($customType, $type->getCustomType());
+        self::assertSame($parameters, $type->getParameters());
     }
 
     /**
@@ -85,8 +101,11 @@ class ExtensionMemberTest extends TestCase
     public function testCreateThrowsOnInvalidHandlerClass(): void
     {
         $parser = $this->createMock(ParserInterface::class);
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
 
-        new ExtensionMember($parser, [Car::class]);
+        new ExtensionMember($typeFactory, $parser, [Car::class]);
     }
 
     /**
@@ -100,8 +119,11 @@ class ExtensionMemberTest extends TestCase
 
         $processorClass = get_class($customObject);
         $parser = $this->createMock(ParserInterface::class);
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
 
-        new ExtensionMember($parser, [$processorClass, $processorClass]);
+        new ExtensionMember($typeFactory, $parser, [$processorClass, $processorClass]);
     }
 
     /**
@@ -109,10 +131,13 @@ class ExtensionMemberTest extends TestCase
      */
     public function testGetTypeWithoutRegisteredHandlersReturnsNull(): void
     {
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
         $parser = $this->createMock(ParserInterface::class);
         $stringFormType = $this->createMock(StringFormTypeInterface::class);
 
-        $customObject = new ExtensionMember($parser);
+        $customObject = new ExtensionMember($typeFactory, $parser);
         $type = $customObject->getType($stringFormType);
 
         self::assertNull($type);
@@ -125,6 +150,9 @@ class ExtensionMemberTest extends TestCase
     {
         $customObject = ExtensionMockFactory::createTypeExcensionMock(Car::class);
 
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
         $parser = $this->createMock(ParserInterface::class);
         $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->method('isClass')
@@ -132,7 +160,7 @@ class ExtensionMemberTest extends TestCase
         $stringFormType->method('getStringType')
             ->willReturn('!234');
 
-        $customObject = new ExtensionMember($parser, [get_class($customObject)]);
+        $customObject = new ExtensionMember($typeFactory, $parser, [get_class($customObject)]);
         $type = $customObject->getType($stringFormType);
 
         self::assertNull($type);
@@ -145,6 +173,9 @@ class ExtensionMemberTest extends TestCase
     {
         $customObject = ExtensionMockFactory::createTypeExcensionMock(Car::class);
 
+        $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $typeFactory->expects(self::never())
+            ->method('getType');
         $parser = $this->createMock(ParserInterface::class);
         $stringFormType = $this->createMock(StringFormTypeInterface::class);
         $stringFormType->method('isClass')
@@ -152,7 +183,7 @@ class ExtensionMemberTest extends TestCase
         $stringFormType->method('getStringType')
             ->willReturn(Radio::class);
 
-        $customObject = new ExtensionMember($parser, [get_class($customObject)]);
+        $customObject = new ExtensionMember($typeFactory, $parser, [get_class($customObject)]);
         $type = $customObject->getType($stringFormType);
 
         self::assertNull($type);

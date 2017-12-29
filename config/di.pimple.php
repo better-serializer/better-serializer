@@ -466,6 +466,7 @@ $container[TypeFactoryChain\ArrayMember::class] = function (Container $c) {
 
 $container[TypeFactoryChain\ExtensionMember::class] = function (Container $c) {
     return new TypeFactoryChain\ExtensionMember(
+        $c['BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface::Unitialized'],
         $c[BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface::class]
     );
 };

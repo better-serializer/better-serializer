@@ -58,6 +58,6 @@ abstract class AbstractExtensionTypeMember extends ChainMember implements Extens
             throw new RuntimeException(sprintf('Handler for class %s is already registered.', $customType));
         }
 
-        $this->customTypes[$customType] = $customType;
+        $this->customTypes[$customType] = $customObjectHandlerClass;
     }
 }

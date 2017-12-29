@@ -9,6 +9,7 @@ namespace BetterSerializer\Helper\DataBind;
 
 use BetterSerializer\Common\TypeExtensionInterface;
 use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface as ReadContext;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
 
@@ -76,5 +77,13 @@ final class BooleanStringExtension implements TypeExtensionInterface
     public static function getType(): string
     {
         return self::TYPE;
+    }
+
+    /**
+     * @return null|string
+     */
+    public static function getReplacedType(): ?string
+    {
+        return TypeEnum::BOOLEAN;
     }
 }

@@ -37,6 +37,7 @@ class DoctrineCollectionTest extends TestCase
         $extension = new DoctrineCollection($parameters);
 
         self::assertSame(Collection::class, DoctrineCollection::getType());
+        self::assertNull(DoctrineCollection::getReplacedType());
         self::assertSame($isEmpty, $extension->isEmpty($collection));
         self::assertInstanceOf(CollectionAdapterInterface::class, $extension->getAdapter($collection));
         self::assertInstanceOf(CollectionAdapterInterface::class, $extension->getNewAdapter());

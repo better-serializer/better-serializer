@@ -23,23 +23,30 @@ final class ExtensionMockFactory
 {
     /**
      * @param string $type
+     * @param string $replacedType
      * @return TypeExtensionInterface
      * @throws \PHPUnit\Framework\Exception
      * @throws \PHPUnit\Framework\MockObject\RuntimeException
      * @throws \ReflectionException
      * @SuppressWarnings(PHPMD)
      */
-    public static function createTypeExcensionMock(string $type): TypeExtensionInterface
+    public static function createTypeExcensionMock(string $type, string $replacedType = null): TypeExtensionInterface
     {
         $mockGeneratpr = new Generator();
         $parameters = $mockGeneratpr->getMock(ParametersInterface::class);
 
         $typeExtension = new class($parameters) implements TypeExtensionInterface {
             private static $type;
+            private static $replacedType;
 
             public static function getType(): string
             {
                 return self::$type;
+            }
+
+            public static function getReplacedType(): ?string
+            {
+                return self::$replacedType;
             }
 
             public function __construct(ParametersInterface $parameters)
@@ -58,8 +65,14 @@ final class ExtensionMockFactory
             {
                 self::$type = $className;
             }
+
+            public function setReplacedType(?string $replacedType)
+            {
+                self::$replacedType = $replacedType;
+            }
         };
         $typeExtension->setType($type);
+        $typeExtension->setReplacedType($replacedType);
 
         return $typeExtension;
     }
@@ -89,6 +102,11 @@ final class ExtensionMockFactory
             public static function getType(): string
             {
                 return self::$type;
+            }
+
+            public static function getReplacedType(): ?string
+            {
+                return null;
             }
 
             public function __construct(ParametersInterface $parameters)

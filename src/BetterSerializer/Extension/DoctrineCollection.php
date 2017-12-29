@@ -49,6 +49,14 @@ final class DoctrineCollection implements CollectionExtensionInterface
     }
 
     /**
+     * @return null|string
+     */
+    public static function getReplacedType(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param mixed $collection
      * @return bool
      * @throws RuntimeException

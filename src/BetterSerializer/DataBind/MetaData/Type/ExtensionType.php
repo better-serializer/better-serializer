@@ -13,21 +13,69 @@ use RuntimeException;
 /**
  *
  */
-final class ExtensionType extends AbstractExtensionType
+final class ExtensionType extends AbstractType implements ExtensionTypeInterface
 {
+
+    /**
+     * @var string
+     */
+    private $customType;
+
+    /**
+     * @var ParametersInterface
+     */
+    private $parameters;
+
+    /**
+     * @var TypeInterface
+     */
+    private $replacedType;
 
     /**
      * @param string $type
      * @param ParametersInterface $parameters
+     * @param TypeInterface $replacedType
      * @throws RuntimeException
      */
-    public function __construct(string $type, ParametersInterface $parameters)
+    public function __construct(string $type, ParametersInterface $parameters, TypeInterface $replacedType = null)
     {
         if (class_exists($type) || interface_exists($type)) {
             throw new RuntimeException("This type shouldn't be used with classes or interfaces.");
         }
 
-        parent::__construct($type, $parameters);
+        $this->customType = $type;
+        $this->parameters = $parameters;
+        $this->replacedType = $replacedType;
+        parent::__construct();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomType(): string
+    {
+        return $this->customType;
+    }
+
+    /**
+     * @return ParametersInterface
+     */
+    public function getParameters(): ParametersInterface
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param TypeInterface $type
+     * @return bool
+     */
+    public function equals(TypeInterface $type): bool
+    {
+        if (!$type instanceof self || !parent::equals($type)) {
+            return false;
+        }
+
+        return $this->customType === $type->customType && $this->parameters->equals($type->getParameters());
     }
 
     /**
@@ -52,9 +100,8 @@ final class ExtensionType extends AbstractExtensionType
      */
     public function isCompatibleWith(TypeInterface $type): bool
     {
-        // @todo store simple type with custom type to be able to exactly compare simple/primitive types
         return $type instanceof UnknownType
-            //|| $type instanceof SimpleTypeInterface
+            || ($this->replacedType !== null && $this->replacedType->isCompatibleWith($type))
             || $this->equals($type);
     }
 

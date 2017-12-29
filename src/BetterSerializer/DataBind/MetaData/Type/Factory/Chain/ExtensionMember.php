@@ -9,6 +9,9 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionObjectType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionType;
+use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\FqdnStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use RuntimeException;
@@ -20,9 +23,29 @@ final class ExtensionMember extends AbstractExtensionTypeMember
 {
 
     /**
+     * @var TypeFactoryInterface
+     */
+    private $typeFactory;
+
+    /**
      * @var string
      */
     private $currentType;
+
+    /**
+     * @param TypeFactoryInterface $typeFactory
+     * @param ParserInterface $parametersParser
+     * @param string[] $customObjectClasses
+     * @throws RuntimeException
+     */
+    public function __construct(
+        TypeFactoryInterface $typeFactory,
+        ParserInterface $parametersParser,
+        array $customObjectClasses = []
+    ) {
+        $this->typeFactory = $typeFactory;
+        parent::__construct($parametersParser, $customObjectClasses);
+    }
 
     /**
      * @param StringFormTypeInterface $stringFormType
@@ -59,6 +82,13 @@ final class ExtensionMember extends AbstractExtensionTypeMember
             return new ExtensionObjectType($this->currentType, $parameters);
         }
 
-        return new ExtensionType($this->currentType, $parameters);
+        $replacedType = null;
+        $replacedTypeString = call_user_func("{$this->customTypes[$this->currentType]}::getReplacedType");
+
+        if ($replacedTypeString) {
+            $replacedType = $this->typeFactory->getType(new FqdnStringFormType($replacedTypeString));
+        }
+
+        return new ExtensionType($this->currentType, $parameters, $replacedType);
     }
 }

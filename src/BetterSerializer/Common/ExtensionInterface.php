@@ -28,4 +28,13 @@ interface ExtensionInterface
      * @return string
      */
     public static function getType(): string;
+
+    /**
+     * If the extension represents a fully custom type (with custom name), it is viable
+     * to define the type which is being replaced by the custom type,
+     * for the serializer to be able to pair object constructor parameters with object properties.
+     *
+     * @return null|string
+     */
+    public static function getReplacedType(): ?string;
 }
