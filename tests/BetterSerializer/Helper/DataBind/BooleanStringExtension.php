@@ -26,19 +26,16 @@ final class BooleanStringExtension implements TypeExtensionInterface
 
     /**
      * @const string
-     * @SuppressWarnings(PHPMD)
      */
     private const TYPE = 'BooleanString';
 
     /**
      * @const string
-     * @SuppressWarnings(PHPMD)
      */
     private const TYPE_TRUE = 'yes';
 
     /**
      * @const string
-     * @SuppressWarnings(PHPMD)
      */
     private const TYPE_FALSE = 'no';
 

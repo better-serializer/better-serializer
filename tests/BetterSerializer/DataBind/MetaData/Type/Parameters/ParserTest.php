@@ -20,6 +20,10 @@ class ParserTest extends TestCase
     /**
      * @param string $customClassDefinition
      * @param array $expectedParameters
+     * @throws RuntimeException
+     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      * @dataProvider parametersDataProvider
      */
     public function testParseParameters(string $customClassDefinition, array $expectedParameters): void
@@ -53,7 +57,7 @@ class ParserTest extends TestCase
     {
         return [
             [
-                'CustomClass(asd="zxc",   bbb="1",c=2.2, d=12)',
+                "CustomClass(asd='zxc',   bbb='1',c=2.2, d=12)",
                 [
                     'asd' => 'zxc',
                     'bbb' => '1',
@@ -62,7 +66,7 @@ class ParserTest extends TestCase
                 ]
             ],
             [
-                'CustomClass(asd="zxc")',
+                "CustomClass(asd='zxc')",
                 [
                     'asd' => 'zxc',
                 ]

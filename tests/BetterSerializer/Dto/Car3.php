@@ -24,7 +24,7 @@ final class Car3
 
     /**
      * @var bool
-     * @Serializer\Property(type="BooleanString")
+     * @Serializer\Property(type="BooleanString(param1='string', param2=6)")
      */
     private $isForKids;
 

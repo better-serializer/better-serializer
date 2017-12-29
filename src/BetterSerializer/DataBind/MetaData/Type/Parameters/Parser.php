@@ -47,7 +47,7 @@ final class Parser implements ParserInterface
         }
 
         [$name, $value] = $parameterData;
-        $trimmedValue = trim($value, '"');
+        $trimmedValue = trim($value, "'");
 
         if ($trimmedValue === $value) {
             $trimmedValue = strpos($trimmedValue, '.') !== false ? (float) $trimmedValue : (int) $trimmedValue;
