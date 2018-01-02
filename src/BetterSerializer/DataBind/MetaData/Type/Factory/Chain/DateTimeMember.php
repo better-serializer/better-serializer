@@ -8,8 +8,11 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
 use BetterSerializer\DataBind\MetaData\Type\DateTimeType;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use DateTime;
+use DateTimeImmutable;
 use LogicException;
 
 /**
@@ -21,51 +24,44 @@ final class DateTimeMember extends ChainMember
 {
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $className;
+    private static $allowedTypes = [
+        DateTime::class => DateTime::class,
+        DateTimeImmutable::class => DateTimeImmutable::class,
+    ];
 
     /**
-     * @var string
-     */
-    private $format;
-
-    /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
+    protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        if (!preg_match(
-            "/^(?P<fqClassName>\\\?(?P<className>DateTime(Immutable)?))(\(format='(?P<format>[^']+)'\))?$/",
-            $stringFormType->getStringType(),
-            $matches
-        )) {
-            return false;
-        }
-
-        $this->className = $matches['className'];
-        $this->format = '';
-
-        if (isset($matches['format'])) {
-            $this->format = $matches['format'];
-        }
-
-        return true;
+        return $stringFormType->getTypeClass() === TypeClassEnum::CLASS_TYPE() &&
+            isset(self::$allowedTypes[$stringFormType->getStringType()]);
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws LogicException
      */
-    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
+    protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface
     {
-        if ($this->format !== '') {
-            return new DateTimeType($this->className, $this->format);
+        $format = null;
+        $parameters = $stringFormType->getParameters();
+
+        if ($parameters && $parameters->has('format')) {
+            $formatParam = $parameters->get('format');
+            $format = trim((string) $formatParam->getValue());
         }
 
-        return new DateTimeType($this->className);
+        if ($format) {
+            return new DateTimeType($stringFormType->getStringType(), $format);
+        }
+
+        return new DateTimeType($stringFormType->getStringType());
     }
 }

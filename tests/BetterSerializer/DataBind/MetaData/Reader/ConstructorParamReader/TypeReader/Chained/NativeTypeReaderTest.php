@@ -8,7 +8,10 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use BetterSerializer\Reflection\ReflectionMethodInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
@@ -32,19 +35,31 @@ class NativeTypeReaderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $declaringClass = $this->createMock(ReflectionClassInterface::class);
         $param = $this->createMock(ReflectionParameterInterface::class);
         $param->expects(self::once())
             ->method('getType')
             ->willReturn($reflType);
+        $param->expects(self::once())
+            ->method('getDeclaringClass')
+            ->willReturn($declaringClass);
 
         $type = $this->createMock(TypeInterface::class);
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+        $stringTypeParser->expects(self::once())
+            ->method('parseWithParentContext')
+            ->with((string) $reflType, $declaringClass)
+            ->willReturn($stringType);
 
         $nativeTypeFactory = $this->createMock(NativeTypeFactoryInterface::class);
         $nativeTypeFactory->expects(self::once())
             ->method('getType')
+            ->with($stringType)
             ->willReturn($type);
 
-        $reader = new NativeTypeReader($nativeTypeFactory);
+
+        $reader = new NativeTypeReader($stringTypeParser, $nativeTypeFactory);
         $reader->initialize($constructor);
         $type = $reader->getType($param);
 

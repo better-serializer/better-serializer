@@ -6,7 +6,7 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;

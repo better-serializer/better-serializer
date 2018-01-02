@@ -18,7 +18,7 @@ final class Car3
 
     /**
      * @var Collection
-     * @Serializer\Property(type="Collection<Door>")
+     * @Serializer\Property(type="Collection<Door>(paramA='string', paramB=7)")
      */
     private $doors;
 

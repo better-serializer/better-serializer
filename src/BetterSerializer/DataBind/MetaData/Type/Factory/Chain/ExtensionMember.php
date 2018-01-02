@@ -10,9 +10,10 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionObjectType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\FqdnStringFormType;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use RuntimeException;
 
@@ -23,72 +24,69 @@ final class ExtensionMember extends AbstractExtensionTypeMember
 {
 
     /**
+     * @var StringTypeParserInterface
+     */
+    private $stringTypeParser;
+
+    /**
      * @var TypeFactoryInterface
      */
     private $typeFactory;
 
     /**
-     * @var string
-     */
-    private $currentType;
-
-    /**
      * @param TypeFactoryInterface $typeFactory
-     * @param ParserInterface $parametersParser
+     * @param StringTypeParserInterface $stringTypeParser
      * @param string[] $customObjectClasses
      * @throws RuntimeException
      */
     public function __construct(
         TypeFactoryInterface $typeFactory,
-        ParserInterface $parametersParser,
+        StringTypeParserInterface $stringTypeParser,
         array $customObjectClasses = []
     ) {
         $this->typeFactory = $typeFactory;
-        parent::__construct($parametersParser, $customObjectClasses);
+        $this->stringTypeParser = $stringTypeParser;
+        parent::__construct($customObjectClasses);
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
+    protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        if (empty($this->customTypes)) {
-            return false;
-        }
-
-        if (!preg_match("/^(?P<type>\\\?[A-Za-z][a-zA-Z0-9_\\\]*)/", $stringFormType->getStringType(), $matches)) {
-            return false;
-        }
-
-        $this->currentType = $matches['type'];
-
-        if (!isset($this->customTypes[$this->currentType])) {
-            return false;
-        }
-
-        return true;
+        return isset($this->customTypes[$stringFormType->getStringType()]);
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
+     * @throws RuntimeException
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
+    protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface
     {
-        $parameters = $this->parametersParser->parseParameters($stringFormType);
+        $parameters = $stringFormType->getParameters();
 
-        if ($stringFormType->isClassOrInterface()) {
-            return new ExtensionObjectType($this->currentType, $parameters);
+        if (!$parameters) {
+            $parameters = new Parameters([]);
+        }
+
+        $currentType = $stringFormType->getStringType();
+        $typeClass = $stringFormType->getTypeClass();
+
+        if ($typeClass === TypeClassEnum::CLASS_TYPE() || $typeClass === TypeClassEnum::INTERFACE_TYPE()) {
+            return new ExtensionObjectType($currentType, $parameters);
         }
 
         $replacedType = null;
-        $replacedTypeString = call_user_func("{$this->customTypes[$this->currentType]}::getReplacedType");
+        $replacedTypeString = call_user_func("{$this->customTypes[$currentType]}::getReplacedType");
 
         if ($replacedTypeString) {
-            $replacedType = $this->typeFactory->getType(new FqdnStringFormType($replacedTypeString));
+            $replacedStringFormType = $this->stringTypeParser->parseSimple($replacedTypeString);
+            $replacedType = $this->typeFactory->getType($replacedStringFormType);
         }
 
-        return new ExtensionType($this->currentType, $parameters, $replacedType);
+        return new ExtensionType($currentType, $parameters, $replacedType);
     }
 }

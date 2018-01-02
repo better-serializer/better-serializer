@@ -9,8 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\ParametersParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -45,12 +45,9 @@ class ExtensionCollectionMemberTest extends TestCase
         $stringFormType->expects(self::exactly(2))
             ->method('getCollectionValueType')
             ->willReturn($colValStringFormType);
-
-        $parameters = $this->createMock(ParametersInterface::class);
-        $parser = $this->createMock(ParserInterface::class);
-        $parser->method('parseParameters')
-            ->with($stringFormType)
-            ->willReturn($parameters);
+        $stringFormType->expects(self::once())
+            ->method('getParameters')
+            ->willReturn(null);
 
         $nestedType = $this->createMock(TypeInterface::class);
 
@@ -59,7 +56,7 @@ class ExtensionCollectionMemberTest extends TestCase
             ->method('getType')
             ->willReturn($nestedType);
 
-        $customCollectionMember = new ExtensionCollectionMember($typeFactory, $parser, [$processorClass]);
+        $customCollectionMember = new ExtensionCollectionMember($typeFactory, [$processorClass]);
         $type = $customCollectionMember->getType($stringFormType);
 
         self::assertInstanceOf(ExtensionCollectionType::class, $type);
@@ -84,10 +81,9 @@ class ExtensionCollectionMemberTest extends TestCase
             ->method('getCollectionValueType')
             ->willReturn($colValStringFormType);
 
-        $parser = $this->createMock(ParserInterface::class);
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
 
-        $customCollectionMember = new ExtensionCollectionMember($typeFactory, $parser, [$processorClass]);
+        $customCollectionMember = new ExtensionCollectionMember($typeFactory, [$processorClass]);
         $type = $customCollectionMember->getType($stringFormType);
 
         self::assertNull($type);
@@ -100,9 +96,8 @@ class ExtensionCollectionMemberTest extends TestCase
     public function testCreateThrowsOnInvalidHandlerClass(): void
     {
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
-        $parser = $this->createMock(ParserInterface::class);
 
-        new ExtensionCollectionMember($typeFactory, $parser, [Car::class]);
+        new ExtensionCollectionMember($typeFactory, [Car::class]);
     }
 
     /**
@@ -116,9 +111,8 @@ class ExtensionCollectionMemberTest extends TestCase
 
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
         $processorClass = get_class($customObject);
-        $parser = $this->createMock(ParserInterface::class);
 
-        new ExtensionCollectionMember($typeFactory, $parser, [$processorClass, $processorClass]);
+        new ExtensionCollectionMember($typeFactory, [$processorClass, $processorClass]);
     }
 
     /**
@@ -127,51 +121,10 @@ class ExtensionCollectionMemberTest extends TestCase
     public function testGetTypeWithoutRegisteredHandlersReturnsNull(): void
     {
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
-        $parser = $this->createMock(ParserInterface::class);
-        $stringFormType = $this->createMock(StringFormTypeInterface::class);
+        $stringFormType = $this->createMock(ContextStringFormTypeInterface::class);
 
-        $customColMember = new ExtensionCollectionMember($typeFactory, $parser);
+        $customColMember = new ExtensionCollectionMember($typeFactory);
         $type = $customColMember->getType($stringFormType);
-
-        self::assertNull($type);
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD)
-     */
-    public function testGetTypeForWrongTypeDefinitionReturnsNull(): void
-    {
-        $customObject = ExtensionMockFactory::createTypeExcensionMock(Car::class);
-
-        $typeFactory = $this->createMock(TypeFactoryInterface::class);
-        $parser = $this->createMock(ParserInterface::class);
-        $stringFormType = $this->createMock(StringFormTypeInterface::class);
-        $stringFormType->method('getStringType')
-            ->willReturn('!234');
-
-        $customCollectionMember = new ExtensionCollectionMember($typeFactory, $parser, [get_class($customObject)]);
-        $type = $customCollectionMember->getType($stringFormType);
-
-        self::assertNull($type);
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD)
-     */
-    public function testGetTypeForUnsupportedCustomTypeReturnsNull(): void
-    {
-        $customObject = ExtensionMockFactory::createTypeExcensionMock(Car::class);
-
-        $typeFactory = $this->createMock(TypeFactoryInterface::class);
-        $parser = $this->createMock(ParserInterface::class);
-        $stringFormType = $this->createMock(StringFormTypeInterface::class);
-        $stringFormType->method('isClass')
-            ->willReturn(true);
-        $stringFormType->method('getStringType')
-            ->willReturn('MyCollection<Radio>');
-
-        $customCollectionMember = new ExtensionCollectionMember($typeFactory, $parser, [get_class($customObject)]);
-        $type = $customCollectionMember->getType($stringFormType);
 
         self::assertNull($type);
     }

@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type;
 
-use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameter;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\Parameters;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameter;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\CarInterface;
 use Doctrine\Common\Collections\Collection;

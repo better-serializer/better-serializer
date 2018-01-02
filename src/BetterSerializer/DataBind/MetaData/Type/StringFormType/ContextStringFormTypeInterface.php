@@ -7,20 +7,13 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\StringFormType;
 
-use BetterSerializer\Reflection\ReflectionClassInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 
 /**
- * Interface ContextStringFormTypeInterface
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\StringFormType
+ *
  */
 interface ContextStringFormTypeInterface extends StringFormTypeInterface
 {
-
-    /**
-     * @return ReflectionClassInterface
-     */
-    public function getReflectionClass(): ReflectionClassInterface;
 
     /**
      * @return ContextStringFormTypeInterface|null
@@ -31,4 +24,9 @@ interface ContextStringFormTypeInterface extends StringFormTypeInterface
      * @return ContextStringFormTypeInterface|null
      */
     public function getCollectionValueType(): ?ContextStringFormTypeInterface;
+
+    /**
+     * @return null|ParametersInterface
+     */
+    public function getParameters(): ?ParametersInterface;
 }

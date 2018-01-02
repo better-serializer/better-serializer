@@ -16,4 +16,10 @@ interface ExtensionRegistryInterface
      * @param string $extensionClass
      */
     public function registerExtension(string $extensionClass): void;
+
+    /**
+     * @param string $typeString
+     * @return bool
+     */
+    public function hasType(string $typeString): bool;
 }

@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
 use RuntimeException;
 
 /**
@@ -17,24 +16,16 @@ abstract class AbstractExtensionTypeMember extends ChainMember implements Extens
 {
 
     /**
-     * @var ParserInterface
-     */
-    protected $parametersParser;
-
-    /**
      * @var array
      */
     protected $customTypes;
 
     /**
-     * @param ParserInterface $parametersParser
      * @param string[] $customObjectClasses
      * @throws RuntimeException
      */
-    public function __construct(ParserInterface $parametersParser, array $customObjectClasses = [])
+    public function __construct(array $customObjectClasses = [])
     {
-        $this->parametersParser = $parametersParser;
-
         foreach ($customObjectClasses as $customObjectClass) {
             $this->addCustomTypeHandlerClass($customObjectClass);
         }

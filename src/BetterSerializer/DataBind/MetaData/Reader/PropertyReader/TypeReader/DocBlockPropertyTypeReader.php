@@ -8,18 +8,13 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
-use LogicException;
-use RuntimeException;
 
 /**
- * Class DocBlockPropertyTypeReader
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader
+ *
  */
 final class DocBlockPropertyTypeReader implements TypeReaderInterface
 {
@@ -30,21 +25,27 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
     private $docBlockFactory;
 
     /**
+     * @var StringTypeParserInterface
+     */
+    private $stringTypeParser;
+
+    /**
      * DocBlockPropertyTypeReader constructor.
      * @param DocBlockFactoryInterface $docBlockFactory
+     * @param StringTypeParserInterface $stringTypeParser
      */
-    public function __construct(DocBlockFactoryInterface $docBlockFactory)
+    public function __construct(DocBlockFactoryInterface $docBlockFactory, StringTypeParserInterface $stringTypeParser)
     {
         $this->docBlockFactory = $docBlockFactory;
+        $this->stringTypeParser = $stringTypeParser;
     }
 
     /**
      * @param PropertyContextInterface $context
-     * @return StringFormTypeInterface|null
-     * @throws RuntimeException
-     * @throws LogicException
+     * @return ContextStringFormTypeInterface|null
+     * @throws \InvalidArgumentException
      */
-    public function resolveType(PropertyContextInterface $context): ?StringFormTypeInterface
+    public function resolveType(PropertyContextInterface $context): ?ContextStringFormTypeInterface
     {
         $reflectionProperty = $context->getReflectionProperty();
         $docComment = $reflectionProperty->getDocComment();
@@ -63,6 +64,6 @@ final class DocBlockPropertyTypeReader implements TypeReaderInterface
         $type = $varTags[0]->getType();
         $stringType = (string) $type;
 
-        return new ContextStringFormType($stringType, $context->getReflectionClass());
+        return $this->stringTypeParser->parseWithParentContext($stringType, $context->getReflectionClass());
     }
 }

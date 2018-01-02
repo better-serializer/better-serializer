@@ -7,23 +7,21 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Converter\Chain
+ *
  */
 final class SimpleMember extends ChainMember
 {
-
     /**
      * @var string[]
      */
@@ -36,19 +34,21 @@ final class SimpleMember extends ChainMember
     ];
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
+    protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        return isset(self::$type2Instance[$stringFormType->getStringType()]);
+        return $stringFormType->getTypeClass() === TypeClassEnum::PRIMITIVE_TYPE()
+            && isset(self::$type2Instance[$stringFormType->getStringType()]);
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
      */
-    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
+    protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface
     {
         $className = self::$type2Instance[$stringFormType->getStringType()];
 

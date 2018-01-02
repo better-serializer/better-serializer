@@ -9,6 +9,7 @@ namespace BetterSerializer\Extension\Registry;
 
 use BetterSerializer\Extension\Registry\Registrator\ExtensionRegistratorInterface;
 use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 
 /**
@@ -18,20 +19,28 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
 {
 
     /**
+     * @var ExtensionsCollectionInterface
+     */
+    private $extensionsCollection;
+
+    /**
      * @var ExtensionRegistratorInterface[]
      */
     private $registrators;
 
     /**
+     * @param ExtensionsCollectionInterface $extensionsCollection
      * @param ExtensionRegistratorInterface[] $registrators
      */
-    public function __construct(array $registrators)
+    public function __construct(ExtensionsCollectionInterface $extensionsCollection, array $registrators)
     {
+        $this->extensionsCollection = $extensionsCollection;
         $this->registrators = $registrators;
     }
 
     /**
      * @param string $extensionClass
+     * @throws ReflectionException
      * @throws RuntimeException
      */
     public function registerExtension(string $extensionClass): void
@@ -40,6 +49,8 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
 
         foreach ($this->registrators as $registrator) {
             if ($registrator->register($reflClass)) {
+                $this->extensionsCollection->registerExtension($extensionClass);
+
                 return;
             }
         }
@@ -56,5 +67,14 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
                 )
             )
         );
+    }
+
+    /**
+     * @param string $typeString
+     * @return bool
+     */
+    public function hasType(string $typeString): bool
+    {
+        return $this->extensionsCollection->hasType($typeString);
     }
 }

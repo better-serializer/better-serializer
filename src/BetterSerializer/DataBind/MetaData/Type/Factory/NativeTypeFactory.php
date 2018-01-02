@@ -15,6 +15,7 @@ use BetterSerializer\DataBind\MetaData\Type\InterfaceType;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 
@@ -29,10 +30,12 @@ final class NativeTypeFactory implements NativeTypeFactoryInterface
     /**
      * @param StringFormTypeInterface $stringFormType
      * @return TypeInterface
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getType(StringFormTypeInterface $stringFormType): TypeInterface
     {
         $stringType = $stringFormType->getStringType();
+        $typeClass = $stringFormType->getTypeClass();
 
         switch (true) {
             case $stringType === 'array':
@@ -45,9 +48,9 @@ final class NativeTypeFactory implements NativeTypeFactoryInterface
                 return new FloatType();
             case $stringType === 'string':
                 return new StringType();
-            case $stringFormType->isClass():
+            case $typeClass === TypeClassEnum::CLASS_TYPE():
                 return new ObjectType($stringType);
-            case $stringFormType->isInterface():
+            case $typeClass === TypeClassEnum::INTERFACE_TYPE():
                 return new InterfaceType($stringType);
         }
 

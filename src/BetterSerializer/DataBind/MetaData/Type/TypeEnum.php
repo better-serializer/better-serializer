@@ -28,7 +28,7 @@ use Serializable;
  * @method static TypeEnum CUSTOM_OBJECT
  * @method static TypeEnum CUSTOM_COLLECTION
  */
-final class TypeEnum extends Enum implements Serializable
+final class TypeEnum extends Enum implements TypeEnumInterface, Serializable
 {
     use EnumSerializableTrait;
 

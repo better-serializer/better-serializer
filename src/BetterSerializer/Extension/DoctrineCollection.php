@@ -9,7 +9,7 @@ namespace BetterSerializer\Extension;
 
 use BetterSerializer\Common\CollectionExtensionInterface;
 use BetterSerializer\Common\CollectionAdapterInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Iterator;

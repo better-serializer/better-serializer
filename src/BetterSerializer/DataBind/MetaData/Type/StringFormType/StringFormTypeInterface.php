@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\StringFormType;
 
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnumInterface;
+
 /**
- * Class StringTypedPropertyContext
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader
+ *
  */
 interface StringFormTypeInterface
 {
@@ -26,17 +26,7 @@ interface StringFormTypeInterface
     public function getStringType(): string;
 
     /**
-     * @return bool
+     * @return TypeClassEnumInterface
      */
-    public function isClass(): bool;
-
-    /**
-     * @return bool
-     */
-    public function isInterface(): bool;
-
-    /**
-     * @return bool
-     */
-    public function isClassOrInterface(): bool;
+    public function getTypeClass(): TypeClassEnumInterface;
 }

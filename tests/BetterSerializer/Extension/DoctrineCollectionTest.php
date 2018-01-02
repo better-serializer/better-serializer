@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Extension;
 
 use BetterSerializer\Common\CollectionAdapterInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\Dto\CarInterface;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;

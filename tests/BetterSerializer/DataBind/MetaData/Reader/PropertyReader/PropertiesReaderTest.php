@@ -8,7 +8,7 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
@@ -47,7 +47,7 @@ class PropertiesReaderTest extends TestCase
      */
     public function testGetPropertyMetadata(): void
     {
-        $stringTypeStub = $this->createMock(StringFormTypeInterface::class);
+        $stringTypeStub = $this->createMock(ContextStringFormTypeInterface::class);
 
         $annotationReaderStub = $this->createMock(AnnotationReader::class);
         $annotationReaderStub->expects(self::exactly(2))

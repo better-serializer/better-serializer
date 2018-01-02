@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ChainMemberInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use LogicException;
@@ -35,11 +35,11 @@ final class TypeFactory implements TypeFactoryInterface
     }
 
     /**
-     * @param StringFormTypeInterface $stringType
+     * @param ContextStringFormTypeInterface $stringType
      * @return TypeInterface
      * @throws LogicException
      */
-    public function getType(StringFormTypeInterface $stringType): TypeInterface
+    public function getType(ContextStringFormTypeInterface $stringType): TypeInterface
     {
         foreach ($this->chainMembers as $chainMember) {
             $type = $chainMember->getType($stringType);

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Common;
 
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 
 /**
  * Interface ExtensionInterface

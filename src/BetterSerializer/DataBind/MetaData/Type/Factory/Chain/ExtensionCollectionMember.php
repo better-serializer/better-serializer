@@ -9,9 +9,8 @@ namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use RuntimeException;
 
@@ -28,56 +27,38 @@ final class ExtensionCollectionMember extends AbstractExtensionTypeMember
 
     /**
      * @param TypeFactoryInterface $typeFactory
-     * @param ParserInterface $parametersParser
      * @param array $customObjectClasses
      * @throws RuntimeException
      */
-    public function __construct(
-        TypeFactoryInterface $typeFactory,
-        ParserInterface $parametersParser,
-        array $customObjectClasses = []
-    ) {
+    public function __construct(TypeFactoryInterface $typeFactory, array $customObjectClasses = [])
+    {
         $this->typeFactory = $typeFactory;
-        parent::__construct($parametersParser, $customObjectClasses);
+        parent::__construct($customObjectClasses);
     }
 
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
+    protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        if (empty($this->customTypes)) {
-            return false;
-        }
-
-        $currentType = $stringFormType->getStringType();
-
-        if (!preg_match("/^(?P<type>\\\?[A-Za-z][a-zA-Z0-9_\\\]*)/", $currentType)) {
-            return false;
-        }
-
-        if (!$stringFormType instanceof ContextStringFormTypeInterface || !$stringFormType->getCollectionValueType()) {
-            return false;
-        }
-
-        if (!isset($this->customTypes[$currentType])) {
-            return false;
-        }
-
-        return true;
+        return $stringFormType->getCollectionValueType() && isset($this->customTypes[$stringFormType->getStringType()]);
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
+     * @throws RuntimeException
      */
-    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
+    protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface
     {
-        $parameters = $this->parametersParser->parseParameters($stringFormType);
+        $parameters = $stringFormType->getParameters();
 
-        /* @var $stringFormType ContextStringFormTypeInterface */
+        if (!$parameters) {
+            $parameters = new Parameters([]);
+        }
+
         $nestedStringFormType = $stringFormType->getCollectionValueType();
         $nestedType = $this->typeFactory->getType($nestedStringFormType);
 

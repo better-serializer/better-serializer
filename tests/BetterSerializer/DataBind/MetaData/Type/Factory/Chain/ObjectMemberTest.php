@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ObjectType;
-use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnumInterface;
 use BetterSerializer\Dto\Car;
-use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,16 +29,19 @@ class ObjectMemberTest extends TestCase
     public function testGetType(): void
     {
         $stringTypeString = Car::class;
-        $stringType = $this->createMock(StringFormTypeInterface::class);
-        $stringType->method('getStringType')
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
+        $stringType->expects(self::once())
+            ->method('getStringType')
             ->willReturn($stringTypeString);
-        $stringType->method('isClass')
-            ->willReturn(true);
+        $stringType->expects(self::once())
+            ->method('getTypeClass')
+            ->willReturn(TypeClassEnum::CLASS_TYPE());
 
         $objectMember = new ObjectMember();
         /* @var $typeObject ObjectType */
         $typeObject = $objectMember->getType($stringType);
 
+        self::assertNotNull($typeObject);
         self::assertInstanceOf(ObjectType::class, $typeObject);
         self::assertSame($typeObject->getClassName(), $stringTypeString);
     }
@@ -48,10 +51,12 @@ class ObjectMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $stringType = $this->createMock(StringFormTypeInterface::class);
+        $typeClass = $this->createMock(TypeClassEnumInterface::class);
+
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
-            ->method('isClass')
-            ->willReturn(false);
+            ->method('getTypeClass')
+            ->willReturn($typeClass);
 
         $objectMember = new ObjectMember();
         $shouldBeNull = $objectMember->getType($stringType);

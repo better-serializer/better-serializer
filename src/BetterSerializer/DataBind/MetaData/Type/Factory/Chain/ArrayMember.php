@@ -7,14 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\FqdnStringFormType;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use LogicException;
 
 /**
  * Class SimpleMember
@@ -30,11 +27,6 @@ final class ArrayMember extends ChainMember
     private $typeFactory;
 
     /**
-     * @var string
-     */
-    private $stringSubType;
-
-    /**
      * ArrayMember constructor.
      * @param TypeFactoryInterface $typeFactory
      */
@@ -44,38 +36,21 @@ final class ArrayMember extends ChainMember
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
      */
-    protected function isProcessable(StringFormTypeInterface $stringFormType): bool
+    protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        if (preg_match('/array<([^>]+)>/', $stringFormType->getStringType(), $matches)) {
-            $this->stringSubType = $matches[1];
-
-            return true;
-        }
-
-        return false;
+        return $stringFormType->getStringType() === TypeEnum::ARRAY && $stringFormType->getCollectionValueType();
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
-     * @throws LogicException
      */
-    protected function createType(StringFormTypeInterface $stringFormType): TypeInterface
+    protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface
     {
-        $subTypeCallback = function (string $stringSubType): StringFormTypeInterface {
-            return new FqdnStringFormType($stringSubType);
-        };
-
-        if ($stringFormType instanceof ContextStringFormTypeInterface) {
-            $subTypeCallback = function (string $stringSubType) use ($stringFormType): StringFormTypeInterface {
-                return new ContextStringFormType($stringSubType, $stringFormType->getReflectionClass());
-            };
-        }
-
-        $nestedStringFormType = $subTypeCallback($this->stringSubType);
+        $nestedStringFormType = $stringFormType->getCollectionValueType();
         $subType = $this->typeFactory->getType($nestedStringFormType);
 
         return new ArrayType($subType);

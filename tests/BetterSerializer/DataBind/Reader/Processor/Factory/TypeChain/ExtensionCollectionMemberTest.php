@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Reader\Processor\ExtensionCollection;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;

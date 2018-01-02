@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\Writer\Processor\Extension;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\Dto\Car;

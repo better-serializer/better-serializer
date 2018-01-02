@@ -8,17 +8,16 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\StringFormTypedPropertyContext;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class DocBlockPropertyTypeReaderTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader
+ *
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.LongVariable)
  */
@@ -32,6 +31,8 @@ class DocBlockPropertyTypeReaderTest extends TestCase
     {
         $docBlockFactory = DocBlockFactory::createInstance(); // final
 
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+
         $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
         $reflPropertyStub->expects(self::once())
             ->method('getDocComment')
@@ -41,12 +42,23 @@ class DocBlockPropertyTypeReaderTest extends TestCase
         $contextStub->expects(self::once())
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
+        $contextStub->expects(self::once())
+            ->method('getReflectionClass')
+            ->willReturn($reflClass);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
-        $typedContext = $typeReader->resolveType($contextStub);
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+        $stringTypeParser->expects(self::once())
+            ->method('parseWithParentContext')
+            ->with($this->isType('string'), $reflClass)
+            ->willReturn($stringType);
 
-        self::assertInstanceOf(ContextStringFormType::class, $typedContext);
-        self::assertSame('string', $typedContext->getStringType());
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory, $stringTypeParser);
+        $stringFormType = $typeReader->resolveType($contextStub);
+
+        self::assertNotNull($stringFormType);
+        self::assertInstanceOf(ContextStringFormTypeInterface::class, $stringFormType);
+        self::assertSame($stringType, $stringFormType);
     }
 
     /**
@@ -66,7 +78,9 @@ class DocBlockPropertyTypeReaderTest extends TestCase
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $stringTypeParser);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertNull($typedContext);
@@ -89,7 +103,9 @@ class DocBlockPropertyTypeReaderTest extends TestCase
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+
+        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory, $stringTypeParser);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertNull($typedContext);

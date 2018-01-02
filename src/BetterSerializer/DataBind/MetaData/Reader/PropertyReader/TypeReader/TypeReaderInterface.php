@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 
 /**
  * Class AnnotationPropertyTypeReader
@@ -19,7 +19,7 @@ interface TypeReaderInterface
 {
     /**
      * @param PropertyContextInterface $context
-     * @return StringFormTypeInterface|null
+     * @return ContextStringFormTypeInterface|null
      */
-    public function resolveType(PropertyContextInterface $context): ?StringFormTypeInterface;
+    public function resolveType(PropertyContextInterface $context): ?ContextStringFormTypeInterface;
 }

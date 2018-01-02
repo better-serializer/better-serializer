@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
@@ -19,10 +19,10 @@ abstract class ChainMember implements ChainMemberInterface
 {
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface|null
      */
-    public function getType(StringFormTypeInterface $stringFormType): ?TypeInterface
+    public function getType(ContextStringFormTypeInterface $stringFormType): ?TypeInterface
     {
         if (!$this->isProcessable($stringFormType)) {
             return null;
@@ -32,14 +32,14 @@ abstract class ChainMember implements ChainMemberInterface
     }
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return bool
      */
-    abstract protected function isProcessable(StringFormTypeInterface $stringFormType): bool;
+    abstract protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool;
 
     /**
-     * @param StringFormTypeInterface $stringFormType
+     * @param ContextStringFormTypeInterface $stringFormType
      * @return TypeInterface
      */
-    abstract protected function createType(StringFormTypeInterface $stringFormType): TypeInterface;
+    abstract protected function createType(ContextStringFormTypeInterface $stringFormType): TypeInterface;
 }

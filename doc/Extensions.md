@@ -137,7 +137,7 @@ The return value of the `getReplacedType()` method can be `null` in such case.
 
 Everything else can be used the same way as described in the previous chapter.
 
-## Existing collection class/interface extensions
+### Existing collection class/interface extensions
 
 It is possible to write a custom extension for every possible collection type e.g. Doctrine 
 collection, internal PHP collections (SplStack, SplQueue, etc...). Check the [Doctrine
@@ -338,6 +338,8 @@ To be able to use the collection extension with the serializer, the property of 
 type, which expects to have the following use clause defined in the file:
 `use Doctrine\Common\Collections\Collection;`. When the use clause is missing, it is needed to define the type
 using the fully classified class name: `@Serializer\Property(type="Doctrine\Common\Collections\Collection<Door>")`
+
+It is possible to use custom configuration parameters the same way as mentioned in the first chapter. 
 
 Defining the collection key types is not supported yet.
 

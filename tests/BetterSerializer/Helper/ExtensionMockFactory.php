@@ -10,7 +10,7 @@ namespace BetterSerializer\Helper;
 use BetterSerializer\Common\CollectionExtensionInterface;
 use BetterSerializer\Common\CollectionAdapterInterface;
 use BetterSerializer\Common\TypeExtensionInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface as ReadContext;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
 use PHPUnit\Framework\MockObject\Generator;

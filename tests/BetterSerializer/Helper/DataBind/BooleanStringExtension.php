@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Helper\DataBind;
 
 use BetterSerializer\Common\TypeExtensionInterface;
-use BetterSerializer\DataBind\MetaData\Type\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface as ReadContext;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
