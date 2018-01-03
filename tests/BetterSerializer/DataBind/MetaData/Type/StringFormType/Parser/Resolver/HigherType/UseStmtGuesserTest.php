@@ -32,7 +32,16 @@ class UseStmtGuesserTest extends TestCase
      */
     public function testGuessForTypeMissingInUseStatements(string $type, string $namespace, string $expected): void
     {
+        $nsFragments = $this->createMock(NamespaceFragmentsInterface::class);
+        $nsFragments->expects(self::once())
+            ->method('getFirst')
+            ->willReturn($type);
+
         $nsFragmentsParser = $this->createMock(NamespaceFragmentsParserInterface::class);
+        $nsFragmentsParser->expects(self::once())
+            ->method('parse')
+            ->with(ltrim($type, '\\'))
+            ->willReturn($nsFragments);
 
         $useStatements = $this->createMock(UseStatementsInterface::class);
         $useStatements->expects(self::once())
@@ -65,6 +74,41 @@ class UseStmtGuesserTest extends TestCase
             ['string', 'test', 'test\\string'],
             ['\\Car', 'Test', 'Test\\Car'],
         ];
+    }
+
+    public function testGuessForNsFirstFragmentsMissing(): void
+    {
+        $type = '';
+        $namespace = '';
+        $nsFragments = $this->createMock(NamespaceFragmentsInterface::class);
+        $nsFragments->expects(self::once())
+            ->method('getFirst')
+            ->willReturn('');
+
+        $nsFragmentsParser = $this->createMock(NamespaceFragmentsParserInterface::class);
+        $nsFragmentsParser->expects(self::once())
+            ->method('parse')
+            ->with(ltrim($type, '\\'))
+            ->willReturn($nsFragments);
+
+        $useStatements = $this->createMock(UseStatementsInterface::class);
+        $useStatements->expects(self::exactly(0))
+            ->method('hasByIdentifier');
+        $useStatements->expects(self::exactly(0))
+            ->method('hasByAlias');
+
+        $context = $this->createMock(ContextInterface::class);
+        $context->expects(self::once())
+            ->method('getNamespace')
+            ->willReturn($namespace);
+        $context->expects(self::once())
+            ->method('getUseStatements')
+            ->willReturn($useStatements);
+
+        $guesser = new UseStmtGuesser($nsFragmentsParser);
+        $potentialHigherType = $guesser->guess($type, $context);
+
+        self::assertSame('', $potentialHigherType);
     }
 
     /**

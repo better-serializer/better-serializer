@@ -43,6 +43,10 @@ final class UseStmtGuesser implements TypeGuesserInterface
         $expectedClass = $context->getNamespace() . '\\' . $potentialHigherType;
         $useStatements = $context->getUseStatements();
 
+        if ($firstFragment === '') {
+            return rtrim($expectedClass, '\\');
+        }
+
         if ($useStatements->hasByIdentifier($firstFragment)) {
             $useStatement = $useStatements->getByIdentifier($firstFragment);
             $expectedClass = $useStatement->getFqdn() . '\\' . $fragments->getWithoutFirst();
@@ -51,8 +55,6 @@ final class UseStmtGuesser implements TypeGuesserInterface
             $expectedClass = $useStatement->getFqdn() . '\\' . $fragments->getWithoutFirst();
         }
 
-        $expectedClass = rtrim($expectedClass, '\\');
-
-        return $expectedClass;
+        return rtrim($expectedClass, '\\');
     }
 }

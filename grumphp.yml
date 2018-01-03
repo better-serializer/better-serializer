@@ -36,7 +36,7 @@ parameters:
       infection:
         threads: 2
         test_framework: phpunit
-        only_covered: false
+        only_covered: true
         configuration: infection.json
         min_msi: ~
         min_covered_msi: ~
