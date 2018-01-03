@@ -11,6 +11,7 @@ use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use BetterSerializer\Reflection\ReflectionClassInterface;
 use BetterSerializer\Reflection\ReflectionMethodInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
@@ -18,9 +19,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionType;
 
 /**
- * Class NativeTypeReaderTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Processor\TypeReader\Chained
+ *
  */
 class NativeTypeReaderTest extends TestCase
 {
@@ -64,5 +63,26 @@ class NativeTypeReaderTest extends TestCase
         $type = $reader->getType($param);
 
         self::assertInstanceOf(TypeInterface::class, $type);
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function testGetTypeReturnsUnknownTypeOnParamTypeMissing(): void
+    {
+        $constructor = $this->createMock(ReflectionMethodInterface::class);
+        $param = $this->createMock(ReflectionParameterInterface::class);
+        $param->expects(self::once())
+            ->method('getType')
+            ->willReturn(null);
+
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+        $nativeTypeFactory = $this->createMock(NativeTypeFactoryInterface::class);
+
+        $reader = new NativeTypeReader($stringTypeParser, $nativeTypeFactory);
+        $reader->initialize($constructor);
+        $type = $reader->getType($param);
+
+        self::assertInstanceOf(UnknownType::class, $type);
     }
 }

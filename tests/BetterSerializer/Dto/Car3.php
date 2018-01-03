@@ -33,7 +33,7 @@ final class Car3
      * @param bool $isForKids
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function __construct(Collection $doors, bool $isForKids = true)
+    public function __construct(Collection $doors, $isForKids = true)
     {
         $this->doors = $doors;
         $this->isForKids = $isForKids;

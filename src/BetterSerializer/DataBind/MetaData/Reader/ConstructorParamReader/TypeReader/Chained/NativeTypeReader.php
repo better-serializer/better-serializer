@@ -10,9 +10,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeR
 use BetterSerializer\DataBind\MetaData\Type\Factory\NativeTypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use BetterSerializer\Reflection\ReflectionMethodInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
-use LogicException;
 
 /**
  *
@@ -53,11 +53,15 @@ final class NativeTypeReader implements ChainedTypeReaderInterface
     /**
      * @param ReflectionParameterInterface $parameter
      * @return TypeInterface
-     * @throws LogicException
      */
     public function getType(ReflectionParameterInterface $parameter): TypeInterface
     {
         $type = $parameter->getType();
+
+        if (!$type) {
+            return new UnknownType();
+        }
+
         $stringFormType = $this->stringTypeParser->parseWithParentContext(
             (string) $type,
             $parameter->getDeclaringClass()
