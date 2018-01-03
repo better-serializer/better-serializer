@@ -13,13 +13,11 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\SimpleProperty;
+use BetterSerializer\DataBind\Writer\Processor\SimplePropertyProcessor;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Converter\PropertyMetaDataChain
+ *
  */
 final class SimplePropertyMember extends ExtractingChainMember
 {
@@ -66,6 +64,6 @@ final class SimplePropertyMember extends ExtractingChainMember
         $converter = $this->converterFactory->newConverter($metaData->getType());
         $extractor = $this->extractorFactory->newExtractor($metaData);
 
-        return new SimpleProperty($extractor, $converter, $metaData->getOutputKey());
+        return new SimplePropertyProcessor($extractor, $converter, $metaData->getOutputKey());
     }
 }

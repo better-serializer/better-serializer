@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Processor\ExtensionCollection as ExtensionCollectionProcessor;
+use BetterSerializer\DataBind\Reader\Processor\ExtensionCollectionProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use LogicException;

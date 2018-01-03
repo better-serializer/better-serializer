@@ -26,7 +26,7 @@ class IntegerTypeTest extends TestCase
     public function testGetType(): void
     {
         $int = new IntegerType();
-        self::assertInstanceOf(get_class(TypeEnum::INTEGER()), $int->getType());
+        self::assertInstanceOf(get_class(TypeEnum::INTEGER_TYPE()), $int->getType());
     }
 
     /**
@@ -52,11 +52,11 @@ class IntegerTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), true],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -66,7 +66,7 @@ class IntegerTypeTest extends TestCase
      */
     public function testToString(): void
     {
-        self::assertSame(TypeEnum::INTEGER, (string) new IntegerType());
+        self::assertSame(TypeEnum::INTEGER_TYPE, (string) new IntegerType());
     }
 
     /**
@@ -92,11 +92,11 @@ class IntegerTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), true],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }

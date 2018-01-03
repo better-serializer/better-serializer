@@ -25,6 +25,6 @@ final class DocBlockArrayParser implements FormatParserInterface
             return null;
         }
 
-        return new Result(TypeEnum::ARRAY, null, $matches['nestedValueType']);
+        return new Result(TypeEnum::ARRAY_TYPE, null, $matches['nestedValueType']);
     }
 }

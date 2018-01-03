@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
 use BetterSerializer\DataBind\MetaData\Type\InterfaceType;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
@@ -86,10 +86,10 @@ class NativeTypeFactoryTest extends TestCase
             ->willReturn($typeClass);
 
         $factory = new NativeTypeFactory();
-        /* @var $type ObjectType */
+        /* @var $type ClassType */
         $type = $factory->getType($stringFormType);
 
-        self::assertInstanceOf(ObjectType::class, $type);
+        self::assertInstanceOf(ClassType::class, $type);
         self::assertSame(Car::class, $type->getClassName());
     }
 

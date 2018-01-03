@@ -12,17 +12,15 @@ use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexCollection as ComplexCollectionProcessor;
-use BetterSerializer\DataBind\Reader\Processor\SimpleCollection as SimpleCollectionProcessor;
+use BetterSerializer\DataBind\Reader\Processor\ComplexCollectionProcessor;
+use BetterSerializer\DataBind\Reader\Processor\SimpleCollectionProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
 
 /**
- * Class ObjectMember
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain
+ *
  */
 final class CollectionMember extends NestingChainMember
 {

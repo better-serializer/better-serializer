@@ -27,10 +27,10 @@ final class ConverterFactory extends AbstractConverterFactory implements Convert
      * @var array
      */
     protected static $type2Converter = [
-        TypeEnum::BOOLEAN => BooleanConverter::class,
-        TypeEnum::FLOAT => FloatConverter::class,
-        TypeEnum::INTEGER => IntegerConverter::class,
-        TypeEnum::STRING => StringConverter::class,
-        TypeEnum::DATETIME => FromDateTimeConverter::class,
+        TypeEnum::BOOLEAN_TYPE => BooleanConverter::class,
+        TypeEnum::FLOAT_TYPE => FloatConverter::class,
+        TypeEnum::INTEGER_TYPE => IntegerConverter::class,
+        TypeEnum::STRING_TYPE => StringConverter::class,
+        TypeEnum::DATETIME_TYPE => FromDateTimeConverter::class,
     ];
 }

@@ -11,7 +11,7 @@ use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Simple;
+use BetterSerializer\DataBind\Writer\Processor\SimpleProcessor;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -39,7 +39,7 @@ class SimpleMemberTest extends TestCase
         $simpleMember = new SimpleMember($converterFactory);
         $simpleProcessor = $simpleMember->create($simpleType, $context);
 
-        self::assertInstanceOf(Simple::class, $simpleProcessor);
+        self::assertInstanceOf(SimpleProcessor::class, $simpleProcessor);
     }
 
     /**

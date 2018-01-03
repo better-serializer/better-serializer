@@ -26,11 +26,11 @@ final class SimpleMember extends ChainMember
      * @var string[]
      */
     private static $type2Instance = [
-        TypeEnum::BOOLEAN => BooleanType::class,
-        TypeEnum::NULL => NullType::class,
-        TypeEnum::INTEGER => IntegerType::class,
-        TypeEnum::FLOAT => FloatType::class,
-        TypeEnum::STRING => StringType::class,
+        TypeEnum::BOOLEAN_TYPE => BooleanType::class,
+        TypeEnum::NULL_TYPE => NullType::class,
+        TypeEnum::INTEGER_TYPE => IntegerType::class,
+        TypeEnum::FLOAT_TYPE => FloatType::class,
+        TypeEnum::STRING_TYPE => StringType::class,
     ];
 
     /**

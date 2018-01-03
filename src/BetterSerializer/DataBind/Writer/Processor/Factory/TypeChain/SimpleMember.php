@@ -11,7 +11,7 @@ use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\Simple;
+use BetterSerializer\DataBind\Writer\Processor\SimpleProcessor;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 
 /**
@@ -53,6 +53,6 @@ final class SimpleMember extends ChainMember
     {
         $converter = $this->converterFactory->newConverter($type);
 
-        return new Simple($converter);
+        return new SimpleProcessor($converter);
     }
 }

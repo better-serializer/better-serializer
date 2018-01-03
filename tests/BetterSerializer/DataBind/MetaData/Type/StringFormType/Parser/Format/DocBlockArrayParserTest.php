@@ -29,7 +29,7 @@ class DocBlockArrayParserTest extends TestCase
 
         self::assertNotNull($result);
         self::assertInstanceOf(Result::class, $result);
-        self::assertSame(TypeEnum::ARRAY, $result->getType());
+        self::assertSame(TypeEnum::ARRAY_TYPE, $result->getType());
         self::assertNull($result->getParameters());
         self::assertSame('string', $result->getNestedValueType());
         self::assertNull($result->getNestedKeyType());

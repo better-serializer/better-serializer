@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters
 /**
  *
  */
-final class ExtensionCollectionType extends AbstractExtensionObjectType implements ExtensionCollectionTypeInterface
+final class ExtensionCollectionType extends AbstractExtensionClassType implements ExtensionCollectionTypeInterface
 {
 
     /**
@@ -85,6 +85,6 @@ final class ExtensionCollectionType extends AbstractExtensionObjectType implemen
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::CUSTOM_COLLECTION();
+        $this->type = TypeEnum::CUSTOM_COLLECTION_TYPE();
     }
 }

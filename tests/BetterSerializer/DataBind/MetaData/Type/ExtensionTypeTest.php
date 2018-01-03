@@ -70,7 +70,7 @@ class ExtensionTypeTest extends TestCase
         $extension1 = new ExtensionType($type1, $parameters1);
 
         $class = Car::class;
-        $objectType = new ObjectType($class);
+        $objectType = new ClassType($class);
 
         $interface = CarInterface::class;
         $interfaceType = new InterfaceType($interface);
@@ -110,13 +110,13 @@ class ExtensionTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
             [new ExtensionType('MyType', new Parameters([new Parameter('name', 'value')])), true],
             [new ExtensionType('MyType1', new Parameters([new Parameter('name', 'value')])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -151,13 +151,13 @@ class ExtensionTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
             [new ExtensionType('MyType', new Parameters([new Parameter('name', 'value')])), true],
             [new ExtensionType('MyType1', new Parameters([new Parameter('name', 'value')])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }

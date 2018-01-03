@@ -20,7 +20,7 @@ final class UnknownType extends AbstractType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::UNKNOWN();
+        $this->type = TypeEnum::UNKNOWN_TYPE();
     }
 
     /**

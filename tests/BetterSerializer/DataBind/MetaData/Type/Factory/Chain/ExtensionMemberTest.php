@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\ExtensionObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ExtensionClassType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
@@ -36,7 +36,7 @@ class ExtensionMemberTest extends TestCase
     {
         $customType = 'MyType';
         $typeClass = $this->createMock(TypeClassEnumInterface::class);
-        $replacedTypeString = TypeEnum::BOOLEAN;
+        $replacedTypeString = TypeEnum::BOOLEAN_TYPE;
         $extension = ExtensionMockFactory::createTypeExcensionMock($customType, $replacedTypeString);
 
         $processorClass = get_class($extension);
@@ -97,9 +97,9 @@ class ExtensionMemberTest extends TestCase
         $extensionMember = new ExtensionMember($typeFactory, $stringTypeParser, [$processorClass]);
         $type = $extensionMember->getType($stringFormType);
 
-        /* @var $type ExtensionObjectType */
+        /* @var $type ExtensionClassType */
         self::assertNotNull($type);
-        self::assertInstanceOf(ExtensionObjectType::class, $type);
+        self::assertInstanceOf(ExtensionClassType::class, $type);
         self::assertSame($customType, $type->getCustomType());
         self::assertSame($parameters, $type->getParameters());
     }

@@ -48,11 +48,11 @@ class PrimitiveTypeResolverTest extends TestCase
     public function resolveSuccessDataProvider(): array
     {
         return [
-            [TypeEnum::BOOLEAN],
-            [TypeEnum::ARRAY],
-            [TypeEnum::FLOAT],
-            [TypeEnum::INTEGER],
-            [TypeEnum::STRING],
+            [TypeEnum::BOOLEAN_TYPE],
+            [TypeEnum::ARRAY_TYPE],
+            [TypeEnum::FLOAT_TYPE],
+            [TypeEnum::INTEGER_TYPE],
+            [TypeEnum::STRING_TYPE],
         ];
     }
 

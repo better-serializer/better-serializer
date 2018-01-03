@@ -21,11 +21,11 @@ final class PrimitiveTypeResolver implements ResolverInterface
      * @var string[]
      */
     private static $primitiveTypes = [
-        TypeEnum::BOOLEAN => TypeEnum::BOOLEAN,
-        TypeEnum::ARRAY => TypeEnum::ARRAY,
-        TypeEnum::FLOAT => TypeEnum::FLOAT,
-        TypeEnum::INTEGER => TypeEnum::INTEGER,
-        TypeEnum::STRING => TypeEnum::STRING,
+        TypeEnum::BOOLEAN_TYPE => TypeEnum::BOOLEAN_TYPE,
+        TypeEnum::ARRAY_TYPE => TypeEnum::ARRAY_TYPE,
+        TypeEnum::FLOAT_TYPE => TypeEnum::FLOAT_TYPE,
+        TypeEnum::INTEGER_TYPE => TypeEnum::INTEGER_TYPE,
+        TypeEnum::STRING_TYPE => TypeEnum::STRING_TYPE,
     ];
 
     /**

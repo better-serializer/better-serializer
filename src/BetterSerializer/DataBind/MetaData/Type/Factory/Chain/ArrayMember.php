@@ -41,7 +41,7 @@ final class ArrayMember extends ChainMember
      */
     protected function isProcessable(ContextStringFormTypeInterface $stringFormType): bool
     {
-        return $stringFormType->getStringType() === TypeEnum::ARRAY && $stringFormType->getCollectionValueType();
+        return $stringFormType->getStringType() === TypeEnum::ARRAY_TYPE && $stringFormType->getCollectionValueType();
     }
 
     /**

@@ -73,7 +73,7 @@ class ExtensionCollectionTypeTest extends TestCase
         $objExtension3 = new ExtensionCollectionType($type3, $nestedType, $parameters3);
 
         $class = ArrayCollection::class;
-        $objectType = new ObjectType($class);
+        $objectType = new ClassType($class);
 
         $interface = Collection::class;
         $interfaceType = new InterfaceType($interface);
@@ -126,13 +126,13 @@ class ExtensionCollectionTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
             [new ExtensionType('MyType', new Parameters([new Parameter('name', 'value')])), false],
             [new ExtensionType('MyType1', new Parameters([new Parameter('name', 'value')])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
             [new ExtensionCollectionType(
                 Collection::class,
@@ -181,8 +181,8 @@ class ExtensionCollectionTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
-            [new ObjectType(ArrayCollection::class), true],
+            [new ClassType(Car::class), false],
+            [new ClassType(ArrayCollection::class), true],
             [new InterfaceType(CarInterface::class), false],
             [new InterfaceType(Collection::class), true],
             [new StringType(), false],
@@ -190,7 +190,7 @@ class ExtensionCollectionTypeTest extends TestCase
             [new ExtensionType('MyType', new Parameters([])), false],
             [new ExtensionType('MyType', new Parameters([new Parameter('name', 'value')])), false],
             [new ExtensionType('MyType1', new Parameters([new Parameter('name', 'value')])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), true],
             [new ExtensionCollectionType(
                 Collection::class,
@@ -229,7 +229,14 @@ class ExtensionCollectionTypeTest extends TestCase
         );
 
         self::assertSame(
-            sprintf('%s::%s<%s>(%s="%s")', TypeEnum::CUSTOM_COLLECTION, Collection::class, 'string', 'name', 'value'),
+            sprintf(
+                '%s::%s<%s>(%s="%s")',
+                TypeEnum::CUSTOM_COLLECTION_TYPE,
+                Collection::class,
+                'string',
+                'name',
+                'value'
+            ),
             (string) $type
         );
     }

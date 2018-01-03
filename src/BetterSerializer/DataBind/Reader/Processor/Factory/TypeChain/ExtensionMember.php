@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Processor\Extension as ExtensionProcessor;
+use BetterSerializer\DataBind\Reader\Processor\ExtensionProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**

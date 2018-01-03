@@ -28,7 +28,7 @@ class InterfaceTypeTest extends TestCase
     public function testGetType(): void
     {
         $interface = new InterfaceType(CarInterface::class);
-        self::assertInstanceOf(get_class(TypeEnum::INTERFACE()), $interface->getType());
+        self::assertInstanceOf(get_class(TypeEnum::INTERFACE_TYPE()), $interface->getType());
         self::assertSame(CarInterface::class, $interface->getInterfaceName());
     }
 
@@ -69,13 +69,13 @@ class InterfaceTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
-            [new ObjectType(SpecialCar::class), false],
-            [new ObjectType(Radio::class), false],
+            [new ClassType(Car::class), false],
+            [new ClassType(SpecialCar::class), false],
+            [new ClassType(Radio::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
             [new InterfaceType(CarInterface::class), true],
             [new InterfaceType(SpecialCarInterface::class), false],
@@ -89,7 +89,7 @@ class InterfaceTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(
-            TypeEnum::INTERFACE . '<' . CarInterface::class . '>',
+            TypeEnum::INTERFACE_TYPE . '<' . CarInterface::class . '>',
             (string) new InterfaceType(CarInterface::class)
         );
     }
@@ -117,15 +117,15 @@ class InterfaceTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), true],
-            [new ObjectType(SpecialCar::class), true],
-            [new ObjectType(Radio::class), false],
+            [new ClassType(Car::class), true],
+            [new ClassType(SpecialCar::class), true],
+            [new ClassType(Radio::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Radio::class, new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), true],
-            [new ExtensionObjectType(SpecialCar::class, new Parameters([])), true],
+            [new ExtensionClassType(Radio::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), true],
+            [new ExtensionClassType(SpecialCar::class, new Parameters([])), true],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
             [new ExtensionCollectionType(CarInterface::class, new StringType(), new Parameters([])), true],
             [new ExtensionCollectionType(SpecialCarInterface::class, new StringType(), new Parameters([])), true],

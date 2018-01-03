@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\Simple as SimpleProcessor;
+use BetterSerializer\DataBind\Reader\Processor\SimpleProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**

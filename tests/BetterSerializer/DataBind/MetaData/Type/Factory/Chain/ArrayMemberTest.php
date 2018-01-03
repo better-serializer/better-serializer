@@ -25,7 +25,7 @@ class ArrayMemberTest extends TestCase
      */
     public function testGetTypeWithSimpleStringSubType(): void
     {
-        $stringType = TypeEnum::ARRAY;
+        $stringType = TypeEnum::ARRAY_TYPE;
         $stringTypeInstance = $this->createMock(TypeInterface::class);
         $nestedStringFormType = $this->createMock(ContextStringFormTypeInterface::class);
 
@@ -62,7 +62,7 @@ class ArrayMemberTest extends TestCase
         $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
-            ->willReturn(TypeEnum::STRING);
+            ->willReturn(TypeEnum::STRING_TYPE);
 
         $arrayMember = new ArrayMember($typeFactory);
         $shouldBeNull = $arrayMember->getType($stringType);
@@ -80,7 +80,7 @@ class ArrayMemberTest extends TestCase
         $stringFormType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringFormType->expects(self::once())
             ->method('getStringType')
-            ->willReturn(TypeEnum::ARRAY);
+            ->willReturn(TypeEnum::ARRAY_TYPE);
         $stringFormType->expects(self::once())
             ->method('getCollectionValueType')
             ->willReturn(null);

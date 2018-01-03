@@ -81,6 +81,6 @@ final class BooleanStringExtension implements TypeExtensionInterface
      */
     public static function getReplacedType(): ?string
     {
-        return TypeEnum::BOOLEAN;
+        return TypeEnum::BOOLEAN_TYPE;
     }
 }

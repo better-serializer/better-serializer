@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Processor\ExtensionCollection;
+use BetterSerializer\DataBind\Reader\Processor\ExtensionCollectionProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\Helper\ExtensionMockFactory;
 use Doctrine\Common\Collections\Collection;
@@ -50,7 +50,7 @@ class ExtensionCollectionMemberTest extends TestCase
         $customObjectMember = new ExtensionCollectionMember($processorFactory, [$handlerClass]);
         $processor = $customObjectMember->create($type);
 
-        self::assertInstanceOf(ExtensionCollection::class, $processor);
+        self::assertInstanceOf(ExtensionCollectionProcessor::class, $processor);
     }
 
     /**

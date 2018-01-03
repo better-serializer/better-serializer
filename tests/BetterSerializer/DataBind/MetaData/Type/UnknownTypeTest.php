@@ -27,7 +27,7 @@ class UnknownTypeTest extends TestCase
     public function testGetType(): void
     {
         $null = new UnknownType();
-        self::assertInstanceOf(get_class(TypeEnum::UNKNOWN()), $null->getType());
+        self::assertInstanceOf(get_class(TypeEnum::UNKNOWN_TYPE()), $null->getType());
     }
 
     /**
@@ -53,11 +53,11 @@ class UnknownTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -85,11 +85,11 @@ class UnknownTypeTest extends TestCase
             [new FloatType(), true],
             [new IntegerType(), true],
             [new NullType(), true],
-            [new ObjectType(Car::class), true],
+            [new ClassType(Car::class), true],
             [new StringType(), true],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), true],
-            [new ExtensionObjectType(Car::class, new Parameters([])), true],
+            [new ExtensionClassType(Car::class, new Parameters([])), true],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), true],
         ];
     }

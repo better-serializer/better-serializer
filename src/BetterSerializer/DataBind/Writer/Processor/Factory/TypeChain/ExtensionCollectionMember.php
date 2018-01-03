@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\ExtensionCollection as ExtensionCollectionProcessor;
+use BetterSerializer\DataBind\Writer\Processor\ExtensionCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;

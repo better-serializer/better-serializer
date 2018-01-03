@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionCollectionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\ExtensionCollection;
+use BetterSerializer\DataBind\Writer\Processor\ExtensionCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\Dto\Car;
@@ -52,7 +52,7 @@ class ExtensionCollectionMemberTest extends TestCase
         $customObjectMember = new ExtensionCollectionMember($processorFactory, [$handlerClass]);
         $processor = $customObjectMember->create($type, $context);
 
-        self::assertInstanceOf(ExtensionCollection::class, $processor);
+        self::assertInstanceOf(ExtensionCollectionProcessor::class, $processor);
     }
 
     /**

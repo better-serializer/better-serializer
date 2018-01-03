@@ -36,7 +36,7 @@ final class InterfaceType extends AbstractType implements InterfaceTypeInterface
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::INTERFACE();
+        $this->type = TypeEnum::INTERFACE_TYPE();
     }
 
     /**
@@ -66,7 +66,7 @@ final class InterfaceType extends AbstractType implements InterfaceTypeInterface
         if ($type instanceof self) {
             return $this->equals($type) ||
                 $this->implementsInterface($type) || $type->implementsInterface($this);
-        } elseif ($type instanceof ObjectType) {
+        } elseif ($type instanceof ClassType) {
             return $type->implementsInterface($this);
         } elseif ($type instanceof ExtensionTypeInterface) {
             return $this->isCompatibleWithExtensionType($type);

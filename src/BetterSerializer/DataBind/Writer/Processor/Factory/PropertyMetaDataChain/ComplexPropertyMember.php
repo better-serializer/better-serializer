@@ -10,10 +10,10 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataCha
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexProperty;
+use BetterSerializer\DataBind\Writer\Processor\ComplexPropertyProcessor;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use LogicException;
@@ -54,7 +54,7 @@ final class ComplexPropertyMember extends ExtractingChainMember
     {
         $type = $metaData->getType();
 
-        return $type instanceof ObjectType ||
+        return $type instanceof ClassType ||
                $type instanceof ArrayType ||
                $type instanceof ExtensionTypeInterface;
     }
@@ -74,6 +74,6 @@ final class ComplexPropertyMember extends ExtractingChainMember
         $extractor = $this->extractorFactory->newExtractor($metaData);
         $nestedProcessor = $this->processorFactory->createFromType($metaData->getType(), $context);
 
-        return new ComplexProperty($extractor, $nestedProcessor, $metaData->getOutputKey());
+        return new ComplexPropertyProcessor($extractor, $nestedProcessor, $metaData->getOutputKey());
     }
 }

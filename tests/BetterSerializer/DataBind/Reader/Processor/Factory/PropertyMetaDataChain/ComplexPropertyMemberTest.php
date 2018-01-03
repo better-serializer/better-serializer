@@ -8,20 +8,17 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexProperty;
+use BetterSerializer\DataBind\Reader\Processor\ComplexPropertyProcessor;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ObjectMemberTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -33,7 +30,7 @@ class ComplexPropertyMemberTest extends TestCase
      */
     public function testCreate(): void
     {
-        $type = new ObjectType(Car::class);
+        $type = new ClassType(Car::class);
         $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
@@ -63,7 +60,7 @@ class ComplexPropertyMemberTest extends TestCase
         $complexNestedMember = new ComplexPropertyMember($processorFactory, $injectorFactory);
         $processor = $complexNestedMember->create($propertyMetaData);
 
-        self::assertInstanceOf(ComplexProperty::class, $processor);
+        self::assertInstanceOf(ComplexPropertyProcessor::class, $processor);
     }
 
     /**

@@ -20,6 +20,6 @@ final class BooleanType extends AbstractSimpleType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::BOOLEAN();
+        $this->type = TypeEnum::BOOLEAN_TYPE();
     }
 }

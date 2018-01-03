@@ -7,11 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Writer\Processor\Factory;
 
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain\ChainMemberInterface as MetaDataMember;
-use BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ChainMemberInterface as TypeMember;
-use BetterSerializer\DataBind\Writer\Processor\Cached;
+use BetterSerializer\DataBind\Writer\Processor\CachedProcessor;
 use BetterSerializer\DataBind\Writer\Processor\PropertyProcessorInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\Recursive\Cache;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
@@ -21,9 +18,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class RecursiveProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory
+ *
  */
 final class RecursiveProcessorFactory extends AbstractProcessorFactory implements ProcessorFactoryInterface
 {
@@ -72,7 +67,7 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
             return $processor;
         }
 
-        $this->cache->setProcessor($stringCacheKey, new Cached($this->cache, $stringCacheKey));
+        $this->cache->setProcessor($stringCacheKey, new CachedProcessor($this->cache, $stringCacheKey));
 
         return null;
     }

@@ -31,7 +31,7 @@ class ArrayTypeTest extends TestCase
 
         /* @var $typeMock TypeInterface */
         $type = new ArrayType($typeMock);
-        self::assertInstanceOf(get_class(TypeEnum::ARRAY()), $type->getType());
+        self::assertInstanceOf(get_class(TypeEnum::ARRAY_TYPE()), $type->getType());
         self::assertSame($typeMock, $type->getNestedType());
     }
 
@@ -59,11 +59,11 @@ class ArrayTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -74,7 +74,7 @@ class ArrayTypeTest extends TestCase
     public function testToString(): void
     {
         self::assertSame(
-            TypeEnum::ARRAY . '<' . TypeEnum::STRING . '>',
+            TypeEnum::ARRAY_TYPE . '<' . TypeEnum::STRING_TYPE . '>',
             (string) new ArrayType(new StringType())
         );
     }
@@ -103,11 +103,11 @@ class ArrayTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }

@@ -20,6 +20,6 @@ final class NullType extends AbstractSimpleType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::NULL();
+        $this->type = TypeEnum::NULL_TYPE();
     }
 }

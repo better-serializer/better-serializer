@@ -12,7 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
 use BetterSerializer\DataBind\MetaData\Type\InterfaceType;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
@@ -49,7 +49,7 @@ final class NativeTypeFactory implements NativeTypeFactoryInterface
             case $stringType === 'string':
                 return new StringType();
             case $typeClass === TypeClassEnum::CLASS_TYPE():
-                return new ObjectType($stringType);
+                return new ClassType($stringType);
             case $typeClass === TypeClassEnum::INTERFACE_TYPE():
                 return new InterfaceType($stringType);
         }

@@ -15,7 +15,7 @@ use LogicException;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-final class DateTimeType extends AbstractObjectType implements DateTimeTypeInterface
+final class DateTimeType extends AbstractClassType implements DateTimeTypeInterface
 {
 
     /**
@@ -54,7 +54,7 @@ final class DateTimeType extends AbstractObjectType implements DateTimeTypeInter
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::DATETIME();
+        $this->type = TypeEnum::DATETIME_TYPE();
     }
 
     /**
@@ -81,7 +81,7 @@ final class DateTimeType extends AbstractObjectType implements DateTimeTypeInter
     public function isCompatibleWith(TypeInterface $type): bool
     {
         return (
-            ($type instanceof AbstractObjectType && $this->getClassName() === $type->getClassName())
+            ($type instanceof AbstractClassType && $this->getClassName() === $type->getClassName())
             || $type instanceof UnknownType
         );
     }

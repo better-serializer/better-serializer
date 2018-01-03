@@ -26,7 +26,7 @@ class StringTypeTest extends TestCase
     public function testGetType(): void
     {
         $string = new StringType();
-        self::assertInstanceOf(get_class(TypeEnum::STRING()), $string->getType());
+        self::assertInstanceOf(get_class(TypeEnum::STRING_TYPE()), $string->getType());
     }
 
     /**
@@ -52,11 +52,11 @@ class StringTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), true],
             [new UnknownType(), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -66,7 +66,7 @@ class StringTypeTest extends TestCase
      */
     public function testToString(): void
     {
-        self::assertSame(TypeEnum::STRING, (string) new StringType());
+        self::assertSame(TypeEnum::STRING_TYPE, (string) new StringType());
     }
 
     /**
@@ -92,11 +92,11 @@ class StringTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), true],
             [new UnknownType(), true],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }

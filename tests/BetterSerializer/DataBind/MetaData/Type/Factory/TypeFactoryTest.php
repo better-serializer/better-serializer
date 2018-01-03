@@ -48,7 +48,7 @@ class TypeFactoryTest extends TestCase
      */
     public function testGetTypeThrowsException(): void
     {
-        $stringTypeString = TypeEnum::STRING;
+        $stringTypeString = TypeEnum::STRING_TYPE;
         $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
@@ -69,7 +69,7 @@ class TypeFactoryTest extends TestCase
      */
     public function testAddChainMemberType(): void
     {
-        $stringTypeString = TypeEnum::STRING;
+        $stringTypeString = TypeEnum::STRING_TYPE;
         $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')

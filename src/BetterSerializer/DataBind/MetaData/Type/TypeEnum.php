@@ -11,22 +11,19 @@ use MabeEnum\EnumSerializableTrait;
 use Serializable;
 
 /**
- * Class Type
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
- * @method static TypeEnum STRING
- * @method static TypeEnum INTEGER
- * @method static TypeEnum FLOAT
- * @method static TypeEnum BOOLEAN
- * @method static TypeEnum OBJECT
- * @method static TypeEnum INTERFACE
- * @method static TypeEnum ARRAY
- * @method static TypeEnum NULL
- * @method static TypeEnum UNKNOWN
- * @method static TypeEnum DATETIME
+ * @method static TypeEnum STRING_TYPE
+ * @method static TypeEnum INTEGER_TYPE
+ * @method static TypeEnum FLOAT_TYPE
+ * @method static TypeEnum BOOLEAN_TYPE
+ * @method static TypeEnum CLASS_TYPE
+ * @method static TypeEnum INTERFACE_TYPE
+ * @method static TypeEnum ARRAY_TYPE
+ * @method static TypeEnum NULL_TYPE
+ * @method static TypeEnum UNKNOWN_TYPE
+ * @method static TypeEnum DATETIME_TYPE
  * @method static TypeEnum CUSTOM_TYPE
- * @method static TypeEnum CUSTOM_OBJECT
- * @method static TypeEnum CUSTOM_COLLECTION
+ * @method static TypeEnum CUSTOM_CLASS_TYPE
+ * @method static TypeEnum CUSTOM_COLLECTION_TYPE
  */
 final class TypeEnum extends Enum implements TypeEnumInterface, Serializable
 {
@@ -35,52 +32,52 @@ final class TypeEnum extends Enum implements TypeEnumInterface, Serializable
     /**
      * @const string
      */
-    public const STRING = 'string';
+    public const STRING_TYPE = 'string';
 
     /**
      * @const string
      */
-    public const INTEGER = 'int';
+    public const INTEGER_TYPE = 'int';
 
     /**
      * @const string
      */
-    public const FLOAT = 'float';
+    public const FLOAT_TYPE = 'float';
 
     /**
      * @const string
      */
-    public const BOOLEAN = 'bool';
+    public const BOOLEAN_TYPE = 'bool';
 
     /**
      * @const string
      */
-    public const OBJECT = 'object';
+    public const CLASS_TYPE = 'class';
 
     /**
      * @const string
      */
-    public const INTERFACE = 'interface';
+    public const INTERFACE_TYPE = 'interface';
 
     /**
      * @const string
      */
-    public const ARRAY = 'array';
+    public const ARRAY_TYPE = 'array';
 
     /**
      * @const string
      */
-    public const NULL = 'null';
+    public const NULL_TYPE = 'null';
 
     /**
      * @const string
      */
-    public const UNKNOWN = 'unknown';
+    public const UNKNOWN_TYPE = 'unknown';
 
     /**
      * @const string
      */
-    public const DATETIME = 'dateTime';
+    public const DATETIME_TYPE = 'dateTime';
 
     /**
      * @const string
@@ -90,10 +87,10 @@ final class TypeEnum extends Enum implements TypeEnumInterface, Serializable
     /**
      * @const string
      */
-    public const CUSTOM_OBJECT = 'customObject';
+    public const CUSTOM_CLASS_TYPE = 'customClass';
 
     /**
      * @const string
      */
-    public const CUSTOM_COLLECTION = 'customCollection';
+    public const CUSTOM_COLLECTION_TYPE = 'customCollection';
 }

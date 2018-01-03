@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\ExtensionObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ExtensionClassType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionType;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
@@ -76,7 +76,7 @@ final class ExtensionMember extends AbstractExtensionTypeMember
         $typeClass = $stringFormType->getTypeClass();
 
         if ($typeClass === TypeClassEnum::CLASS_TYPE() || $typeClass === TypeClassEnum::INTERFACE_TYPE()) {
-            return new ExtensionObjectType($currentType, $parameters);
+            return new ExtensionClassType($currentType, $parameters);
         }
 
         $replacedType = null;

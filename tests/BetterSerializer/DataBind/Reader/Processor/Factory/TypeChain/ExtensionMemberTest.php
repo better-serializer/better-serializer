@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
-use BetterSerializer\DataBind\Reader\Processor\Extension;
+use BetterSerializer\DataBind\Reader\Processor\ExtensionProcessor;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Helper\ExtensionMockFactory;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +42,7 @@ class ExtensionMemberTest extends TestCase
         $customObjectMember = new ExtensionMember([$handlerClass]);
         $processor = $customObjectMember->create($type);
 
-        self::assertInstanceOf(Extension::class, $processor);
+        self::assertInstanceOf(ExtensionProcessor::class, $processor);
     }
 
     /**

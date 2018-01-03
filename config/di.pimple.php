@@ -68,7 +68,7 @@ $container[BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryIn
             $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\CollectionMember::class]
         );
         $factory->addTypeChainMember(
-            $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember::class]
+            $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ClassMember::class]
         );
         $factory->addTypeChainMember(
             $c[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\SimpleMember::class]
@@ -107,9 +107,9 @@ $container[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\Collecti
         );
     };
 
-$container[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember::class] =
+$container[BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ClassMember::class] =
     function (Container $c) {
-        return new BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ObjectMember(
+        return new BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain\ClassMember(
             $c['BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
             $c[BetterSerializer\DataBind\Reader\Instantiator\Factory\InstantiatorFactoryInterface::class],
             $c[BetterSerializer\DataBind\MetaData\Reader\ReaderInterface::class]
@@ -239,7 +239,7 @@ $container[BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryIn
             $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\CollectionMember::class]
         );
         $factory->addTypeChainMember(
-            $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember::class]
+            $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ClassMember::class]
         );
         $factory->addTypeChainMember(
             $c[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\SimpleMember::class]
@@ -278,9 +278,9 @@ $container[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\Collecti
         );
     };
 
-$container[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember::class] =
+$container[BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ClassMember::class] =
     function (Container $c) {
-        return new BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ObjectMember(
+        return new BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain\ClassMember(
             $c['BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface::Unitialized'],
             $c[BetterSerializer\DataBind\Writer\MetaData\ContextualReaderInterface::class]
         );
@@ -456,7 +456,7 @@ $container[BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface:
     $typeFactory->addChainMember($c[TypeFactoryChain\DateTimeMember::class]);
     $typeFactory->addChainMember($c[TypeFactoryChain\ExtensionMember::class]);
     $typeFactory->addChainMember($c[TypeFactoryChain\ExtensionCollectionMember::class]);
-    $typeFactory->addChainMember($c[TypeFactoryChain\ObjectMember::class]);
+    $typeFactory->addChainMember($c[TypeFactoryChain\ClassMember::class]);
     $typeFactory->addChainMember($c[TypeFactoryChain\InterfaceMember::class]);
     $typeFactory->addChainMember($c[TypeFactoryChain\ArrayMember::class]);
 
@@ -487,8 +487,8 @@ $container[TypeFactoryChain\DateTimeMember::class] = function () {
     return new TypeFactoryChain\DateTimeMember();
 };
 
-$container[TypeFactoryChain\ObjectMember::class] = function () {
-    return new TypeFactoryChain\ObjectMember();
+$container[TypeFactoryChain\ClassMember::class] = function () {
+    return new TypeFactoryChain\ClassMember();
 };
 
 $container[TypeFactoryChain\InterfaceMember::class] = function () {

@@ -13,12 +13,10 @@ use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Reader\Processor\SimpleProperty;
+use BetterSerializer\DataBind\Reader\Processor\SimplePropertyProcessor;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Converter\PropertyMetaDataChain
+ *
  */
 final class SimplePropertyMember extends InjectingChainMember
 {
@@ -60,6 +58,6 @@ final class SimplePropertyMember extends InjectingChainMember
         $injector = $this->injectorFactory->newInjector($metaData);
         $converter = $this->converterFactory->newConverter($metaData->getType());
 
-        return new SimpleProperty($injector, $converter, $metaData->getOutputKey());
+        return new SimplePropertyProcessor($injector, $converter, $metaData->getOutputKey());
     }
 }

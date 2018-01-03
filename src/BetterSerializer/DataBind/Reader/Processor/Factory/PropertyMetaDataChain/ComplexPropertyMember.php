@@ -10,20 +10,17 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataCha
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
-use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
-use BetterSerializer\DataBind\Reader\Processor\ComplexProperty;
+use BetterSerializer\DataBind\Reader\Processor\ComplexPropertyProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use LogicException;
 use ReflectionException;
 use RuntimeException;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain
+ *
  */
 final class ComplexPropertyMember extends InjectingChainMember
 {
@@ -54,7 +51,7 @@ final class ComplexPropertyMember extends InjectingChainMember
     {
         $type = $metaData->getType();
 
-        return $type instanceof ObjectType || $type instanceof ArrayType || $type instanceof ExtensionTypeInterface;
+        return $type instanceof ClassType || $type instanceof ArrayType || $type instanceof ExtensionTypeInterface;
     }
 
     /**
@@ -69,6 +66,6 @@ final class ComplexPropertyMember extends InjectingChainMember
         $injector = $this->injectorFactory->newInjector($metaData);
         $nestedProcessor = $this->processorFactory->createFromType($metaData->getType());
 
-        return new ComplexProperty($injector, $nestedProcessor, $metaData->getOutputKey());
+        return new ComplexPropertyProcessor($injector, $nestedProcessor, $metaData->getOutputKey());
     }
 }

@@ -33,7 +33,7 @@ class DateTimeTypeTest extends TestCase
     public function testGetType(): void
     {
         $dateTime = new DateTimeType(DateTime::class);
-        self::assertInstanceOf(get_class(TypeEnum::DATETIME()), $dateTime->getType());
+        self::assertInstanceOf(get_class(TypeEnum::DATETIME_TYPE()), $dateTime->getType());
         self::assertSame(DateTime::class, $dateTime->getClassName());
         self::assertSame(DateTime::ATOM, $dateTime->getFormat());
         self::assertSame(
@@ -49,7 +49,7 @@ class DateTimeTypeTest extends TestCase
     {
         $format = 'Y-m-d';
         $dateTime = new DateTimeType(DateTimeImmutable::class, $format);
-        self::assertInstanceOf(get_class(TypeEnum::DATETIME()), $dateTime->getType());
+        self::assertInstanceOf(get_class(TypeEnum::DATETIME_TYPE()), $dateTime->getType());
         self::assertSame(DateTimeImmutable::class, $dateTime->getClassName());
         self::assertSame($format, $dateTime->getFormat());
         self::assertSame(
@@ -90,15 +90,15 @@ class DateTimeTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
-            [new ObjectType(SpecialCar::class), false],
+            [new ClassType(Car::class), false],
+            [new ClassType(SpecialCar::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
             [new DateTimeType(DateTime::class), true],
             [new DateTimeType(DateTime::class, 'Y-m-d'), false],
             [new DateTimeType(DateTimeImmutable::class), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
@@ -126,16 +126,16 @@ class DateTimeTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), false],
-            [new ObjectType(Car::class), false],
-            [new ObjectType(Radio::class), false],
-            [new ObjectType(DateTime::class), true],
+            [new ClassType(Car::class), false],
+            [new ClassType(Radio::class), false],
+            [new ClassType(DateTime::class), true],
             [new StringType(), false],
             [new UnknownType(), true],
             [new DateTimeType(DateTime::class), true],
             [new DateTimeType(DateTime::class, 'Y-m-d'), true],
             [new DateTimeType(DateTimeImmutable::class), false],
             [new ExtensionType('MyType', new Parameters([])), false],
-            [new ExtensionObjectType(Car::class, new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
             [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }

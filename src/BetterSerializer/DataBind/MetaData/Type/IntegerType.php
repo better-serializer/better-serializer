@@ -20,6 +20,6 @@ final class IntegerType extends AbstractSimpleType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::INTEGER();
+        $this->type = TypeEnum::INTEGER_TYPE();
     }
 }

@@ -44,8 +44,8 @@ interface ExtensionTypeInterface extends TypeInterface
     public function implementsInterface(InterfaceType $interface): bool;
 
     /**
-     * @param AbstractObjectType $object
+     * @param AbstractClassType $object
      * @return bool
      */
-    public function extendsClass(AbstractObjectType $object): bool;
+    public function extendsClass(AbstractClassType $object): bool;
 }

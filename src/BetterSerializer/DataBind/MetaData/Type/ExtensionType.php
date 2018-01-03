@@ -116,11 +116,11 @@ final class ExtensionType extends AbstractType implements ExtensionTypeInterface
     }
 
     /**
-     * @param AbstractObjectType $object
+     * @param AbstractClassType $object
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function extendsClass(AbstractObjectType $object): bool
+    public function extendsClass(AbstractClassType $object): bool
     {
         return false;
     }

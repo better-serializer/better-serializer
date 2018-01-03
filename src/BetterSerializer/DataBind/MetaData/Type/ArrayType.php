@@ -29,7 +29,7 @@ final class ArrayType extends AbstractCollectionType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::ARRAY();
+        $this->type = TypeEnum::ARRAY_TYPE();
     }
 
     /**
