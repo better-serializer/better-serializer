@@ -13,6 +13,7 @@ use BetterSerializer\Reflection\UseStatement\CodeReaderInterface;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use LogicException;
+use ReflectionClass;
 
 /**
  * Class CodeReaderFactory
@@ -23,14 +24,15 @@ final class CodeReaderFactory implements CodeReaderFactoryInterface
 {
 
     /**
-     * @param int $classOffset
+     * @param ReflectionClass $reflectionClass
      * @return CodeReaderInterface
      * @throws LogicException
      */
-    public function newCodeReader(int $classOffset): CodeReaderInterface
+    public function newCodeReader(ReflectionClass $reflectionClass): CodeReaderInterface
     {
-        $filesystem = new Filesystem(new Local('/'));
-        $filesystem->addPlugin(new FirstXLines($classOffset));
+        $directory = dirname($reflectionClass->getFileName());
+        $filesystem = new Filesystem(new Local($directory));
+        $filesystem->addPlugin(new FirstXLines($reflectionClass->getStartLine()));
 
         return new CodeReader($filesystem);
     }
