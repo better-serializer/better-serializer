@@ -38,9 +38,14 @@ final class Builder
     private $extensionRegistry;
 
     /**
+     * @var bool
+     */
+    private $extensionsRegistered = false;
+
+    /**
      * @var string[]
      */
-    private static $internalExtensions = [];
+    private $internalExtensions = [];
 
     /**
      * Builder constructor.
@@ -54,7 +59,7 @@ final class Builder
         }
 
         $this->container = $container;
-        $this->registerExtensions();
+        $this->internalExtensions = $this->container['InternalExtensions'];
     }
 
     /**
@@ -63,6 +68,8 @@ final class Builder
      */
     public function createSerializer(): Serializer
     {
+        $this->registerExtensions();
+
         return $this->container->offsetGet(Serializer::class);
     }
 
@@ -96,7 +103,7 @@ final class Builder
      */
     public function addExtension(string $extensionClass): void
     {
-        $this->getExtensionRegistry()->registerExtension($extensionClass);
+        $this->internalExtensions[] = $extensionClass;
     }
 
     /**
@@ -112,11 +119,17 @@ final class Builder
      */
     private function registerExtensions(): void
     {
-        self::$internalExtensions = $this->container['InternalExtensions'];
-
-        foreach (self::$internalExtensions as $extensionClass) {
-            $this->addExtension($extensionClass);
+        if ($this->extensionsRegistered) {
+            return;
         }
+
+        $registry = $this->getExtensionRegistry();
+
+        foreach ($this->internalExtensions as $extensionClass) {
+            $registry->registerExtension($extensionClass);
+        }
+
+        $this->extensionsRegistered = true;
     }
 
     /**

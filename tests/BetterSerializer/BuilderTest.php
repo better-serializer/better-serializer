@@ -18,9 +18,6 @@ use Pimple\Container;
 use RuntimeException;
 
 /**
- * Class BuilderTest
- * @author mfris
- * @package BetterSerializer
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BuilderTest extends TestCase
@@ -120,5 +117,9 @@ class BuilderTest extends TestCase
 
         $builder = new Builder($container);
         $builder->addExtension($extensionClass);
+
+        $builder->createSerializer();
+        // test that extensions are registered only once
+        $builder->createSerializer();
     }
 }
