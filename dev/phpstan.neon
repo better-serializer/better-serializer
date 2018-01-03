@@ -3,6 +3,10 @@ parameters:
         - '#Method BetterSerializer\\DataBind\\MetaData\\Type\\Factory\\TypeFactory::getType\(\) should return BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface but returns BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface|null#'
         - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getNestedType\(\)#'
         - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getClassName\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getCustomType\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getParameters\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\StringFormType\\StringFormTypeInterface::getCollectionValueType\(\)#'
+        - '#Call to an undefined method BetterSerializer\\DataBind\\MetaData\\Type\\TypeInterface::getInterfaceName\(\)#'
 
     excludes_analyse:
         - %rootDir%/../../../tests/*

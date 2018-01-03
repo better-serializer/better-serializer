@@ -11,65 +11,86 @@ use MabeEnum\EnumSerializableTrait;
 use Serializable;
 
 /**
- * Class Type
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
- * @method static TypeEnum STRING
- * @method static TypeEnum INTEGER
- * @method static TypeEnum FLOAT
- * @method static TypeEnum BOOLEAN
- * @method static TypeEnum OBJECT
- * @method static TypeEnum ARRAY
- * @method static TypeEnum NULL
- * @method static TypeEnum UNKNOWN
- * @method static TypeEnum DATETIME
+ * @method static TypeEnum STRING_TYPE
+ * @method static TypeEnum INTEGER_TYPE
+ * @method static TypeEnum FLOAT_TYPE
+ * @method static TypeEnum BOOLEAN_TYPE
+ * @method static TypeEnum CLASS_TYPE
+ * @method static TypeEnum INTERFACE_TYPE
+ * @method static TypeEnum ARRAY_TYPE
+ * @method static TypeEnum NULL_TYPE
+ * @method static TypeEnum UNKNOWN_TYPE
+ * @method static TypeEnum DATETIME_TYPE
+ * @method static TypeEnum CUSTOM_TYPE
+ * @method static TypeEnum CUSTOM_CLASS_TYPE
+ * @method static TypeEnum CUSTOM_COLLECTION_TYPE
  */
-final class TypeEnum extends Enum implements Serializable
+final class TypeEnum extends Enum implements TypeEnumInterface, Serializable
 {
     use EnumSerializableTrait;
 
     /**
      * @const string
      */
-    const STRING = 'string';
+    public const STRING_TYPE = 'string';
 
     /**
      * @const string
      */
-    const INTEGER = 'int';
+    public const INTEGER_TYPE = 'int';
 
     /**
      * @const string
      */
-    const FLOAT = 'float';
+    public const FLOAT_TYPE = 'float';
 
     /**
      * @const string
      */
-    const BOOLEAN = 'bool';
+    public const BOOLEAN_TYPE = 'bool';
 
     /**
      * @const string
      */
-    const OBJECT = 'object';
+    public const CLASS_TYPE = 'class';
 
     /**
      * @const string
      */
-    const ARRAY = 'array';
+    public const INTERFACE_TYPE = 'interface';
 
     /**
      * @const string
      */
-    const NULL = 'null';
+    public const ARRAY_TYPE = 'array';
 
     /**
      * @const string
      */
-    const UNKNOWN = 'unknown';
+    public const NULL_TYPE = 'null';
 
     /**
      * @const string
      */
-    const DATETIME = 'dateTime';
+    public const UNKNOWN_TYPE = 'unknown';
+
+    /**
+     * @const string
+     */
+    public const DATETIME_TYPE = 'dateTime';
+
+    /**
+     * @const string
+     */
+    public const CUSTOM_TYPE = 'customType';
+
+    /**
+     * @const string
+     */
+    public const CUSTOM_CLASS_TYPE = 'customClass';
+
+    /**
+     * @const string
+     */
+    public const CUSTOM_COLLECTION_TYPE = 'customCollection';
 }

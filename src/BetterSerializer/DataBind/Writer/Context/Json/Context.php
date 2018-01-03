@@ -19,9 +19,17 @@ final class Context implements ContextInterface
 {
 
     /**
-     * @var array
+     * @var array|mixed
      */
     private $data = [];
+
+    /**
+     * @param $value
+     */
+    public function writeSimple($value): void
+    {
+        $this->data = $value;
+    }
 
     /**
      * @param string|int $key
@@ -48,7 +56,7 @@ final class Context implements ContextInterface
      */
     public function mergeSubContext($key, ContextInterface $context): void
     {
-        if (!$context instanceof Context) {
+        if (!$context instanceof self) {
             throw new RuntimeException(
                 sprintf(
                     'Invalid context to merge. Expected: %s, actual: %s',

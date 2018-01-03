@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\Writer\Type;
 
 use BetterSerializer\DataBind\Writer\Type\Chain\ArrayMember;
 use BetterSerializer\DataBind\Writer\Type\Chain\DateTimeMember;
-use BetterSerializer\DataBind\Writer\Type\Chain\ObjectMember;
+use BetterSerializer\DataBind\Writer\Type\Chain\ClassMember;
 use BetterSerializer\DataBind\Writer\Type\Chain\SimpleMember;
 
 /**
@@ -28,7 +28,7 @@ final class ExtractorBuilder
         $extractor = new Extractor();
         $extractor->addChainMember(new SimpleMember());
         $extractor->addChainMember(new DateTimeMember());
-        $extractor->addChainMember(new ObjectMember());
+        $extractor->addChainMember(new ClassMember());
         $extractor->addChainMember(new ArrayMember($extractor));
 
         return $extractor;

@@ -23,6 +23,7 @@ use DateTimeImmutable;
  * Class Json
  * @author mfris
  * @package Integration\Serialization
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class BasicTest extends AbstractIntegrationTest
 {
@@ -33,6 +34,9 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerialization($data, string $expectedJson): void
     {
@@ -48,6 +52,9 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerializationCached($data, string $expectedJson): void
     {
@@ -72,6 +79,7 @@ final class BasicTest extends AbstractIntegrationTest
             $this->getOverridenNameTuple(),
             $this->getNamespaceFeatureTupleWithDateTimes(),
             $this->getRecursiveDataTuple(),
+            $this->getPrimitiveDataTuple(),
         ];
     }
 
@@ -232,5 +240,13 @@ final class BasicTest extends AbstractIntegrationTest
             . '","updatedAt":null},"children":[],"createdAt":"' . $dateTime . '","updatedAt":null}';
 
         return [$category, $categoryJson];
+    }
+
+    /**
+     * @return array
+     */
+    private function getPrimitiveDataTuple(): array
+    {
+        return [6, 6];
     }
 }

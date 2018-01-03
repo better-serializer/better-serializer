@@ -20,6 +20,6 @@ final class StringType extends AbstractSimpleType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::STRING();
+        $this->type = TypeEnum::STRING_TYPE();
     }
 }

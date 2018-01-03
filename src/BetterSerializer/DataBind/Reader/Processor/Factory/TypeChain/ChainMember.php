@@ -20,20 +20,6 @@ abstract class ChainMember implements ChainMemberInterface
 {
 
     /**
-     * @var ProcessorFactoryInterface
-     */
-    protected $processorFactory;
-
-    /**
-     * ChainMember constructor.
-     * @param ProcessorFactoryInterface $processorFactory
-     */
-    public function __construct(ProcessorFactoryInterface $processorFactory)
-    {
-        $this->processorFactory = $processorFactory;
-    }
-
-    /**
      * @param TypeInterface $type
      * @return ProcessorInterface|null
      */

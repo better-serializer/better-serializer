@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\StringFormType;
 
-use BetterSerializer\Reflection\ReflectionClassInterface;
-use LogicException;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\ParametersInterface;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnumInterface;
 
 /**
  * Class StringTypedPropertyContext
@@ -24,50 +24,52 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     private $stringType;
 
     /**
-     * @var ReflectionClassInterface
-     */
-    private $reflectionClass;
-
-    /**
      * @var string
      */
     private $namespace;
 
     /**
-     * @var bool
+     * @var TypeClassEnumInterface
      */
-    private $isClass;
+    private $typeClass;
 
     /**
-     * StringTypedPropertyContext constructor.
+     * @var ParametersInterface|null
+     */
+    private $parameters;
+
+    /**
+     * @var ContextStringFormType|null
+     */
+    private $collectionValueType;
+
+    /**
+     * @var ContextStringFormType|null
+     */
+    private $collectionKeyType;
+
+    /**
      * @param string $stringType
-     * @param ReflectionClassInterface $reflectionClass
-     * @throws LogicException
+     * @param string $namespace
+     * @param TypeClassEnumInterface $typeClass
+     * @param ParametersInterface|null $parameters
+     * @param ContextStringFormTypeInterface|null $collectionValueType
+     * @param ContextStringFormTypeInterface|null $collectionKeyType
      */
-    public function __construct(string $stringType, ReflectionClassInterface $reflectionClass)
-    {
-        $this->reflectionClass = $reflectionClass;
-        $this->stringType = $this->getAnalyzedType($stringType);
-    }
-
-    /**
-     * @return string
-     */
-    public function getNamespace(): string
-    {
-        if ($this->namespace === null) {
-            $this->namespace = $this->reflectionClass->getNamespaceName();
-        }
-
-        return $this->namespace;
-    }
-
-    /**
-     * @return ReflectionClassInterface
-     */
-    public function getReflectionClass(): ReflectionClassInterface
-    {
-        return $this->reflectionClass;
+    public function __construct(
+        string $stringType,
+        string $namespace,
+        TypeClassEnumInterface $typeClass,
+        ?ParametersInterface $parameters = null,
+        ?ContextStringFormTypeInterface $collectionValueType = null,
+        ?ContextStringFormTypeInterface $collectionKeyType = null
+    ) {
+        $this->stringType = $stringType;
+        $this->namespace = $namespace;
+        $this->typeClass = $typeClass;
+        $this->parameters = $parameters;
+        $this->collectionValueType = $collectionValueType;
+        $this->collectionKeyType = $collectionKeyType;
     }
 
     /**
@@ -79,68 +81,42 @@ final class ContextStringFormType implements ContextStringFormTypeInterface
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isClass(): bool
+    public function getNamespace(): string
     {
-        return $this->isClass;
+        return $this->namespace;
     }
 
     /**
-     * @param string $stringType
-     * @return string
-     * @throws LogicException
+     * @return TypeClassEnumInterface
      */
-    private function getAnalyzedType(string $stringType): string
+    public function getTypeClass(): TypeClassEnumInterface
     {
-        $this->isClass = false;
-        $isPotentialClass = preg_match("/^[a-zA-Z0-9_\\\]+[^\\]]$/", $stringType, $matches);
-
-        if (!$isPotentialClass) {
-            return $stringType;
-        }
-
-        $potentialClass = $this->resolvePotentialClass($matches[0]);
-
-        return $potentialClass !== '' ? $potentialClass : $stringType;
+        return $this->typeClass;
     }
 
     /**
-     * @param string $potentialClass
-     * @return string
-     * @throws LogicException
+     * @return null|ParametersInterface
      */
-    private function resolvePotentialClass(string $potentialClass): string
+    public function getParameters(): ?ParametersInterface
     {
-        $potentialClass = ltrim($potentialClass, '\\');
-        $fragments = new NamespaceFragments($potentialClass);
-        $firstFragment = $fragments->getFirst();
+        return $this->parameters;
+    }
 
-        $expectedClass = $this->getNamespace() . '\\' . $potentialClass;
-        $useStatements = $this->reflectionClass->getUseStatements();
+    /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionValueType(): ?ContextStringFormTypeInterface
+    {
+        return $this->collectionValueType;
+    }
 
-        if ($useStatements->hasByIdentifier($firstFragment)) {
-            $useStatement = $useStatements->getByIdentifier($firstFragment);
-            $expectedClass = $useStatement->getFqdn() . '\\' . $fragments->getWithoutFirst();
-        } elseif ($useStatements->hasByAlias($firstFragment)) {
-            $useStatement = $useStatements->getByAlias($firstFragment);
-            $expectedClass = $useStatement->getFqdn() . '\\' . $fragments->getWithoutFirst();
-        }
-
-        $expectedClass = rtrim($expectedClass, '\\');
-        if (class_exists($expectedClass, false) || class_exists($expectedClass)) {
-            $this->isClass = true;
-
-            return $expectedClass;
-        }
-
-        $potentialClass = rtrim($potentialClass, '\\');
-        if (class_exists($potentialClass, false) || class_exists($potentialClass)) {
-            $this->isClass = true;
-
-            return $potentialClass;
-        }
-
-        return '';
+    /**
+     * @return ContextStringFormTypeInterface|null
+     */
+    public function getCollectionKeyType(): ?ContextStringFormTypeInterface
+    {
+        return $this->collectionKeyType;
     }
 }

@@ -15,6 +15,11 @@ interface ContextInterface
 {
 
     /**
+     * @param $value
+     */
+    public function writeSimple($value): void;
+
+    /**
      * @param string|int $key
      * @param mixed $value
      * @return void

@@ -9,6 +9,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamPr
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyTuple\PropertyWithConstructorParamTupleInterface;
 use BetterSerializer\DataBind\MetaData\Type\ComplexTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
@@ -44,7 +45,9 @@ final class ComplexParamProcessorFactory implements ChainedParamProcessorFactory
      */
     public function isApplicable(PropertyWithConstructorParamTupleInterface $tuple): bool
     {
-        return $tuple->getType() instanceof ComplexTypeInterface;
+        $type = $tuple->getType();
+
+        return $type instanceof ComplexTypeInterface || $type instanceof ExtensionTypeInterface;
     }
 
     /**

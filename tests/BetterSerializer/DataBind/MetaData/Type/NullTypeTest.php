@@ -6,13 +6,16 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Type;
 
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters;
 use BetterSerializer\Dto\Car;
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class NullTypeTest
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class NullTypeTest extends TestCase
 {
@@ -23,7 +26,7 @@ class NullTypeTest extends TestCase
     public function testGetType(): void
     {
         $null = new NullType();
-        self::assertInstanceOf(get_class(TypeEnum::NULL()), $null->getType());
+        self::assertInstanceOf(get_class(TypeEnum::NULL_TYPE()), $null->getType());
     }
 
     /**
@@ -49,9 +52,12 @@ class NullTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), true],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), false],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
 
@@ -60,7 +66,7 @@ class NullTypeTest extends TestCase
      */
     public function testToString(): void
     {
-        self::assertSame(TypeEnum::NULL, (string) new NullType());
+        self::assertSame(TypeEnum::NULL_TYPE, (string) new NullType());
     }
 
     /**
@@ -86,9 +92,12 @@ class NullTypeTest extends TestCase
             [new FloatType(), false],
             [new IntegerType(), false],
             [new NullType(), true],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), false],
             [new UnknownType(), true],
+            [new ExtensionType('MyType', new Parameters([])), false],
+            [new ExtensionClassType(Car::class, new Parameters([])), false],
+            [new ExtensionCollectionType(Collection::class, new StringType(), new Parameters([])), false],
         ];
     }
 }

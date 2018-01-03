@@ -8,15 +8,16 @@ declare(strict_types=1);
 namespace BetterSerializer;
 
 use BetterSerializer\Cache\Factory;
+use BetterSerializer\Cache\FactoryInterface;
+use BetterSerializer\Extension\DoctrineCollection;
+use BetterSerializer\Extension\Registry\ExtensionRegistryInterface;
 use Doctrine\Common\Cache\Cache;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use RuntimeException;
 
 /**
- * Class Builder
- * @author mfris
- * @package BetterSerializer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class Builder
 {
@@ -32,11 +33,28 @@ final class Builder
     private $cacheFactory;
 
     /**
-     * Builder constructor.
+     * @var ExtensionRegistryInterface
      */
-    public function __construct()
+    private $extensionRegistry;
+
+    /**
+     * @var string[]
+     */
+    private static $internalExtensions = [];
+
+    /**
+     * Builder constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container = null)
     {
-        $this->initContainer();
+        if (!$container) {
+            $container = $this->initContainer();
+        }
+
+        $this->container = $container;
+        $this->registerExtensions();
     }
 
     /**
@@ -74,22 +92,54 @@ final class Builder
     }
 
     /**
-     *
+     * @param string $extensionClass
      */
-    private function initContainer(): void
+    public function addExtension(string $extensionClass): void
     {
-        $this->container = require dirname(__DIR__) . '/../config/di.pimple.php';
+        $this->getExtensionRegistry()->registerExtension($extensionClass);
     }
 
     /**
-     * @return Factory
+     * @return Container
      */
-    private function getCacheFactory(): Factory
+    private function initContainer(): Container
+    {
+        return require dirname(__DIR__) . '/../config/di.pimple.php';
+    }
+
+    /**
+     *
+     */
+    private function registerExtensions(): void
+    {
+        self::$internalExtensions = $this->container['InternalExtensions'];
+
+        foreach (self::$internalExtensions as $extensionClass) {
+            $this->addExtension($extensionClass);
+        }
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    private function getCacheFactory(): FactoryInterface
     {
         if (!$this->cacheFactory) {
             $this->cacheFactory = $this->container[Factory::class];
         }
 
         return $this->cacheFactory;
+    }
+
+    /**
+     * @return ExtensionRegistryInterface
+     */
+    private function getExtensionRegistry(): ExtensionRegistryInterface
+    {
+        if ($this->extensionRegistry === null) {
+            $this->extensionRegistry = $this->container[ExtensionRegistryInterface::class];
+        }
+
+        return $this->extensionRegistry;
     }
 }

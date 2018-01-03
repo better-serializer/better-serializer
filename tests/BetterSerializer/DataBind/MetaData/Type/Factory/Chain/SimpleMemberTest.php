@@ -7,21 +7,21 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory\Chain;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
+use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class SimpleMemberTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type\Factory\Chain
+ *
  * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SimpleMemberTest extends TestCase
 {
@@ -30,19 +30,24 @@ class SimpleMemberTest extends TestCase
      * @dataProvider typeMappingProvider
      * @param string $stringTypeString
      * @param string $typeClassName
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
      */
     public function testGetType(string $stringTypeString, string $typeClassName): void
     {
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::exactly(2))
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        /* @var $stringType StringFormTypeInterface */
+        $stringType->expects(self::once())
+            ->method('getTypeClass')
+            ->willReturn(TypeClassEnum::PRIMITIVE_TYPE());
 
         $simpleMember = new SimpleMember();
-        $typeObject = $simpleMember->getType($stringType);
+        $simpleType = $simpleMember->getType($stringType);
 
-        self::assertInstanceOf($typeClassName, $typeObject);
+        self::assertInstanceOf($typeClassName, $simpleType);
     }
 
     /**
@@ -50,11 +55,13 @@ class SimpleMemberTest extends TestCase
      */
     public function testGetTypeReturnsNull(): void
     {
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn(Car::class);
-        /* @var $stringType StringFormTypeInterface */
+        $stringType->expects(self::once())
+            ->method('getTypeClass')
+            ->willReturn(TypeClassEnum::PRIMITIVE_TYPE());
 
         $simpleMember = new SimpleMember();
         $shouldBeNull = $simpleMember->getType($stringType);
@@ -68,11 +75,11 @@ class SimpleMemberTest extends TestCase
     public function typeMappingProvider(): array
     {
         return [
-            [TypeEnum::BOOLEAN, BooleanType::class],
-            [TypeEnum::NULL, NullType::class],
-            [TypeEnum::INTEGER, IntegerType::class],
-            [TypeEnum::FLOAT, FloatType::class],
-            [TypeEnum::STRING, StringType::class],
+            [TypeEnum::BOOLEAN_TYPE, BooleanType::class],
+            [TypeEnum::NULL_TYPE, NullType::class],
+            [TypeEnum::INTEGER_TYPE, IntegerType::class],
+            [TypeEnum::FLOAT_TYPE, FloatType::class],
+            [TypeEnum::STRING_TYPE, StringType::class],
         ];
     }
 }

@@ -13,7 +13,7 @@ use BetterSerializer\DataBind\MetaData\Type\BooleanType;
 use BetterSerializer\DataBind\MetaData\Type\FloatType;
 use BetterSerializer\DataBind\MetaData\Type\IntegerType;
 use BetterSerializer\DataBind\MetaData\Type\NullType;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\SimpleParamProcessor;
@@ -77,7 +77,7 @@ class SimpleParamProcessorFactoryTest extends TestCase
             [new FloatType(), true],
             [new IntegerType(), true],
             [new NullType(), true],
-            [new ObjectType(Car::class), false],
+            [new ClassType(Car::class), false],
             [new StringType(), true],
         ];
     }

@@ -7,3 +7,5 @@
 /vendor/
 /log/
 /cache
+!/cache/better-serializer/.gitkeep
+!/cache/jms-serializer/.gitkeep

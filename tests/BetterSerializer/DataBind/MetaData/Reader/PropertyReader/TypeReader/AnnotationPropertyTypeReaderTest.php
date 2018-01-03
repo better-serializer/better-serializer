@@ -9,7 +9,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
+use BetterSerializer\Reflection\ReflectionClassInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,13 +28,14 @@ class AnnotationPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithoutAnnotations(): void
     {
-        $context = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+
+        $context = $this->createMock(PropertyContextInterface::class);
         $context->expects(self::once())
             ->method('getPropertyAnnotation')
             ->willReturn(null);
-        /* @var $context PropertyContextInterface */
 
-        $reader = new AnnotationPropertyTypeReader();
+        $reader = new AnnotationPropertyTypeReader($stringTypeParser);
         $typedContext = $reader->resolveType($context);
 
         self::assertNull($typedContext);
@@ -43,21 +46,34 @@ class AnnotationPropertyTypeReaderTest extends TestCase
      */
     public function testGetTypeWithAnnotations(): void
     {
-        $propertyAnnotStub1 = $this->getMockBuilder(PropertyInterface::class)->getMock();
+        $propertyType = 'string';
+        $propertyAnnotStub1 = $this->createMock(PropertyInterface::class);
         $propertyAnnotStub1->expects(self::once())
             ->method('getType')
-            ->willReturn('string');
+            ->willReturn($propertyType);
 
-        $context = $this->getMockBuilder(PropertyContextInterface::class)->getMock();
+        $reflClass = $this->createMock(ReflectionClassInterface::class);
+
+        $context = $this->createMock(PropertyContextInterface::class);
         $context->expects(self::once())
             ->method('getPropertyAnnotation')
             ->willReturn($propertyAnnotStub1);
-        /* @var $context PropertyContextInterface */
+        $context->expects(self::once())
+            ->method('getReflectionClass')
+            ->willReturn($reflClass);
 
-        $reader = new AnnotationPropertyTypeReader();
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
+
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+        $stringTypeParser->expects(self::once())
+            ->method('parseWithParentContext')
+            ->with($propertyType, $reflClass)
+            ->willReturn($stringType);
+
+        $reader = new AnnotationPropertyTypeReader($stringTypeParser);
         $typedContext = $reader->resolveType($context);
 
-        self::assertInstanceOf(ContextStringFormType::class, $typedContext);
-        self::assertSame('string', $typedContext->getStringType());
+        self::assertNotNull($typedContext);
+        self::assertInstanceOf(ContextStringFormTypeInterface::class, $typedContext);
     }
 }

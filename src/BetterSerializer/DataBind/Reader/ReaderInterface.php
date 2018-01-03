@@ -18,9 +18,9 @@ interface ReaderInterface
 
     /**
      * @param string $serialized
-     * @param string $stringType
+     * @param string $typeString
      * @param SerializationTypeInterface $serializationType
      * @return mixed
      */
-    public function readValue(string $serialized, string $stringType, SerializationTypeInterface $serializationType);
+    public function readValue(string $serialized, string $typeString, SerializationTypeInterface $serializationType);
 }

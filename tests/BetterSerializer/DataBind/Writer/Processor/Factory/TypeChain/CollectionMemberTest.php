@@ -12,17 +12,14 @@ use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Writer\Processor\ComplexCollection;
+use BetterSerializer\DataBind\Writer\Processor\ComplexCollectionProcessor;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ProcessorInterface;
-use BetterSerializer\DataBind\Writer\Processor\SimpleCollection;
+use BetterSerializer\DataBind\Writer\Processor\SimpleCollectionProcessor;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ArrayMemberTest
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\TypeChain
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -54,7 +51,7 @@ class CollectionMemberTest extends TestCase
         $collectionMember = new CollectionMember($converterFactory, $processorFactory);
         $collectionProcessor = $collectionMember->create($arrayType, $context);
 
-        self::assertInstanceOf(ComplexCollection::class, $collectionProcessor);
+        self::assertInstanceOf(ComplexCollectionProcessor::class, $collectionProcessor);
     }
 
     /**
@@ -82,7 +79,7 @@ class CollectionMemberTest extends TestCase
         $collectionMember = new CollectionMember($converterFactory, $processorFactory);
         $collectionProcessor = $collectionMember->create($arrayType, $context);
 
-        self::assertInstanceOf(SimpleCollection::class, $collectionProcessor);
+        self::assertInstanceOf(SimpleCollectionProcessor::class, $collectionProcessor);
     }
 
     /**

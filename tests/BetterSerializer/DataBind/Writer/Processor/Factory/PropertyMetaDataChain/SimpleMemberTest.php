@@ -10,19 +10,16 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataCha
 use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\Property;
+use BetterSerializer\DataBind\Writer\Processor\SimplePropertyProcessor;
 use BetterSerializer\DataBind\Writer\SerializationContextInterface;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class SimpleMemberTest
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class SimpleMemberTest extends TestCase
@@ -57,10 +54,10 @@ class SimpleMemberTest extends TestCase
             ->willReturn($extractor);
         $context = $this->createMock(SerializationContextInterface::class);
 
-        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
+        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
         $processor = $simpleMember->create($propertyMetaData, $context);
 
-        self::assertInstanceOf(Property::class, $processor);
+        self::assertInstanceOf(SimplePropertyProcessor::class, $processor);
     }
 
     /**
@@ -68,7 +65,7 @@ class SimpleMemberTest extends TestCase
      */
     public function testCreateReturnsNull(): void
     {
-        $type = new ObjectType(Car::class);
+        $type = new ClassType(Car::class);
         $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getType')
@@ -78,7 +75,7 @@ class SimpleMemberTest extends TestCase
         $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
         $context = $this->createMock(SerializationContextInterface::class);
 
-        $simpleMember = new SimpleMember($converterFactory, $extractorFactory);
+        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
         $shouldBeNull = $simpleMember->create($propertyMetaData, $context);
 
         self::assertNull($shouldBeNull);

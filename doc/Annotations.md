@@ -49,7 +49,11 @@ The following types are supported currently:
 | string                                                   | Primitive string                                 |
 | array<T>                                                 | An array of type T (T can be any available type).<br>Examples:<br>array<string>, array<MyNamespace\MyObject>, etc.|
 | T[]                                                      | An array of type T (T can be any available type).|
-| T                                                        | Where T is a class name. It either can be fully qualified, or relative to the current namespace of the parent class.| 
+| T                                                        | Where T is a class name. It either can be fully qualified, or relative to the current namespace of the parent class.|
+| Collection<T>                                            | A Doctrine collection of type T, where T is a class name. It either can be fully qualified, or relative to the current namespace of the parent class. This short notation expect a use clasue with FQDN Collection.| 
+| Doctrine\Common\Collections\Collection<T>                | A Doctrine collection of type T, without the FQDN Collection use clause. | 
+| DateTime(format='Y-m-d H:i:s')                           | DateTime object with custom format (default format is DateTime::ATOM)|
+| DateTimeImmutable(format='Y-m-d H:i:s')                  | DateTimeImmutable object with custom format (default format is DateTime::ATOM)|
 
 ### @BoundToProperty
 

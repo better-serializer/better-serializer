@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Integration;
 
 use BetterSerializer\Builder;
+use BetterSerializer\Helper\DataBind\BooleanStringExtension;
 use BetterSerializer\Serializer;
 use JMS\Serializer\Serializer as JmsSerializer;
 use JMS\Serializer\SerializerBuilder;
@@ -52,6 +53,8 @@ abstract class AbstractIntegrationTest extends TestCase
     {
         self::$builder = new Builder();
         self::$builderCached = new Builder();
+        self::$builder->addExtension(BooleanStringExtension::class);
+        self::$builderCached->addExtension(BooleanStringExtension::class);
 
         if (extension_loaded('apcu') && ini_get('apc.enabled')) {
             self::$builderCached->enableApcuCache();
@@ -64,6 +67,7 @@ abstract class AbstractIntegrationTest extends TestCase
 
     /**
      * @return Serializer
+     * @throws \Pimple\Exception\UnknownIdentifierException
      */
     protected function getSerializer(): Serializer
     {
@@ -76,6 +80,7 @@ abstract class AbstractIntegrationTest extends TestCase
 
     /**
      * @return Serializer
+     * @throws \Pimple\Exception\UnknownIdentifierException
      */
     protected function getCachedSerializer(): Serializer
     {
@@ -89,6 +94,8 @@ abstract class AbstractIntegrationTest extends TestCase
 
     /**
      * @return JmsSerializer
+     * @throws \JMS\Serializer\Exception\InvalidArgumentException
+     * @throws \JMS\Serializer\Exception\RuntimeException
      */
     protected function getJmsSerializer(): JmsSerializer
     {

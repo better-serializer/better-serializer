@@ -33,7 +33,8 @@
         "phpstan/phpstan": "^0.7",
         "satooshi/php-coveralls": "~1.0",
         "jms/serializer": "^1.8",
-        "phpro/grumphp": "^v0.12"
+        "phpro/grumphp": "^v0.12",
+        "doctrine/collections": "^1.5"
     },
 
     "autoload": {
@@ -46,6 +47,12 @@
         "psr-4": {
             "BetterSerializer\\": "tests/BetterSerializer/",
             "Integration\\": "tests/Integration/"
+        }
+    },
+
+    "config": {
+        "platform": {
+            "php": "7.1"
         }
     }
 }

@@ -12,7 +12,7 @@ namespace BetterSerializer\DataBind\MetaData\Type;
  * @author mfris
  * @package BetterSerializer\DataBind\MetaData\Type
  */
-interface DateTimeTypeInterface extends ObjectTypeInterface
+interface DateTimeTypeInterface extends ClassTypeInterface
 {
 
     /**

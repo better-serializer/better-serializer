@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\Chained;
 
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\StringTypeParserInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\UnknownType;
 use BetterSerializer\Reflection\ReflectionClassInterface;
@@ -46,14 +48,22 @@ class DocBlockTypeReaderTest extends TestCase
             ->willReturn($declaringClass);
 
         $type = $this->createMock(TypeInterface::class);
+        $stringFormType = $this->createMock(ContextStringFormTypeInterface::class);
 
         $docBlockFactory = DocBlockFactory::createInstance(); // final
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
         $typeFactory->expects(self::once())
             ->method('getType')
+            ->with($stringFormType)
             ->willReturn($type);
 
-        $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
+        $stringTypeParser->expects(self::once())
+            ->method('parseWithParentContext')
+            ->with($this->isType('string'), $declaringClass)
+            ->willReturn($stringFormType);
+
+        $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory, $stringTypeParser);
         $reader->initialize($constructor);
 
         $retrievedType = $reader->getType($param);
@@ -78,8 +88,9 @@ class DocBlockTypeReaderTest extends TestCase
 
         $docBlockFactory = DocBlockFactory::createInstance(); // final
         $typeFactory = $this->createMock(TypeFactoryInterface::class);
+        $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
 
-        $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory);
+        $reader = new DocBlockTypeReader($typeFactory, $docBlockFactory, $stringTypeParser);
         $reader->initialize($constructor);
 
         $retrievedType = $reader->getType($param);

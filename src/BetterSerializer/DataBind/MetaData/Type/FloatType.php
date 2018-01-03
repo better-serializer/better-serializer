@@ -20,6 +20,6 @@ final class FloatType extends AbstractSimpleType
      */
     protected function initType(): void
     {
-        $this->type = TypeEnum::FLOAT();
+        $this->type = TypeEnum::FLOAT_TYPE();
     }
 }

@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\MetaData\Type\Factory;
 
-use BetterSerializer\DataBind\MetaData\Type\StringFormType\StringFormTypeInterface;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain\ChainMemberInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
@@ -27,15 +27,14 @@ class TypeFactoryTest extends TestCase
      */
     public function testGetType(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
 
-        $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
+        $chainMember = $this->createMock(ChainMemberInterface::class);
         $chainMember->expects(self::exactly(2))
             ->method('getType')
             ->with($stringType)
             ->willReturnOnConsecutiveCalls(null, $type);
-
 
         $typeFactory = new TypeFactory([$chainMember, $chainMember]);
         $createdType = $typeFactory->getType($stringType);
@@ -49,14 +48,13 @@ class TypeFactoryTest extends TestCase
      */
     public function testGetTypeThrowsException(): void
     {
-        $stringTypeString = TypeEnum::STRING;
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringTypeString = TypeEnum::STRING_TYPE;
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        /* @var $stringType StringFormTypeInterface */
 
-        $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
+        $chainMember = $this->createMock(ChainMemberInterface::class);
         $chainMember->expects(self::once())
             ->method('getType')
             ->with($stringType)
@@ -71,16 +69,15 @@ class TypeFactoryTest extends TestCase
      */
     public function testAddChainMemberType(): void
     {
-        $stringTypeString = TypeEnum::STRING;
-        $stringType = $this->getMockBuilder(StringFormTypeInterface::class)->getMock();
+        $stringTypeString = TypeEnum::STRING_TYPE;
+        $stringType = $this->createMock(ContextStringFormTypeInterface::class);
         $stringType->expects(self::once())
             ->method('getStringType')
             ->willReturn($stringTypeString);
-        /* @var $stringType StringFormTypeInterface */
 
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
 
-        $chainMember = $this->getMockBuilder(ChainMemberInterface::class)->getMock();
+        $chainMember = $this->createMock(ChainMemberInterface::class);
         $chainMember->expects(self::once())
             ->method('getType')
             ->with($stringType)

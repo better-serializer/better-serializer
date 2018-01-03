@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Processor\Factory;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use BetterSerializer\DataBind\Reader\Processor\Cached;
-use BetterSerializer\DataBind\Reader\Processor\ComplexNestedProcessorInterface;
+use BetterSerializer\DataBind\Reader\Processor\CachedProcessor;
+use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\Recursive\Cache;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use LogicException;
@@ -67,7 +67,7 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
             return $processor;
         }
 
-        $this->cache->setProcessor($stringCacheKey, new Cached($this->cache, $stringCacheKey));
+        $this->cache->setProcessor($stringCacheKey, new CachedProcessor($this->cache, $stringCacheKey));
 
         return null;
     }
@@ -107,7 +107,7 @@ final class RecursiveProcessorFactory extends AbstractProcessorFactory implement
     {
         $this->nestings[$key]--;
 
-        if ($this->nestings[$key] === 0 && $processor instanceof ComplexNestedProcessorInterface) {
+        if ($this->nestings[$key] === 0 && $processor instanceof PropertyProcessorInterface) {
             $processor->resolveRecursiveProcessors();
             unset($this->nestings[$key]);
         }

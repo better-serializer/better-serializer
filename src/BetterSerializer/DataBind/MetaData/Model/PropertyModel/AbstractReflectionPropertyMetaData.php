@@ -32,7 +32,8 @@ abstract class AbstractReflectionPropertyMetaData extends AbstractPropertyMetaDa
      *
      * @param ReflectionPropertyInterface $reflectionProperty
      * @param AnnotationInterface[] $annotations
-     * @param TypeInterface         $type
+     * @param TypeInterface $type
+     * @throws RuntimeException
      */
     public function __construct(
         ReflectionPropertyInterface $reflectionProperty,
@@ -54,6 +55,7 @@ abstract class AbstractReflectionPropertyMetaData extends AbstractPropertyMetaDa
 
     /**
      * @return string
+     * @throws LogicException
      * @SuppressWarnings(PHPMD)
      */
     public function getOutputKey(): string

@@ -6,17 +6,17 @@ declare(strict_types = 1);
  */
 namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader;
 
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ObjectPropertyMetaData;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ClassPropertyMetaData;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContext;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
-use BetterSerializer\DataBind\MetaData\Reflection\ReflectionClassHelperInterface;
 use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
-use BetterSerializer\DataBind\MetaData\Type\ObjectType;
+use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use BetterSerializer\Reflection\ReflectionClassInterface;
+use ReflectionException;
 use RuntimeException;
 
 /**
@@ -69,6 +69,7 @@ final class PropertiesReader implements PropertiesReaderInterface
      * @param ReflectionClassInterface $reflectionClass
      * @return PropertyMetaDataInterface[]
      * @throws RuntimeException
+     * @throws ReflectionException
      */
     public function getPropertiesMetadata(ReflectionClassInterface $reflectionClass): array
     {
@@ -80,8 +81,8 @@ final class PropertiesReader implements PropertiesReaderInterface
             $annotations = $this->annotationReader->getPropertyAnnotations($nativeReflProperty);
             $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
             $type = $this->getType($context);
-            $propertyClassName = $type instanceof ObjectType ?
-                                    ObjectPropertyMetaData::class : ReflectionPropertyMetadata::class;
+            $propertyClassName = $type instanceof ClassType ?
+                                    ClassPropertyMetaData::class : ReflectionPropertyMetadata::class;
 
             $metaData[$propertyName] = new $propertyClassName($reflectionProperty, $context->getAnnotations(), $type);
         }

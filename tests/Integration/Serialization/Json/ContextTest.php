@@ -28,6 +28,9 @@ final class ContextTest extends AbstractIntegrationTest
      * @param mixed $data
      * @param string $expectedJson
      * @param string[] $groups
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerialization($data, string $expectedJson, array $groups): void
     {
@@ -45,6 +48,9 @@ final class ContextTest extends AbstractIntegrationTest
      * @param mixed $data
      * @param string $expectedJson
      * @param string[] $groups
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testSerializationCached($data, string $expectedJson, array $groups): void
     {
