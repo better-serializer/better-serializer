@@ -1,0 +1,17 @@
+{
+  "source": {
+    "directories": [
+      "src"
+    ],
+    "exclude": [
+    ]
+  },
+  "timeout": 300,
+  "logs": {
+    "text": "log/infection-log.txt"
+  },
+  "phpUnit": {
+    "configDir": ".",
+    "customPath": "./vendor/bin/phpunit"
+  }
+}

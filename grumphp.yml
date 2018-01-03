@@ -1,6 +1,7 @@
 parameters:
     git_dir: .
     bin_dir: vendor/bin
+    process_timeout: 600
     tasks:
       phpcs:
         standard: PSR2
@@ -19,19 +20,28 @@ parameters:
         config_contains_finder: false
         verbose: true
         diff: false
-        triggered_by: ['php']
+        triggered_by: [php]
       phplint: ~
       phpmd:
         exclude: []
         ruleset: ['dev/phpmd.ruleset.xml']
-        triggered_by: ['php']
+        triggered_by: [php]
       phpparser: ~
       phpstan:
         autoload_file: ~
         configuration: dev/phpstan.neon
         level: 7
-        triggered_by: ['php']
+        triggered_by: [php]
       phpunit: ~
+      infection:
+        threads: 2
+        test_framework: phpunit
+        only_covered: false
+        configuration: infection.json
+        min_msi: ~
+        min_covered_msi: ~
+        mutators: []
+        triggered_by: [php]
       phpversion: ~
       securitychecker: ~
       shell: ~
