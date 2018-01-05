@@ -13,11 +13,9 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use LogicException;
 
 /**
- * Class Chain
- * @author mfris
- * @package BetterSerializer\Common\Chain
+ *
  */
-final class TypeFactory implements TypeFactoryInterface
+final class TypeFactory implements ChainedTypeFactoryInterface
 {
 
     /**
