@@ -474,10 +474,6 @@ $container[BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface:
     return new BetterSerializer\DataBind\Reader\Converter\ConverterFactory();
 };
 
-$container[BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface::class] = function () {
-    return new BetterSerializer\DataBind\Writer\Converter\ConverterFactory();
-};
-
 $container[BetterSerializer\Reflection\Factory\ReflectionClassFactoryInterface::class] = function (Container $c) {
     return new BetterSerializer\Reflection\Factory\ReflectionClassFactory(
         $c[BetterSerializer\Reflection\UseStatement\UseStatementsExtractorInterface::class]
