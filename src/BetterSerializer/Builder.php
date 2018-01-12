@@ -85,9 +85,9 @@ final class Builder
      * @param string $directory
      * @throws RuntimeException
      */
-    public function setCacheDir(string $directory): void
+    public function enableFilesystemCache(string $directory): void
     {
-        $this->getCacheFactory()->setCacheDir($directory);
+        $this->getCacheFactory()->enableFileSystemCache($directory);
     }
 
     /**

@@ -44,7 +44,7 @@ class BuilderTest extends TestCase
 
         $cacheFactory = $this->createMock(FactoryInterface::class);
         $cacheFactory->expects(self::once())
-            ->method('setCacheDir')
+            ->method('enableFileSystemCache')
             ->with($cacheDir);
 
         $cache = $this->createMock(ChainCache::class);
@@ -55,7 +55,7 @@ class BuilderTest extends TestCase
         $container[Cache::class] = $cache;
 
         $builder = new Builder($container);
-        $builder->setCacheDir($cacheDir);
+        $builder->enableFilesystemCache($cacheDir);
         $builder->clearCache();
         $serializer = $builder->createSerializer();
 
@@ -69,7 +69,7 @@ class BuilderTest extends TestCase
     public function testSetCacheDirThrows(): void
     {
         $builder = new Builder();
-        $builder->setCacheDir(__DIR__ . '/xxxzzz');
+        $builder->enableFilesystemCache(__DIR__ . '/xxxzzz');
     }
 
     /**

@@ -7,6 +7,10 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Cache;
 
+use BetterSerializer\Cache\Config\ApcuConfig;
+use BetterSerializer\Cache\Config\ConfigInterface;
+use BetterSerializer\Cache\Config\FileSystemConfig;
+use BetterSerializer\Cache\Config\NullConfig;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
@@ -16,50 +20,50 @@ use InvalidArgumentException;
 use RuntimeException;
 
 /**
- * Class Factory
- * @author mfris
- * @package BetterSerializer\Cache
+ *
  */
 final class Factory implements FactoryInterface
 {
 
     /**
-     * @var bool
+     * @var ConfigInterface
      */
-    private $apcuEnabled = false;
+    private $config;
 
     /**
-     * @var string
      */
-    private $cacheDir = '';
+    public function __construct()
+    {
+        $this->disableCache();
+    }
 
     /**
      *
      */
     public function enableApcuCache(): void
     {
-        $this->apcuEnabled = true;
+        $this->config = new ApcuConfig();
+    }
+
+    /**
+     * @param string $path
+     * @throws RuntimeException
+     */
+    public function enableFileSystemCache(string $path): void
+    {
+        if (!file_exists($path) || !is_dir($path)) {
+            throw new RuntimeException(sprintf('Invalid directory: %s', $path));
+        }
+
+        $this->config = new FileSystemConfig($path);
     }
 
     /**
      *
      */
-    public function disableApcuCache(): void
+    public function disableCache(): void
     {
-        $this->apcuEnabled = false;
-    }
-
-    /**
-     * @param string $directory
-     * @throws RuntimeException
-     */
-    public function setCacheDir(string $directory): void
-    {
-        if (!file_exists($directory) || !is_dir($directory)) {
-            throw new RuntimeException(sprintf('Invalid directory: %s', $directory));
-        }
-
-        $this->cacheDir = $directory;
+        $this->config = new NullConfig();
     }
 
     /**
@@ -68,14 +72,23 @@ final class Factory implements FactoryInterface
      */
     public function getCache(): Cache
     {
+        return self::createCache($this->config);
+    }
+
+    /**
+     * @param ConfigInterface $config
+     * @return Cache
+     */
+    public static function createCache(ConfigInterface $config): Cache
+    {
         $cacheProviders = [
             new ArrayCache(),
         ];
 
-        if ($this->apcuEnabled) {
+        if ($config instanceof ApcuConfig) {
             $cacheProviders[] = new ApcuCache();
-        } elseif ($this->cacheDir !== '') {
-            $cacheProviders[] = new FilesystemCache($this->cacheDir);
+        } elseif ($config instanceof FileSystemConfig) {
+            $cacheProviders[] = new FilesystemCache($config->getPath());
         }
 
         $cache = new ChainCache($cacheProviders);

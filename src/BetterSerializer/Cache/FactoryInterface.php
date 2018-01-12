@@ -26,13 +26,13 @@ interface FactoryInterface
     /**
      *
      */
-    public function disableApcuCache(): void;
+    public function disableCache(): void;
 
     /**
-     * @param string $directory
+     * @param string $path
      * @throws RuntimeException
      */
-    public function setCacheDir(string $directory): void;
+    public function enableFileSystemCache(string $path): void;
 
     /**
      * @return Cache

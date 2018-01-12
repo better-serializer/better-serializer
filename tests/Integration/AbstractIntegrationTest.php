@@ -62,7 +62,7 @@ abstract class AbstractIntegrationTest extends TestCase
             return;
         }
 
-        self::$builderCached->setCacheDir(dirname(__DIR__, 2) . '/cache/better-serializer');
+        self::$builderCached->enableFilesystemCache(dirname(__DIR__, 2) . '/cache/better-serializer');
     }
 
     /**

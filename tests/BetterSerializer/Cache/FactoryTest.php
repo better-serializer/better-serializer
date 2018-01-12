@@ -16,9 +16,7 @@ use ReflectionClass;
 use RuntimeException;
 
 /**
- * Class FactoryTest
- * @author mfris
- * @package BetterSerializer\Cache
+ *
  */
 class FactoryTest extends TestCase
 {
@@ -46,7 +44,7 @@ class FactoryTest extends TestCase
         self::assertInstanceOf(ArrayCache::class, $cacheProviders[0]);
         self::assertInstanceOf(ApcuCache::class, $cacheProviders[1]);
 
-        $factory->disableApcuCache();
+        $factory->disableCache();
         $cache = $factory->getCache();
         $cacheProviders = $cacheProvidersProp->getValue($cache);
 
@@ -61,7 +59,7 @@ class FactoryTest extends TestCase
     public function testFileSystem(): void
     {
         $factory = new Factory();
-        $factory->setCacheDir(__DIR__);
+        $factory->enableFileSystemCache(__DIR__);
 
         $cache = $factory->getCache();
 
@@ -85,6 +83,6 @@ class FactoryTest extends TestCase
     public function testFileSystemThrowsExceptionOnInvalidCacheDir(): void
     {
         $factory = new Factory();
-        $factory->setCacheDir(__FILE__);
+        $factory->enableFileSystemCache(__FILE__);
     }
 }
