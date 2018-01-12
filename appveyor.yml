@@ -6,7 +6,7 @@ clone_folder: C:\projects\better-serializer
 install:
   - sc config wuauserv start= auto
   - net start wuauserv
-  - cinst -y php
+  - cinst -y php --version 7.1.13
   - cd c:\tools\php71
   - copy php.ini-production php.ini
   - echo date.timezone="UTC" >> php.ini
