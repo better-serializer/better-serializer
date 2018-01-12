@@ -5,7 +5,7 @@ clone_folder: C:\projects\better-serializer
 
 cache:
   - 'C:\projects\better-serializer\vendor -> C:\projects\better-serializer\composer.lock'
-  - '%USERPROFILE%\.composer -> **\composer.lock'
+  - '%APPDATA%\.composer -> **\composer.lock'
 
 install:
   - cinst -y OpenSSL.Light
