@@ -12,4 +12,3 @@ services:
     environment:
       - SYMFONY_ENV=dev
       - XDEBUG_CONFIG=remote_host=docker.for.mac.host.internal idekey=PHPSTORM
-#docker.for.mac.host.internal
