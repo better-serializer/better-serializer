@@ -12,9 +12,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 /**
- * Class CodeReaderTest
- * @author mfris
- * @package BetterSerializer\Reflection\UseStatement
+ *
  */
 class CodeReaderTest extends TestCase
 {
@@ -25,7 +23,7 @@ class CodeReaderTest extends TestCase
     public function testEverything(): void
     {
         $content = 'xxx';
-        $dirName = '/';
+        $dirName = stripos(PHP_OS, 'WIN')  === 0 ? 'c:\\' : '/';
         $fileName = 'file.php';
 
         $reflectionClass = $this->getMockBuilder(ReflectionClass::class)

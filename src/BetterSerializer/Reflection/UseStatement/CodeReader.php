@@ -10,12 +10,9 @@ namespace BetterSerializer\Reflection\UseStatement;
 use BetterSerializer\Flysystem\Plugin\FirstXLines;
 use League\Flysystem\FilesystemInterface;
 use ReflectionClass;
-use RuntimeException;
 
 /**
- * Class CodeReader
- * @author mfris
- * @package BetterSerializer\Reflection\Factory
+ *
  */
 final class CodeReader implements CodeReaderInterface
 {
@@ -39,8 +36,6 @@ final class CodeReader implements CodeReaderInterface
      *
      * @param ReflectionClass $reflectionClass
      * @return string
-     * @throws RuntimeException
-     * @
      */
     public function readUseStatementsSource(ReflectionClass $reflectionClass): string
     {
