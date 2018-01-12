@@ -3,6 +3,9 @@ shallow_clone: false
 platform: 'x86'
 clone_folder: C:\projects\better-serializer
 
+cache:
+  - C:\projects\better-serializer\vendor -> C:\projects\better-serializer\composer.lock
+
 install:
   - cinst -y OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
