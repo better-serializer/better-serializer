@@ -403,12 +403,8 @@ $container[ConstructorParamReader\TypeReader\Chained\DocBlockTypeReader::class] 
     );
 };
 
-$container[Doctrine\Common\Annotations\AnnotationReader::class] = function (Container $c) {
-    return $c[BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory::class]->newAnnotationReader();
-};
-
-$container[BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory::class] = function () {
-    return new BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory();
+$container[Doctrine\Common\Annotations\AnnotationReader::class] = function () {
+    return BetterSerializer\DataBind\MetaData\Reader\AnnotationReaderFactory::newAnnotationReader();
 };
 
 $container[phpDocumentor\Reflection\DocBlockFactoryInterface::class] = function () {

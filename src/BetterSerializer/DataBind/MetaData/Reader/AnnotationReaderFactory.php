@@ -9,12 +9,9 @@ namespace BetterSerializer\DataBind\MetaData\Reader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use InvalidArgumentException;
 
 /**
- * Class AnnotationReaderFactory
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader
+ *
  */
 final class AnnotationReaderFactory
 {
@@ -22,20 +19,19 @@ final class AnnotationReaderFactory
     /**
      * @var AnnotationReader
      */
-    private $annotationReader;
+    private static $annotationReader;
 
     /**
      * @return AnnotationReader
-     * @throws InvalidArgumentException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function newAnnotationReader(): AnnotationReader
+    public static function newAnnotationReader(): AnnotationReader
     {
-        if ($this->annotationReader === null) {
+        if (self::$annotationReader === null) {
             AnnotationRegistry::registerLoader('class_exists');
-            $this->annotationReader = new AnnotationReader();
+            self::$annotationReader = new AnnotationReader();
         }
 
-        return $this->annotationReader;
+        return self::$annotationReader;
     }
 }
