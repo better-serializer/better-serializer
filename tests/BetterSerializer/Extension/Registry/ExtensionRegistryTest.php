@@ -22,6 +22,34 @@ class ExtensionRegistryTest extends TestCase
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
+    public function testRegisterExtensionOnInstantiation(): void
+    {
+        $typeString = 'test';
+        $extension = ExtensionMockFactory::createTypeExcensionMock($typeString);
+        $extensionClass = get_class($extension);
+
+        $extensionsCollection = $this->createMock(ExtensionsCollectionInterface::class);
+        $extensionsCollection->expects(self::once())
+            ->method('registerExtension')
+            ->with($extensionClass);
+        $extensionsCollection->expects(self::once())
+            ->method('hasType')
+            ->with($typeString)
+            ->willReturn(true);
+
+        $registrator = $this->createMock(ExtensionRegistratorInterface::class);
+        $registrator->expects(self::once())
+            ->method('register')
+            ->willReturn(true);
+
+        $registry = new ExtensionRegistry($extensionsCollection, [$registrator], [$extensionClass]);
+
+        self::assertTrue($registry->hasType($typeString));
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function testRegisterExtension(): void
     {
         $typeString = 'test';

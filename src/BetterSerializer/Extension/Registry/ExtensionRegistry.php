@@ -31,11 +31,18 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
     /**
      * @param ExtensionsCollectionInterface $extensionsCollection
      * @param ExtensionRegistratorInterface[] $registrators
+     * @param string[] $extensionClasses
+     * @throws ReflectionException
+     * @throws RuntimeException
      */
-    public function __construct(ExtensionsCollectionInterface $extensionsCollection, array $registrators)
-    {
+    public function __construct(
+        ExtensionsCollectionInterface $extensionsCollection,
+        array $registrators,
+        array $extensionClasses = []
+    ) {
         $this->extensionsCollection = $extensionsCollection;
         $this->registrators = $registrators;
+        $this->registerExtensions($extensionClasses);
     }
 
     /**
@@ -76,5 +83,17 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
     public function hasType(string $typeString): bool
     {
         return $this->extensionsCollection->hasType($typeString);
+    }
+
+    /**
+     * @param string[] $extensionClasses
+     * @throws ReflectionException
+     * @throws RuntimeException
+     */
+    private function registerExtensions(array $extensionClasses): void
+    {
+        foreach ($extensionClasses as $extensionClass) {
+            $this->registerExtension($extensionClass);
+        }
     }
 }
