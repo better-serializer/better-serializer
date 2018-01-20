@@ -25,7 +25,7 @@ final class ExtensionMember extends AbstractExtensionMember
      */
     protected function isCreatable(TypeInterface $type): bool
     {
-        return $type instanceof ExtensionTypeInterface && isset($this->customHandlerClasses[$type->getCustomType()]);
+        return $type instanceof ExtensionTypeInterface && isset($this->extensionClasses[$type->getCustomType()]);
     }
 
     /**
@@ -36,7 +36,7 @@ final class ExtensionMember extends AbstractExtensionMember
     protected function createProcessor(TypeInterface $type): ProcessorInterface
     {
         /* @var $type ExtensionTypeInterface */
-        $customType = $this->customHandlerClasses[$type->getCustomType()];
+        $customType = $this->extensionClasses[$type->getCustomType()];
         $handler = new $customType($type->getParameters());
 
         return new ExtensionProcessor($handler);

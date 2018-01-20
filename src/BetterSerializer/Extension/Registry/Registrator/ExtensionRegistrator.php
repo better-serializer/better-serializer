@@ -98,8 +98,8 @@ final class ExtensionRegistrator implements ExtensionRegistratorInterface
     {
         $extensionClass = $reflClass->getName();
 
-        $this->typeFactory->addCustomTypeHandlerClass($extensionClass);
-        $this->extRdProcFactory->addCustomHandlerClass($extensionClass);
-        $this->extWrtProcFactory->addCustomHandlerClass($extensionClass);
+        $this->typeFactory->addExtensionClass($extensionClass);
+        $this->extRdProcFactory->addExtensionClass($extensionClass);
+        $this->extWrtProcFactory->addExtensionClass($extensionClass);
     }
 }

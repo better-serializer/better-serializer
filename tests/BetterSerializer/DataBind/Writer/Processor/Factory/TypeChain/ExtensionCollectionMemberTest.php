@@ -81,6 +81,6 @@ class ExtensionCollectionMemberTest extends TestCase
         $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
 
         $member = new ExtensionCollectionMember($processorFactory, [$handlerClass1]);
-        $member->addCustomHandlerClass($handlerClass2);
+        $member->addExtensionClass($handlerClass2);
     }
 }

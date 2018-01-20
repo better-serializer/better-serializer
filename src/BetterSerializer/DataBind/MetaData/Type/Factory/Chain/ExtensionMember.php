@@ -36,17 +36,17 @@ final class ExtensionMember extends AbstractExtensionTypeMember
     /**
      * @param TypeFactoryInterface $typeFactory
      * @param StringTypeParserInterface $stringTypeParser
-     * @param string[] $customObjectClasses
+     * @param string[] $extensionClasses
      * @throws RuntimeException
      */
     public function __construct(
         TypeFactoryInterface $typeFactory,
         StringTypeParserInterface $stringTypeParser,
-        array $customObjectClasses = []
+        array $extensionClasses = []
     ) {
         $this->typeFactory = $typeFactory;
         $this->stringTypeParser = $stringTypeParser;
-        parent::__construct($customObjectClasses);
+        parent::__construct($extensionClasses);
     }
 
     /**

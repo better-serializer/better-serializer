@@ -13,7 +13,7 @@ interface ExtensibleChainMemberInterface extends ChainMemberInterface
 {
 
     /**
-     * @param string $customHandlerClass
+     * @param string $extensionClass
      */
-    public function addCustomHandlerClass(string $customHandlerClass): void;
+    public function addExtensionClass(string $extensionClass): void;
 }

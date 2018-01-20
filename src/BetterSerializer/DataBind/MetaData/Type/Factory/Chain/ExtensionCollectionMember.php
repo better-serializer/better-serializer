@@ -27,13 +27,13 @@ final class ExtensionCollectionMember extends AbstractExtensionTypeMember
 
     /**
      * @param TypeFactoryInterface $typeFactory
-     * @param array $customObjectClasses
+     * @param array $extensionClasses
      * @throws RuntimeException
      */
-    public function __construct(TypeFactoryInterface $typeFactory, array $customObjectClasses = [])
+    public function __construct(TypeFactoryInterface $typeFactory, array $extensionClasses = [])
     {
         $this->typeFactory = $typeFactory;
-        parent::__construct($customObjectClasses);
+        parent::__construct($extensionClasses);
     }
 
 

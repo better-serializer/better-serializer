@@ -28,9 +28,11 @@ class ExtensionRegistratorTest extends TestCase
      * @param string $extTypeInterface
      * @param string $className
      * @param bool $expectedResult
-     * @throws \PHPUnit\Framework\Exception
-     * @throws \PHPUnit_Framework_MockObject_RuntimeException
      * @throws RuntimeException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
      */
     public function testCreate(string $extTypeInterface, string $className, bool $expectedResult): void
     {
@@ -38,15 +40,15 @@ class ExtensionRegistratorTest extends TestCase
 
         $typeFactory = $this->createMock(ExtensibleTypeFactory::class);
         $typeFactory->expects(self::exactly($expectation))
-            ->method('addCustomTypeHandlerClass')
+            ->method('addExtensionClass')
             ->with($className);
         $readerProcFactory = $this->createMock(ReaderTypeChain\ExtensibleChainMemberInterface::class);
         $readerProcFactory->expects(self::exactly($expectation))
-            ->method('addCustomHandlerClass')
+            ->method('addExtensionClass')
             ->with($className);
         $writerProcFactory = $this->createMock(WriterTypeChain\ExtensibleChainMemberInterface::class);
         $writerProcFactory->expects(self::exactly($expectation))
-            ->method('addCustomHandlerClass')
+            ->method('addExtensionClass')
             ->with($className);
         $reflClass = new ReflectionClass($className);
 
@@ -63,9 +65,9 @@ class ExtensionRegistratorTest extends TestCase
 
     /**
      * @return array
-     * @throws \InvalidArgumentException
      * @throws \PHPUnit\Framework\Exception
-     * @throws \PHPUnit_Framework_MockObject_RuntimeException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getIsSupportedDataProvider(): array

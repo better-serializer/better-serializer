@@ -72,6 +72,6 @@ class ExtensionMemberTest extends TestCase
         $handlerClass2 = get_class($customHandler2);
 
         $member = new ExtensionMember([$handlerClass1]);
-        $member->addCustomHandlerClass($handlerClass2);
+        $member->addExtensionClass($handlerClass2);
     }
 }

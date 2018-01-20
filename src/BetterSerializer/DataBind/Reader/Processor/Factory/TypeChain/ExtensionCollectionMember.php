@@ -29,13 +29,13 @@ final class ExtensionCollectionMember extends AbstractExtensionMember
 
     /**
      * @param ProcessorFactoryInterface $processorFactory
-     * @param array $customObjectClasses
+     * @param array $extensionClasses
      * @throws RuntimeException
      */
-    public function __construct(ProcessorFactoryInterface $processorFactory, array $customObjectClasses = [])
+    public function __construct(ProcessorFactoryInterface $processorFactory, array $extensionClasses = [])
     {
         $this->processorFactory = $processorFactory;
-        parent::__construct($customObjectClasses);
+        parent::__construct($extensionClasses);
     }
 
 
@@ -46,7 +46,7 @@ final class ExtensionCollectionMember extends AbstractExtensionMember
     protected function isCreatable(TypeInterface $type): bool
     {
         return $type instanceof ExtensionCollectionTypeInterface
-            && isset($this->customHandlerClasses[$type->getCustomType()]);
+            && isset($this->extensionClasses[$type->getCustomType()]);
     }
 
     /**
@@ -59,7 +59,7 @@ final class ExtensionCollectionMember extends AbstractExtensionMember
     protected function createProcessor(TypeInterface $type): ProcessorInterface
     {
         /* @var $type ExtensionCollectionTypeInterface */
-        $customCollectionType = $this->customHandlerClasses[$type->getCustomType()];
+        $customCollectionType = $this->extensionClasses[$type->getCustomType()];
         $processor = $this->processorFactory->createFromType($type->getNestedType());
         $extension = new $customCollectionType($type->getParameters());
 

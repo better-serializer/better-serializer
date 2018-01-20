@@ -16,8 +16,8 @@ interface ExtensibleChainMemberInterface extends ChainMemberInterface
 {
 
     /**
-     * @param string $customObjectHandlerClass
+     * @param string $extensionClass
      * @throws RuntimeException
      */
-    public function addCustomTypeHandlerClass(string $customObjectHandlerClass): void;
+    public function addExtensionClass(string $extensionClass): void;
 }

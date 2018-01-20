@@ -21,34 +21,34 @@ abstract class AbstractExtensionTypeMember extends ChainMember implements Extens
     protected $customTypes;
 
     /**
-     * @param string[] $customObjectClasses
+     * @param string[] $extensionClasses
      * @throws RuntimeException
      */
-    public function __construct(array $customObjectClasses = [])
+    public function __construct(array $extensionClasses = [])
     {
-        foreach ($customObjectClasses as $customObjectClass) {
-            $this->addCustomTypeHandlerClass($customObjectClass);
+        foreach ($extensionClasses as $extensionClass) {
+            $this->addExtensionClass($extensionClass);
         }
     }
 
     /**
-     * @param string $customObjectHandlerClass
+     * @param string $extensionClass
      * @throws RuntimeException
      */
-    public function addCustomTypeHandlerClass(string $customObjectHandlerClass): void
+    public function addExtensionClass(string $extensionClass): void
     {
-        if (!method_exists($customObjectHandlerClass, 'getType')) {
+        if (!method_exists($extensionClass, 'getType')) {
             throw new RuntimeException(
-                sprintf('Type handler %s is missing the getType method.', $customObjectHandlerClass)
+                sprintf('Type handler %s is missing the getType method.', $extensionClass)
             );
         }
 
-        $customType = call_user_func("{$customObjectHandlerClass}::getType");
+        $customType = call_user_func("{$extensionClass}::getType");
 
         if (isset($this->customTypes[$customType])) {
             throw new RuntimeException(sprintf('Handler for class %s is already registered.', $customType));
         }
 
-        $this->customTypes[$customType] = $customObjectHandlerClass;
+        $this->customTypes[$customType] = $extensionClass;
     }
 }

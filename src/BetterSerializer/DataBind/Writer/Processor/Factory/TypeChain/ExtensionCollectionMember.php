@@ -47,7 +47,7 @@ final class ExtensionCollectionMember extends AbstractExtensionMember
     protected function isCreatable(TypeInterface $type): bool
     {
         return $type instanceof ExtensionCollectionTypeInterface
-            && isset($this->customHandlerClasses[$type->getCustomType()]);
+            && isset($this->extensionClasses[$type->getCustomType()]);
     }
 
     /**
@@ -63,7 +63,7 @@ final class ExtensionCollectionMember extends AbstractExtensionMember
         SerializationContextInterface $context
     ): ProcessorInterface {
         /* @var $type ExtensionCollectionTypeInterface */
-        $customCollectionType = $this->customHandlerClasses[$type->getCustomType()];
+        $customCollectionType = $this->extensionClasses[$type->getCustomType()];
         $processor = $this->processorFactory->createFromType($type->getNestedType(), $context);
         $extension = new $customCollectionType($type->getParameters());
 
