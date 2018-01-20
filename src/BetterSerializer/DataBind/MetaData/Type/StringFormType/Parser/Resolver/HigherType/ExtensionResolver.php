@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver
 
 use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\DataBind\MetaData\Type\TypeClassEnumInterface;
-use BetterSerializer\Extension\Registry\ExtensionsCollectionInterface;
+use BetterSerializer\Extension\Registry\CollectionInterface;
 
 /**
  *
@@ -18,14 +18,14 @@ final class ExtensionResolver implements TypeClassResolverInterface
 {
 
     /**
-     * @var ExtensionsCollectionInterface
+     * @var CollectionInterface
      */
     private $extensions;
 
     /**
-     * @param ExtensionsCollectionInterface $extensions
+     * @param CollectionInterface $extensions
      */
-    public function __construct(ExtensionsCollectionInterface $extensions)
+    public function __construct(CollectionInterface $extensions)
     {
         $this->extensions = $extensions;
     }

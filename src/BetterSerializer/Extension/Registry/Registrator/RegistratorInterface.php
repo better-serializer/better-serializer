@@ -12,7 +12,7 @@ use ReflectionClass;
 /**
  *
  */
-interface ExtensionRegistratorInterface
+interface RegistratorInterface
 {
 
     /**

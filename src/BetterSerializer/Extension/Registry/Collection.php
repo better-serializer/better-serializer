@@ -10,7 +10,7 @@ namespace BetterSerializer\Extension\Registry;
 /**
  *
  */
-final class ExtensionsCollection implements ExtensionsCollectionInterface
+final class Collection implements CollectionInterface
 {
 
     /**

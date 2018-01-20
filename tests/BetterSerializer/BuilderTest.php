@@ -10,7 +10,7 @@ namespace BetterSerializer;
 use BetterSerializer\Cache\Factory;
 use BetterSerializer\Cache\FactoryInterface;
 use BetterSerializer\Dto\Car;
-use BetterSerializer\Extension\Registry\ExtensionRegistryInterface;
+use BetterSerializer\Extension\Registry\RegistryInterface;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
 use PHPUnit\Framework\TestCase;
@@ -107,12 +107,12 @@ class BuilderTest extends TestCase
 
         $container = require dirname(__DIR__, 2) . '/config/di.pimple.php';
 
-        $extensionRegistry = $this->createMock(ExtensionRegistryInterface::class);
+        $extensionRegistry = $this->createMock(RegistryInterface::class);
         $extensionRegistry->expects(self::once())
             ->method('registerExtension')
             ->with($extensionClass);
 
-        $container[ExtensionRegistryInterface::class] = $extensionRegistry;
+        $container[RegistryInterface::class] = $extensionRegistry;
         $container['InternalExtensions'] = [];
 
         $builder = new Builder($container);

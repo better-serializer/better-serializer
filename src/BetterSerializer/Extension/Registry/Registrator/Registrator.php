@@ -16,7 +16,7 @@ use RuntimeException;
 /**
  *
  */
-final class ExtensionRegistrator implements ExtensionRegistratorInterface
+final class Registrator implements RegistratorInterface
 {
 
     /**

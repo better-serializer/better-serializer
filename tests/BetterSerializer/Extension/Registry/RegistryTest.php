@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Extension\Registry;
 
 use BetterSerializer\Dto\Car;
-use BetterSerializer\Extension\Registry\Registrator\ExtensionRegistratorInterface;
+use BetterSerializer\Extension\Registry\Registrator\RegistratorInterface;
 use BetterSerializer\Helper\ExtensionMockFactory;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -16,7 +16,7 @@ use RuntimeException;
 /**
  *
  */
-class ExtensionRegistryTest extends TestCase
+class RegistryTest extends TestCase
 {
 
     /**
@@ -28,7 +28,7 @@ class ExtensionRegistryTest extends TestCase
         $extension = ExtensionMockFactory::createTypeExcensionMock($typeString);
         $extensionClass = get_class($extension);
 
-        $extensionsCollection = $this->createMock(ExtensionsCollectionInterface::class);
+        $extensionsCollection = $this->createMock(CollectionInterface::class);
         $extensionsCollection->expects(self::once())
             ->method('registerExtension')
             ->with($extensionClass);
@@ -37,12 +37,12 @@ class ExtensionRegistryTest extends TestCase
             ->with($typeString)
             ->willReturn(true);
 
-        $registrator = $this->createMock(ExtensionRegistratorInterface::class);
+        $registrator = $this->createMock(RegistratorInterface::class);
         $registrator->expects(self::once())
             ->method('register')
             ->willReturn(true);
 
-        $registry = new ExtensionRegistry($extensionsCollection, [$registrator], [$extensionClass]);
+        $registry = new Registry($extensionsCollection, [$registrator], [$extensionClass]);
 
         self::assertTrue($registry->hasType($typeString));
     }
@@ -56,7 +56,7 @@ class ExtensionRegistryTest extends TestCase
         $extension = ExtensionMockFactory::createTypeExcensionMock($typeString);
         $extensionClass = get_class($extension);
 
-        $extensionsCollection = $this->createMock(ExtensionsCollectionInterface::class);
+        $extensionsCollection = $this->createMock(CollectionInterface::class);
         $extensionsCollection->expects(self::once())
             ->method('registerExtension')
             ->with($extensionClass);
@@ -65,12 +65,12 @@ class ExtensionRegistryTest extends TestCase
             ->with($typeString)
             ->willReturn(true);
 
-        $registrator = $this->createMock(ExtensionRegistratorInterface::class);
+        $registrator = $this->createMock(RegistratorInterface::class);
         $registrator->expects(self::once())
             ->method('register')
             ->willReturn(true);
 
-        $registry = new ExtensionRegistry($extensionsCollection, [$registrator]);
+        $registry = new Registry($extensionsCollection, [$registrator]);
         $registry->registerExtension($extensionClass);
 
         self::assertTrue($registry->hasType($typeString));
@@ -85,9 +85,9 @@ class ExtensionRegistryTest extends TestCase
             "/Class '[A-za-z0-9_]+', doesn't implement any of these configured extension interfaces: [A-za-z0-9_, ]+/"
         );
 
-        $extensionsCollection = $this->createMock(ExtensionsCollectionInterface::class);
+        $extensionsCollection = $this->createMock(CollectionInterface::class);
 
-        $registrator = $this->createMock(ExtensionRegistratorInterface::class);
+        $registrator = $this->createMock(RegistratorInterface::class);
         $registrator->expects(self::once())
             ->method('register')
             ->willReturn(false);
@@ -95,7 +95,7 @@ class ExtensionRegistryTest extends TestCase
             ->method('getExtTypeInterface')
             ->willReturn('TestExtensionInterface');
 
-        $registry = new ExtensionRegistry($extensionsCollection, [$registrator]);
+        $registry = new Registry($extensionsCollection, [$registrator]);
         $registry->registerExtension(Car::class);
     }
 }

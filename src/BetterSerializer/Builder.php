@@ -10,7 +10,7 @@ namespace BetterSerializer;
 use BetterSerializer\Cache\Factory;
 use BetterSerializer\Cache\FactoryInterface;
 use BetterSerializer\Extension\DoctrineCollection;
-use BetterSerializer\Extension\Registry\ExtensionRegistryInterface;
+use BetterSerializer\Extension\Registry\RegistryInterface;
 use Doctrine\Common\Cache\Cache;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
@@ -33,7 +33,7 @@ final class Builder
     private $cacheFactory;
 
     /**
-     * @var ExtensionRegistryInterface
+     * @var RegistryInterface
      */
     private $extensionRegistry;
 
@@ -145,12 +145,12 @@ final class Builder
     }
 
     /**
-     * @return ExtensionRegistryInterface
+     * @return RegistryInterface
      */
-    private function getExtensionRegistry(): ExtensionRegistryInterface
+    private function getExtensionRegistry(): RegistryInterface
     {
         if ($this->extensionRegistry === null) {
-            $this->extensionRegistry = $this->container[ExtensionRegistryInterface::class];
+            $this->extensionRegistry = $this->container[RegistryInterface::class];
         }
 
         return $this->extensionRegistry;

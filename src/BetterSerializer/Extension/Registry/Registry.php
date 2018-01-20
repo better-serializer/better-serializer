@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\Extension\Registry;
 
-use BetterSerializer\Extension\Registry\Registrator\ExtensionRegistratorInterface;
+use BetterSerializer\Extension\Registry\Registrator\RegistratorInterface;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
@@ -15,28 +15,28 @@ use RuntimeException;
 /**
  *
  */
-final class ExtensionRegistry implements ExtensionRegistryInterface
+final class Registry implements RegistryInterface
 {
 
     /**
-     * @var ExtensionsCollectionInterface
+     * @var CollectionInterface
      */
     private $extensionsCollection;
 
     /**
-     * @var ExtensionRegistratorInterface[]
+     * @var RegistratorInterface[]
      */
     private $registrators;
 
     /**
-     * @param ExtensionsCollectionInterface $extensionsCollection
-     * @param ExtensionRegistratorInterface[] $registrators
+     * @param CollectionInterface $extensionsCollection
+     * @param RegistratorInterface[] $registrators
      * @param string[] $extensionClasses
      * @throws ReflectionException
      * @throws RuntimeException
      */
     public function __construct(
-        ExtensionsCollectionInterface $extensionsCollection,
+        CollectionInterface $extensionsCollection,
         array $registrators,
         array $extensionClasses = []
     ) {
@@ -68,7 +68,7 @@ final class ExtensionRegistry implements ExtensionRegistryInterface
                 $reflClass->getName(),
                 implode(
                     ', ',
-                    array_map(function (ExtensionRegistratorInterface $registrator) {
+                    array_map(function (RegistratorInterface $registrator) {
                         return $registrator->getExtTypeInterface();
                     }, $this->registrators)
                 )

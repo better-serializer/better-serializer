@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  *
  */
-class ExtensionsCollectionTest extends TestCase
+class CollectionTest extends TestCase
 {
 
     /**
@@ -25,7 +25,7 @@ class ExtensionsCollectionTest extends TestCase
         $extension = ExtensionMockFactory::createTypeExcensionMock($typeString);
         $extensionClass = get_class($extension);
 
-        $collection = new ExtensionsCollection();
+        $collection = new Collection();
         $collection->registerExtension($extensionClass);
 
         self::assertTrue($collection->hasType($typeString));

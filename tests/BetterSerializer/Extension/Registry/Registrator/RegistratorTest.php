@@ -20,7 +20,7 @@ use RuntimeException;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ExtensionRegistratorTest extends TestCase
+class RegistratorTest extends TestCase
 {
 
     /**
@@ -52,7 +52,7 @@ class ExtensionRegistratorTest extends TestCase
             ->with($className);
         $reflClass = new ReflectionClass($className);
 
-        $registrator = new ExtensionRegistrator(
+        $registrator = new Registrator(
             $extTypeInterface,
             $typeFactory,
             $readerProcFactory,

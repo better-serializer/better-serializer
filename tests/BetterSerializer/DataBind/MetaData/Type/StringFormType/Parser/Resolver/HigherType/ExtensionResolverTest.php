@@ -9,7 +9,7 @@ namespace BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver
 
 use BetterSerializer\DataBind\MetaData\Type\TypeClassEnum;
 use BetterSerializer\Dto\CarInterface;
-use BetterSerializer\Extension\Registry\ExtensionsCollectionInterface;
+use BetterSerializer\Extension\Registry\CollectionInterface;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +30,7 @@ class ExtensionResolverTest extends TestCase
      */
     public function testResolve(string $typeString, ?TypeClassEnum $expectedTypeClass): void
     {
-        $extensions = $this->createMock(ExtensionsCollectionInterface::class);
+        $extensions = $this->createMock(CollectionInterface::class);
         $extensions->expects(self::once())
             ->method('hasType')
             ->with($typeString)

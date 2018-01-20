@@ -10,7 +10,7 @@ namespace BetterSerializer\Extension\Registry;
 /**
  *
  */
-interface ExtensionsCollectionInterface
+interface CollectionInterface
 {
     /**
      * @param string $extensionClass

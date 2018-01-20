@@ -600,12 +600,12 @@ $container[HigherType\InterfaceResolver::class] = function () {
 
 $container[HigherType\ExtensionResolver::class] = function (Container $c) {
     return new HigherType\ExtensionResolver(
-        $c[BetterSerializer\Extension\Registry\ExtensionsCollectionInterface::class]
+        $c[BetterSerializer\Extension\Registry\CollectionInterface::class]
     );
 };
 
 $container['TypeExtensionRegistrator'] = function (Container $c) {
-    return new BetterSerializer\Extension\Registry\Registrator\ExtensionRegistrator(
+    return new BetterSerializer\Extension\Registry\Registrator\Registrator(
         BetterSerializer\Common\TypeExtensionInterface::class,
         $c[TypeFactoryChain\ExtensionMember::class],
         $c[ReaderProcessorFactory\TypeChain\ExtensionMember::class],
@@ -614,7 +614,7 @@ $container['TypeExtensionRegistrator'] = function (Container $c) {
 };
 
 $container['CollectionExtensionRegistrator'] = function (Container $c) {
-    return new BetterSerializer\Extension\Registry\Registrator\ExtensionRegistrator(
+    return new BetterSerializer\Extension\Registry\Registrator\Registrator(
         BetterSerializer\Common\CollectionExtensionInterface::class,
         $c[TypeFactoryChain\ExtensionCollectionMember::class],
         $c[ReaderProcessorFactory\TypeChain\ExtensionCollectionMember::class],
@@ -622,9 +622,9 @@ $container['CollectionExtensionRegistrator'] = function (Container $c) {
     );
 };
 
-$container[BetterSerializer\Extension\Registry\ExtensionRegistryInterface::class] = function (Container $c) {
-    return new BetterSerializer\Extension\Registry\ExtensionRegistry(
-        $c[BetterSerializer\Extension\Registry\ExtensionsCollectionInterface::class],
+$container[BetterSerializer\Extension\Registry\RegistryInterface::class] = function (Container $c) {
+    return new BetterSerializer\Extension\Registry\Registry(
+        $c[BetterSerializer\Extension\Registry\CollectionInterface::class],
         [
             $c['TypeExtensionRegistrator'],
             $c['CollectionExtensionRegistrator']
@@ -632,8 +632,8 @@ $container[BetterSerializer\Extension\Registry\ExtensionRegistryInterface::class
     );
 };
 
-$container[BetterSerializer\Extension\Registry\ExtensionsCollectionInterface::class] = function () {
-    return new BetterSerializer\Extension\Registry\ExtensionsCollection();
+$container[BetterSerializer\Extension\Registry\CollectionInterface::class] = function () {
+    return new BetterSerializer\Extension\Registry\Collection();
 };
 
 $container['InternalExtensions'] = function () {
