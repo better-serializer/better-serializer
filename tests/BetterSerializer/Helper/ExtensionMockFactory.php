@@ -14,7 +14,6 @@ use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parameters\Parameters
 use BetterSerializer\DataBind\Reader\Context\ContextInterface as ReadContext;
 use BetterSerializer\DataBind\Writer\Context\ContextInterface as WriteContext;
 use PHPUnit\Framework\MockObject\Generator;
-use PHPUnit_Framework_MockObject_Generator;
 
 /**
  * @SuppressWarnings(PHPMD)

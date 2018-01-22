@@ -30,5 +30,11 @@ class CollectionTest extends TestCase
 
         self::assertTrue($collection->hasType($typeString));
         self::assertFalse($collection->hasType($typeString . 'xx'));
+
+        $array = $collection->toArray();
+
+        self::assertCount(1, $array);
+        self::assertArrayHasKey($typeString, $array);
+        self::assertSame($extensionClass, $array[$typeString]);
     }
 }

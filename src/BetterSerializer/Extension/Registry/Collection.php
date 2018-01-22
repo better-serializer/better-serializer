@@ -35,4 +35,12 @@ final class Collection implements CollectionInterface
     {
         return isset($this->registeredTypes[$typeString]);
     }
+
+    /**
+     * @return string[]
+     */
+    public function toArray(): array
+    {
+        return $this->registeredTypes;
+    }
 }

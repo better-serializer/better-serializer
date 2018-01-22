@@ -22,4 +22,9 @@ interface CollectionInterface
      * @return bool
      */
     public function hasType(string $typeString): bool;
+
+    /**
+     * @return string[]
+     */
+    public function toArray(): array;
 }
