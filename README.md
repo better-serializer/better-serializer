@@ -7,6 +7,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/better-serializer/better-serializer/v/unstable)](//packagist.org/packages/better-serializer/better-serializer)
 [![License](https://poser.pugx.org/better-serializer/better-serializer/license)](https://packagist.org/packages/better-serializer/better-serializer)
 [![composer.lock available](https://poser.pugx.org/better-serializer/better-serializer/composerlock)](https://packagist.org/packages/better-serializer/better-serializer)
+[![Appveyor status](https://ci.appveyor.com/api/projects/status/github/better-serializer/better-serializer?svg=true)](https://ci.appveyor.com/api/projects/status/github/better-serializer/better-serializer)
 
 This library provides a general serializer for PHP. Currently only JSON serialization format is supported.
 The project aims to be an alternative to [JmsSerializer](https://github.com/schmittjoh/serializer). It tries
