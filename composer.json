@@ -12,13 +12,13 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "marc-mabe/php-enum": "^2.3",
         "doctrine/annotations": "^1.3",
+        "doctrine/cache": "^v1.7",
         "doctrine/instantiator": "^1.0",
         "league/flysystem": "^1.0",
-        "doctrine/cache": "^v1.7",
-        "pimple/pimple": "^3.0",
-        "phpdocumentor/reflection-docblock": "^4.3"
+        "marc-mabe/php-enum": "^2.3",
+        "phpdocumentor/reflection-docblock": "^4.3",
+        "pimple/pimple": "^3.0"
     },
     "require-dev": {
         "doctrine/collections": "^1.5",
