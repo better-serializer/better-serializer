@@ -105,7 +105,7 @@ You can check out the features in the [features page](doc/Features.md). Please a
 
 ## Requirements
 
-This library requires PHP 7.1 and it won't work with older versions. Older versions won't be supported.
+This library requires PHP 7.2 and it won't work with older versions. Older versions won't be supported.
 
 ## Usage
 

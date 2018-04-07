@@ -2,7 +2,7 @@ FROM php:7.2.5-cli
 
 MAINTAINER Martin Fris <rasta@lj.sk>
 
-ENV REFRESHED_AT 2018-01-12
+ENV REFRESHED_AT 2018-04-07
 
 RUN apt-get update && apt-get install -y git-core
 

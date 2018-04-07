@@ -6,11 +6,10 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
     processIsolation="false"
-    stopOnFailure="false"
-    syntaxCheck="false">
+    stopOnFailure="false">
     <testsuites>
         <testsuite name="BetterSerializer">
-            <directory phpVersion="7.1.0" phpVersionOperator=">=">tests</directory>
+            <directory phpVersion="7.2.0" phpVersionOperator=">=">tests</directory>
         </testsuite>
     </testsuites>
 
@@ -27,9 +26,7 @@
     </filter>
 
     <logging>
-        <log type="coverage-html" target="./log/codeCoverage" charset="UTF-8"
-             yui="true" highlight="true"
-             lowUpperBound="50" highLowerBound="80"/>
+        <log type="coverage-html" target="./log/codeCoverage" lowUpperBound="50" highLowerBound="80"/>
         <log type="coverage-text" target="php://stdout" />
         <log type="coverage-clover" target="./log/clover.xml"/>
     </logging>
