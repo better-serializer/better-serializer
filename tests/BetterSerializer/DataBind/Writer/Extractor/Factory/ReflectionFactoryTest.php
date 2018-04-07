@@ -9,15 +9,13 @@ namespace BetterSerializer\DataBind\Writer\Extractor\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
+use BetterSerializer\DataBind\Writer\Extractor\Property\PropertyExtractor;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * Class ReflectionFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor\Factory
+ *
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class ReflectionFactoryTest extends TestCase
@@ -34,10 +32,10 @@ class ReflectionFactoryTest extends TestCase
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);
 
-        $factory = new ReflectionFactory();
+        $factory = new PropertyFactory();
         $extractor = $factory->newExtractor($propertyMetadataStub);
 
-        self::assertInstanceOf(ReflectionExtractor::class, $extractor);
+        self::assertInstanceOf(PropertyExtractor::class, $extractor);
     }
 
     /**
@@ -48,7 +46,7 @@ class ReflectionFactoryTest extends TestCase
     {
         $propertyMetadataStub = $this->createMock(PropertyMetaDataInterface::class);
 
-        $factory = new ReflectionFactory();
+        $factory = new PropertyFactory();
         $factory->newExtractor($propertyMetadataStub);
     }
 }

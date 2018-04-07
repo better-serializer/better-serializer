@@ -11,15 +11,13 @@ namespace BetterSerializer\DataBind\Writer\Extractor\Factory;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Property\ReflectionExtractor;
+use BetterSerializer\DataBind\Writer\Extractor\Property\PropertyExtractor;
 use RuntimeException;
 
 /**
- * Class Factory
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor
+ *
  */
-final class ReflectionFactory implements FactoryInterface
+final class PropertyFactory implements FactoryInterface
 {
 
     /**
@@ -35,6 +33,8 @@ final class ReflectionFactory implements FactoryInterface
             );
         }
 
-        return new ReflectionExtractor($metaData->getReflectionProperty());
+        $reflProperty = $metaData->getReflectionProperty();
+
+        return new PropertyExtractor($reflProperty->getName(), $reflProperty->getDeclaringClass()->getName());
     }
 }

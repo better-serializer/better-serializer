@@ -26,7 +26,7 @@ final class AbstractFactory implements AbstractFactoryInterface
      * @SuppressWarnings(PHPMD)
      */
     private const METADATA2FACTORY_MAPPING = [
-        ReflectionPropertyMetaDataInterface::class => ReflectionFactory::class,
+        ReflectionPropertyMetaDataInterface::class => PropertyFactory::class,
     ];
 
     /**
