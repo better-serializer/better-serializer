@@ -5,7 +5,6 @@ parameters:
     tasks:
       phpcs:
         standard: PSR2
-        show_warnings: true
         tab_width: 4
         whitelist_patterns: []
         encoding: ~

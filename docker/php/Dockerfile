@@ -1,8 +1,8 @@
-FROM php:7.1.13-cli
+FROM php:7.2.4-cli
 
 MAINTAINER Martin Fris <rasta@lj.sk>
 
-ENV REFRESHED_AT 2018-01-12
+ENV REFRESHED_AT 2018-04-07
 
 # Install xdebug
 RUN yes | pecl install xdebug && \
