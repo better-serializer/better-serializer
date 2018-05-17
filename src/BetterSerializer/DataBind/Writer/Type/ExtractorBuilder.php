@@ -13,9 +13,7 @@ use BetterSerializer\DataBind\Writer\Type\Chain\ClassMember;
 use BetterSerializer\DataBind\Writer\Type\Chain\SimpleMember;
 
 /**
- * Class ExtractorBuilder
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Type
+ *
  */
 final class ExtractorBuilder
 {
@@ -23,7 +21,7 @@ final class ExtractorBuilder
     /**
      * @return ExtractorInterface
      */
-    public function build(): ExtractorInterface
+    public static function build(): ExtractorInterface
     {
         $extractor = new Extractor();
         $extractor->addChainMember(new SimpleMember());
