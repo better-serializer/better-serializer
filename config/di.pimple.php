@@ -174,11 +174,7 @@ $container[BetterSerializer\DataBind\Writer\WriterInterface::class] = function (
 };
 
 $container[BetterSerializer\DataBind\Writer\Type\ExtractorInterface::class] = function (Container $c) {
-    return $c[BetterSerializer\DataBind\Writer\Type\ExtractorBuilder::class]->build();
-};
-
-$container[BetterSerializer\DataBind\Writer\Type\ExtractorBuilder::class] = function () {
-    return new BetterSerializer\DataBind\Writer\Type\ExtractorBuilder();
+    return BetterSerializer\DataBind\Writer\Type\ExtractorBuilder::build();
 };
 
 $container[BetterSerializer\DataBind\Writer\Context\ContextFactoryInterface::class] = function () {
