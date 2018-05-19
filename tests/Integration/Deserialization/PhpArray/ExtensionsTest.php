@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Deserialization\Json;
+namespace Integration\Deserialization\PhpArray;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car3;
@@ -21,7 +21,7 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @dataProvider getTestData
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @param string $stringType
      * @param string $testMethod
      * @param string $testResult
@@ -30,14 +30,14 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testDeserialization(string $expectedJson, string $stringType, string $testMethod, $testResult): void
+    public function testDeserialization($expectedData, string $stringType, string $testMethod, $testResult): void
     {
         $serializer = $this->getSerializer();
 
-        $data = $serializer->deserialize($expectedJson, $stringType, SerializationType::JSON());
-        $json = $serializer->serialize($data, SerializationType::JSON());
+        $data = $serializer->deserialize($expectedData, $stringType, SerializationType::PHP_ARRAY());
+        $serialized = $serializer->serialize($data, SerializationType::PHP_ARRAY());
 
-        self::assertSame($expectedJson, $json);
+        self::assertSame($expectedData, $serialized);
 
         $result = $data->{$testMethod}();
 
@@ -48,7 +48,7 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @dataProvider getTestData
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @param string $stringType
      * @param string $testMethod
      * @param string $testResult
@@ -58,17 +58,17 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @throws \RuntimeException
      */
     public function testDeserializationCached(
-        string $expectedJson,
+        $expectedData,
         string $stringType,
         string $testMethod,
         $testResult
     ): void {
         $serializer = $this->getCachedSerializer();
 
-        $data = $serializer->deserialize($expectedJson, $stringType, SerializationType::JSON());
-        $json = $serializer->serialize($data, SerializationType::JSON());
+        $data = $serializer->deserialize($expectedData, $stringType, SerializationType::PHP_ARRAY());
+        $serialized = $serializer->serialize($data, SerializationType::PHP_ARRAY());
 
-        self::assertSame($expectedJson, $json);
+        self::assertSame($expectedData, $serialized);
 
         $result = $data->{$testMethod}();
 
@@ -90,8 +90,18 @@ final class ExtensionsTest extends AbstractIntegrationTest
      */
     private function getCustomExtensionTuple(): array
     {
-        $json = '{"doors":[{"parentalLock":false},{"parentalLock":true}],"isForKids":"yes"}';
+        $data = [
+            'doors' => [
+                [
+                    'parentalLock' => false
+                ],
+                [
+                    'parentalLock' => true
+                ]
+            ],
+            'isForKids' => 'yes'
+        ];
 
-        return [$json, Car3::class, 'isForKids', true];
+        return [$data, Car3::class, 'isForKids', true];
     }
 }

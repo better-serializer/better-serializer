@@ -5,15 +5,13 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Reader\Context\Json;
+namespace BetterSerializer\DataBind\Reader\Context\PhpArray;
 
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 use RuntimeException;
 
 /**
- * Class Context
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\ValueWriter\Json
+ *
  */
 final class Context implements ContextInterface
 {
@@ -29,14 +27,11 @@ final class Context implements ContextInterface
     private $deserialized;
 
     /**
-     * Context constructor.
-     * @param string $json
+     * @param mixed $data
      */
-    public function __construct(string $json = '')
+    public function __construct($data = null)
     {
-        if ($json !== '') {
-            $this->data = json_decode($json, true);
-        }
+        $this->data = $data;
     }
 
     /**

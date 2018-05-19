@@ -10,17 +10,16 @@ namespace BetterSerializer\DataBind\Reader;
 use BetterSerializer\Common\SerializationTypeInterface;
 
 /**
- * Interface ReaderInterface
- * @package BetterSerializer\DataBind\Reader
+ *
  */
 interface ReaderInterface
 {
 
     /**
-     * @param string $serialized
+     * @param $serialized
      * @param string $typeString
      * @param SerializationTypeInterface $serializationType
      * @return mixed
      */
-    public function readValue(string $serialized, string $typeString, SerializationTypeInterface $serializationType);
+    public function readValue($serialized, string $typeString, SerializationTypeInterface $serializationType);
 }

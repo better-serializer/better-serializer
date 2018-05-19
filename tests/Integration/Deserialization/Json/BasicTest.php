@@ -17,9 +17,7 @@ use DateTimeImmutable;
 use DateTime;
 
 /**
- * Class Json
- * @author mfris
- * @package Integration\Deserialization
+ *
  */
 final class BasicTest extends AbstractIntegrationTest
 {

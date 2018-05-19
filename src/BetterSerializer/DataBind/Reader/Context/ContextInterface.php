@@ -7,9 +7,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Context;
 
 /**
- * Class ContextInterface
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\ValueWriter
+ *
  */
 interface ContextInterface
 {

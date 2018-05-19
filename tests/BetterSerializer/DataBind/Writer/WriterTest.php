@@ -18,16 +18,20 @@ use BetterSerializer\Dto\Radio;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class WriterTest
- * @author mfris
- * @package BetterSerializer\DataBind\Writer
  * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class WriterTest extends TestCase
 {
 
     /**
      *
+     * @throws \LogicException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testWriteValueAsString(): void
     {

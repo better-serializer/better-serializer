@@ -10,12 +10,11 @@ namespace BetterSerializer\DataBind\Reader\Context;
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Common\SerializationTypeInterface;
 use BetterSerializer\DataBind\Reader\Context\Json\Context as JsonContext;
+use BetterSerializer\DataBind\Reader\Context\PhpArray\Context as PhpArrayContext;
 use RuntimeException;
 
 /**
- * Class ContextFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Context
+ *
  */
 final class ContextFactory implements ContextFactoryInterface
 {
@@ -25,15 +24,16 @@ final class ContextFactory implements ContextFactoryInterface
      */
     private const TYPE_2_FACTORY_MAPPING = [
         SerializationType::JSON => JsonContext::class,
+        SerializationType::PHP_ARRAY => PhpArrayContext::class,
     ];
 
     /**
-     * @param string $serialized
+     * @param mixed $serialized
      * @param SerializationTypeInterface $serializationType
      * @return ContextInterface
      * @throws RuntimeException
      */
-    public function createContext(string $serialized, SerializationTypeInterface $serializationType): ContextInterface
+    public function createContext($serialized, SerializationTypeInterface $serializationType): ContextInterface
     {
         /* @var $serialization string */
         $serialization = $serializationType->getValue();
