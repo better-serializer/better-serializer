@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Serialization\Json;
+namespace Integration\Serialization\PhpArray;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
@@ -32,17 +32,17 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerialization($data, string $expectedJson): void
+    public function testSerialization($data, $expectedData): void
     {
         $serializer = $this->getSerializer();
 
-        $json = $serializer->serialize($data, SerializationType::JSON());
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY());
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -50,17 +50,17 @@ final class ExtensionsTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerializationCached($data, string $expectedJson): void
+    public function testSerializationCached($data, $expectedData): void
     {
         $serializer = $this->getCachedSerializer();
 
-        $json = $serializer->serialize($data, SerializationType::JSON());
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY());
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -84,7 +84,17 @@ final class ExtensionsTest extends AbstractIntegrationTest
         $doors = new ArrayCollection([$door1, $door2]);
 
         $car = new Car3($doors);
-        $json = '{"doors":[{"parentalLock":false},{"parentalLock":true}],"isForKids":"yes"}';
+        $json = [
+            'doors' => [
+                [
+                    'parentalLock' => false,
+                ],
+                [
+                    'parentalLock' => true,
+                ]
+            ],
+            'isForKids' => 'yes',
+        ];
 
         return [$car, $json];
     }

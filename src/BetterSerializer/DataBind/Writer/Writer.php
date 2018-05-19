@@ -15,9 +15,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class Writer
- * @author mfris
- * @package BetterSerializer\DataBind
+ *
  */
 final class Writer implements WriterInterface
 {
@@ -54,19 +52,19 @@ final class Writer implements WriterInterface
     }
 
     /**
-     * @param mixed             $data
+     * @param mixed $data
      * @param SerializationTypeInterface $serializationType
      * @param SerializationContextInterface $context
-     * @return string
-     * @throws RuntimeException
-     * @throws ReflectionException
+     * @return mixed
      * @throws LogicException
+     * @throws ReflectionException
+     * @throws RuntimeException
      */
     public function writeValueAsString(
         $data,
         SerializationTypeInterface $serializationType,
         SerializationContextInterface $context
-    ): string {
+    ) {
         $typeContext = $this->contextFactory->createContext($serializationType);
         $type = $this->typeExtractor->extract($data);
         $processor = $this->processorFactory->createFromType($type, $context);

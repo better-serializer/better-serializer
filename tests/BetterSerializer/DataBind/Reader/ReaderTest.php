@@ -19,15 +19,19 @@ use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ReaderTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReaderTest extends TestCase
 {
 
     /**
      *
+     * @throws \LogicException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
+     * @throws \RuntimeException
      */
     public function testReadValue(): void
     {

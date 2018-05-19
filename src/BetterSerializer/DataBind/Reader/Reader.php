@@ -60,15 +60,15 @@ final class Reader implements ReaderInterface
     }
 
     /**
-     * @param string $serialized
+     * @param $serialized
      * @param string $typeString
      * @param SerializationTypeInterface $serializationType
      * @return mixed
-     * @throws RuntimeException
-     * @throws ReflectionException
      * @throws LogicException
+     * @throws ReflectionException
+     * @throws RuntimeException
      */
-    public function readValue(string $serialized, string $typeString, SerializationTypeInterface $serializationType)
+    public function readValue($serialized, string $typeString, SerializationTypeInterface $serializationType)
     {
         $context = $this->contextFactory->createContext($serialized, $serializationType);
         $stringType = $this->stringTypeParser->parseSimple($typeString);

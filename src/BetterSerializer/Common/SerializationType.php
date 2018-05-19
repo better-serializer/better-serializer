@@ -9,11 +9,8 @@ namespace BetterSerializer\Common;
 use MabeEnum\Enum;
 
 /**
- * Class SerializationType
- *
- * @author  mfris
- * @package BetterSerializer\Common
  * @method  static SerializationType JSON
+ * @method  static SerializationType PHP_ARRAY
  * @method  static SerializationType NONE
  * @method string getType
  */
@@ -23,6 +20,11 @@ final class SerializationType extends Enum implements SerializationTypeInterface
      * @const string
      */
     const JSON = 'json';
+
+    /**
+     * @const string
+     */
+    const PHP_ARRAY = 'php_array';
 
     /**
      * only for testing purposes

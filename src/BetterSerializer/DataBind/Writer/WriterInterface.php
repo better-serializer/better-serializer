@@ -13,9 +13,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class Writer
- * @author mfris
- * @package BetterSerializer\DataBind
+ *
  */
 interface WriterInterface
 {
@@ -23,14 +21,11 @@ interface WriterInterface
      * @param mixed $data
      * @param SerializationTypeInterface $serializationType
      * @param SerializationContextInterface $context
-     * @return string
-     * @throws RuntimeException
-     * @throws ReflectionException
-     * @throws LogicException
+     * @return mixed
      */
     public function writeValueAsString(
         $data,
         SerializationTypeInterface $serializationType,
         SerializationContextInterface $context
-    ): string;
+    );
 }

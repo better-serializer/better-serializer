@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Serialization\Json;
+namespace Integration\Serialization\PhpArray;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\Dto\Car;
@@ -30,17 +30,17 @@ final class BasicTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerialization($data, string $expectedJson): void
+    public function testSerialization($data, $expectedData): void
     {
         $serializer = $this->getSerializer();
 
-        $json = $serializer->serialize($data, SerializationType::JSON());
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY());
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -48,17 +48,17 @@ final class BasicTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerializationCached($data, string $expectedJson): void
+    public function testSerializationCached($data, $expectedData): void
     {
         $serializer = $this->getCachedSerializer();
 
-        $json = $serializer->serialize($data, SerializationType::JSON());
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY());
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -88,9 +88,16 @@ final class BasicTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[]}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'radio' => [
+                'brand' => 'test station'
+            ],
+            'doors' => []
+        ];
 
-        return [$car, $json];
+        return [$car, $data];
     }
 
     /**
@@ -102,10 +109,23 @@ final class BasicTest extends AbstractIntegrationTest
         $door = new Door();
         $doors = [$door, $door];
         $car = new Car('Honda', 'white', $radio, $doors);
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},'
-            . '"doors":[{"parentalLock":false},{"parentalLock":false}]}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'radio' => [
+                'brand' => 'test station'
+            ],
+            'doors' => [
+                [
+                    'parentalLock' => false
+                ],
+                [
+                    'parentalLock' => false
+                ]
+            ]
+        ];
 
-        return [$car, $json];
+        return [$car, $data];
     }
 
     /**
@@ -116,16 +136,21 @@ final class BasicTest extends AbstractIntegrationTest
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
         $cars = [];
-        $jsonArray = [];
+        $data = [];
 
         for ($i = 0; $i < 2; $i++) {
             $cars[] = $car;
-            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[]}';
+            $data[] = [
+                'title' => 'Honda',
+                'color' => 'white',
+                'radio' => [
+                    'brand' => 'test station'
+                ],
+                'doors' => []
+            ];
         }
 
-        $json = '[' . implode(',', $jsonArray) . ']';
-
-        return [$cars, $json];
+        return [$cars, $data];
     }
 
     /**
@@ -138,17 +163,28 @@ final class BasicTest extends AbstractIntegrationTest
         $doors = [$door, $door];
         $car = new Car('Honda', 'white', $radio, $doors);
         $cars = [];
-        $jsonArray = [];
+        $data = [];
 
         for ($i = 0; $i < 2; $i++) {
             $cars[] = $car;
-            $jsonArray[] = '{"title":"Honda","color":"white","radio":{"brand":"test station"},'
-                . '"doors":[{"parentalLock":false},{"parentalLock":false}]}';
+            $data[] = [
+                'title' => 'Honda',
+                'color' => 'white',
+                'radio' => [
+                    'brand' => 'test station'
+                ],
+                'doors' => [
+                    [
+                        'parentalLock' => false
+                    ],
+                    [
+                        'parentalLock' => false
+                    ]
+                ]
+            ];
         }
 
-        $json = '[' . implode(',', $jsonArray) . ']';
-
-        return [$cars, $json];
+        return [$cars, $data];
     }
 
     /**
@@ -158,16 +194,14 @@ final class BasicTest extends AbstractIntegrationTest
     {
         $string = 'test';
         $strings = [];
-        $jsonArray = [];
+        $data = [];
 
         for ($i = 0; $i < 2; $i++) {
             $strings[] = $string;
-            $jsonArray[] = '"test"';
+            $data[] = $string;
         }
 
-        $json = '[' . implode(',', $jsonArray) . ']';
-
-        return [$strings, $json];
+        return [$strings, $data];
     }
 
     /**
@@ -177,9 +211,17 @@ final class BasicTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new SpecialCar('Honda', 'white', $radio, 'special');
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[],"special":"special"}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'radio' => [
+                'brand' => 'test station'
+            ],
+            'doors' => [],
+            'special' => 'special'
+        ];
 
-        return [$car, $json];
+        return [$car, $data];
     }
 
     /**
@@ -194,10 +236,15 @@ final class BasicTest extends AbstractIntegrationTest
             DateTime::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00'),
             DateTimeImmutable::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00')
         );
-        $json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
-            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
+        $data = [
+            'serializedTitle' => 'testTitle',
+            'manufactured' => '2010-09-01 08:07:06',
+            'selled' => '2017-08-19T17:31:09+00:00',
+            'serviced' => '2017-08-19T17:31:09+00:00',
+            'dismantled' => null,
+        ];
 
-        return [$car2, $json];
+        return [$car2, $data];
     }
 
     /**
@@ -208,7 +255,6 @@ final class BasicTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new SpecialCar('Honda', 'white', $radio, 'special');
-        $carJson = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[],"special":"special"}';
 
         $car2 = new Car2(
             'testTitle',
@@ -216,13 +262,32 @@ final class BasicTest extends AbstractIntegrationTest
             DateTime::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00'),
             DateTimeImmutable::createFromFormat(DateTime::ATOM, '2017-08-19T17:31:09+00:00')
         );
-        $car2Json = '{"serializedTitle":"testTitle","manufactured":"2010-09-01 08:07:06",'
-            . '"selled":"2017-08-19T17:31:09+00:00","serviced":"2017-08-19T17:31:09+00:00","dismantled":null}';
 
         $factory = new CarFactory([$car], [$car2]);
-        $json = '{"cars":[' . $carJson .'],"cars2":['. $car2Json .']}';
+        $data = [
+            'cars' => [
+                [
+                    'title' => 'Honda',
+                    'color' => 'white',
+                    'radio' => [
+                        'brand' => 'test station'
+                    ],
+                    'doors' => [],
+                    'special' => 'special'
+                ],
+            ],
+            'cars2' => [
+                [
+                    'serializedTitle' => 'testTitle',
+                    'manufactured' => '2010-09-01 08:07:06',
+                    'selled' => '2017-08-19T17:31:09+00:00',
+                    'serviced' => '2017-08-19T17:31:09+00:00',
+                    'dismantled' => null,
+                ],
+            ],
+        ];
 
-        return [$factory, $json];
+        return [$factory, $data];
     }
 
     /**
@@ -235,10 +300,21 @@ final class BasicTest extends AbstractIntegrationTest
         $category = new Category(2, $parent);
         $dateTime = (new DateTimeImmutable())->format(DateTime::ATOM);
 
-        $categoryJson = '{"id":2,"parent":{"id":1,"parent":null,"children":[],"createdAt":"' . $dateTime
-            . '","updatedAt":null},"children":[],"createdAt":"' . $dateTime . '","updatedAt":null}';
+        $data = [
+            'id' => 2,
+            'parent' => [
+                'id' => 1,
+                'parent' => null,
+                'children' => [],
+                'createdAt' =>  $dateTime,
+                'updatedAt' => null
+            ],
+            'children' => [],
+            'createdAt' => $dateTime,
+            'updatedAt' => null,
+        ];
 
-        return [$category, $categoryJson];
+        return [$category, $data];
     }
 
     /**

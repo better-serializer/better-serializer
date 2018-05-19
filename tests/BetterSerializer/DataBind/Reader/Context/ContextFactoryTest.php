@@ -9,13 +9,11 @@ namespace BetterSerializer\DataBind\Reader\Context;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\DataBind\Reader\Context\Json\Context as JsonContext;
+use BetterSerializer\DataBind\Reader\Context\PhpArray\Context as PhpArrayContext;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * Class ContextFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Context
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class ContextFactoryTest extends TestCase
@@ -23,12 +21,15 @@ class ContextFactoryTest extends TestCase
 
     /**
      * @dataProvider deserializationTypeProvider
-     * @param string $serialized
+     * @param mixed $serialized
      * @param SerializationType $serializationType
      * @param string $contextClass
+     * @throws RuntimeException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function testCreateContext(
-        string $serialized,
+        $serialized,
         SerializationType $serializationType,
         string $contextClass
     ): void {
@@ -54,7 +55,8 @@ class ContextFactoryTest extends TestCase
     public function deserializationTypeProvider(): array
     {
         return [
-            ['{"a":"a"}', SerializationType::JSON(), JsonContext::class]
+            ['{"a":"a"}', SerializationType::JSON(), JsonContext::class],
+            [['a' => 'a'], SerializationType::PHP_ARRAY(), PhpArrayContext::class]
         ];
     }
 }

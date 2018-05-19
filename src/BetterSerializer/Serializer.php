@@ -16,10 +16,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class Serializer
  *
- * @author  mfris
- * @package BetterSerializer
  */
 final class Serializer
 {
@@ -47,13 +44,13 @@ final class Serializer
     }
 
     /**
-     * @param string $serialized
+     * @param mixed $serialized
      * @param string $stringType
      * @param SerializationTypeInterface $serializationType
      * @return mixed
      */
     public function deserialize(
-        string $serialized,
+        $serialized,
         string $stringType,
         SerializationTypeInterface $serializationType
     ) {
@@ -64,7 +61,7 @@ final class Serializer
      * @param mixed             $data
      * @param SerializationTypeInterface $type
      * @param SerializationContextInterface $context
-     * @return string
+     * @return mixed
      * @throws LogicException
      * @throws ReflectionException
      * @throws RuntimeException
@@ -73,7 +70,7 @@ final class Serializer
         $data,
         SerializationTypeInterface $type,
         SerializationContextInterface $context = null
-    ): string {
+    ) {
         if (!$context) {
             $context = new SerializationContext();
         }

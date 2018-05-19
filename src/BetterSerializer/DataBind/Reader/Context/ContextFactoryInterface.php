@@ -11,17 +11,14 @@ use BetterSerializer\Common\SerializationTypeInterface;
 use RuntimeException;
 
 /**
- * Class ContextFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Context
+ *
  */
 interface ContextFactoryInterface
 {
     /**
-     * @param string $serialized
+     * @param mixed $serialized
      * @param SerializationTypeInterface $serializationType
      * @return ContextInterface
-     * @throws RuntimeException
      */
-    public function createContext(string $serialized, SerializationTypeInterface $serializationType): ContextInterface;
+    public function createContext($serialized, SerializationTypeInterface $serializationType): ContextInterface;
 }

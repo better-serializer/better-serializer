@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace Integration\Serialization\Json;
+namespace Integration\Serialization\PhpArray;
 
 use BetterSerializer\Common\SerializationType;
 use BetterSerializer\DataBind\Writer\SerializationContext;
@@ -24,19 +24,19 @@ final class ContextTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @param string[] $groups
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerialization($data, string $expectedJson, array $groups): void
+    public function testSerialization($data, $expectedData, array $groups): void
     {
         $serializer = $this->getSerializer();
 
         $context = new SerializationContext($groups);
-        $json = $serializer->serialize($data, SerializationType::JSON(), $context);
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY(), $context);
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -44,19 +44,19 @@ final class ContextTest extends AbstractIntegrationTest
      * @group integration
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
-     * @param string $expectedJson
+     * @param mixed $expectedData
      * @param string[] $groups
      * @throws \LogicException
      * @throws \ReflectionException
      * @throws \RuntimeException
      */
-    public function testSerializationCached($data, string $expectedJson, array $groups): void
+    public function testSerializationCached($data, $expectedData, array $groups): void
     {
         $serializer = $this->getCachedSerializer();
 
         $context = new SerializationContext($groups);
-        $json = $serializer->serialize($data, SerializationType::JSON(), $context);
-        self::assertSame($expectedJson, $json);
+        $json = $serializer->serialize($data, SerializationType::PHP_ARRAY(), $context);
+        self::assertSame($expectedData, $json);
     }
 
     /**
@@ -78,9 +78,15 @@ final class ContextTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"}}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'radio' => [
+                'brand' => 'test station',
+            ],
+        ];
 
-        return [$car, $json, ['group1']];
+        return [$car, $data, ['group1']];
     }
 
     /**
@@ -90,9 +96,13 @@ final class ContextTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
-        $json = '{"title":"Honda","color":"white","doors":[]}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'doors' => [],
+        ];
 
-        return [$car, $json, ['group2']];
+        return [$car, $data, ['group2']];
     }
 
     /**
@@ -102,8 +112,15 @@ final class ContextTest extends AbstractIntegrationTest
     {
         $radio = new Radio('test station');
         $car = new Car('Honda', 'white', $radio);
-        $json = '{"title":"Honda","color":"white","radio":{"brand":"test station"},"doors":[]}';
+        $data = [
+            'title' => 'Honda',
+            'color' => 'white',
+            'radio' => [
+                'brand' => 'test station',
+            ],
+            'doors' => [],
+        ];
 
-        return [$car, $json, ['group1', 'group2']];
+        return [$car, $data, ['group1', 'group2']];
     }
 }
