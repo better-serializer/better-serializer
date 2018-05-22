@@ -16,6 +16,7 @@ use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
@@ -23,9 +24,6 @@ use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class SimpleParamProcessorFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\Chain
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ComplexParamProcessorFactoryTest extends TestCase
@@ -36,23 +34,26 @@ class ComplexParamProcessorFactoryTest extends TestCase
      */
     public function testNewParamProcessor(): void
     {
-        $processor = $this->getMockBuilder(ProcessorInterface::class)->getMock();
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
+        $processor = $this->createMock(ProcessorInterface::class);
+        $type = $this->createMock(TypeInterface::class);
 
-        $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
+        $tuple = $this->createMock(PropertyWithConstructorParamTupleInterface::class);
         $tuple->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $processorFactory->expects(self::once())
             ->method('createFromType')
             ->with($type)
             ->willReturn($processor);
 
-        /* @var $tuple PropertyWithConstructorParamTupleInterface */
-        /* @var $processorFactory ProcessorFactoryInterface */
-        $simpleFactory = new ComplexParamProcessorFactory($processorFactory);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+        $nameTranslator->expects(self::once())
+            ->method('translate')
+            ->willReturn('test');
+
+        $simpleFactory = new ComplexParamProcessorFactory($processorFactory, $nameTranslator);
         $simpleProcessor = $simpleFactory->newChainedParamProcessorFactory($tuple);
 
         self::assertInstanceOf(ComplexParamProcessor::class, $simpleProcessor);
@@ -62,19 +63,24 @@ class ComplexParamProcessorFactoryTest extends TestCase
      * @dataProvider isApplicableDataProvider
      * @param TypeInterface $type
      * @param bool $expectedResult
+     * @throws \InvalidArgumentException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function testIsApplicable(TypeInterface $type, bool $expectedResult): void
     {
-        $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
+        $tuple = $this->createMock(PropertyWithConstructorParamTupleInterface::class);
         $tuple->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
 
-        /* @var $tuple PropertyWithConstructorParamTupleInterface */
-        /* @var $processorFactory ProcessorFactoryInterface */
-        $simpleFactory = new ComplexParamProcessorFactory($processorFactory);
+        $simpleFactory = new ComplexParamProcessorFactory($processorFactory, $nameTranslator);
         $result = $simpleFactory->isApplicable($tuple);
 
         self::assertSame($expectedResult, $result);

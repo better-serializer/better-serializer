@@ -11,6 +11,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\ComplexPropertyProcessor;
@@ -21,9 +22,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class ComplexPropertyMember extends ExtractingChainMember
 {
@@ -34,15 +33,16 @@ final class ComplexPropertyMember extends ExtractingChainMember
     private $processorFactory;
 
     /**
-     * ObjectMember constructor.
      * @param ProcessorFactoryInterface $processorFactory
      * @param ExtractorFactoryInterface $extractorFactory
+     * @param TranslatorInterface $nameTranslator
      */
     public function __construct(
         ProcessorFactoryInterface $processorFactory,
-        ExtractorFactoryInterface $extractorFactory
+        ExtractorFactoryInterface $extractorFactory,
+        TranslatorInterface $nameTranslator
     ) {
-        parent::__construct($extractorFactory);
+        parent::__construct($extractorFactory, $nameTranslator);
         $this->processorFactory = $processorFactory;
     }
 
@@ -73,7 +73,8 @@ final class ComplexPropertyMember extends ExtractingChainMember
     ): ProcessorInterface {
         $extractor = $this->extractorFactory->newExtractor($metaData);
         $nestedProcessor = $this->processorFactory->createFromType($metaData->getType(), $context);
+        $serializationName = $this->nameTranslator->translate($metaData);
 
-        return new ComplexPropertyProcessor($extractor, $nestedProcessor, $metaData->getOutputKey());
+        return new ComplexPropertyProcessor($extractor, $nestedProcessor, $serializationName);
     }
 }

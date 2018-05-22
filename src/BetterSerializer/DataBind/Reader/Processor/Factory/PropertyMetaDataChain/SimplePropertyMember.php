@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
@@ -27,14 +28,17 @@ final class SimplePropertyMember extends InjectingChainMember
     private $converterFactory;
 
     /**
-     * SimpleMember constructor.
      * @param ConverterFactoryInterface $converterFactory
      * @param InjectorFactoryInterface $injectorFactory
+     * @param TranslatorInterface $nameTranslator
      */
-    public function __construct(ConverterFactoryInterface $converterFactory, InjectorFactoryInterface $injectorFactory)
-    {
+    public function __construct(
+        ConverterFactoryInterface $converterFactory,
+        InjectorFactoryInterface $injectorFactory,
+        TranslatorInterface $nameTranslator
+    ) {
         $this->converterFactory = $converterFactory;
-        parent::__construct($injectorFactory);
+        parent::__construct($injectorFactory, $nameTranslator);
     }
 
 
@@ -57,7 +61,8 @@ final class SimplePropertyMember extends InjectingChainMember
     {
         $injector = $this->injectorFactory->newInjector($metaData);
         $converter = $this->converterFactory->newConverter($metaData->getType());
+        $serializationName = $this->nameTranslator->translate($metaData);
 
-        return new SimplePropertyProcessor($injector, $converter, $metaData->getOutputKey());
+        return new SimplePropertyProcessor($injector, $converter, $serializationName);
     }
 }

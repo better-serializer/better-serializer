@@ -10,6 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamPr
 use BetterSerializer\DataBind\MetaData\Model\PropertyTuple\PropertyWithConstructorParamTupleInterface;
 use BetterSerializer\DataBind\MetaData\Type\ComplexTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ComplexParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
@@ -18,9 +19,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class ComplexParamProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor
+ *
  */
 final class ComplexParamProcessorFactory implements ChainedParamProcessorFactoryInterface
 {
@@ -31,12 +30,18 @@ final class ComplexParamProcessorFactory implements ChainedParamProcessorFactory
     private $processorFactory;
 
     /**
-     * ComplexParamProcessorFactory constructor.
-     * @param ProcessorFactoryInterface $processorFactory
+     * @var TranslatorInterface
      */
-    public function __construct(ProcessorFactoryInterface $processorFactory)
+    private $nameTranslator;
+
+    /**
+     * @param ProcessorFactoryInterface $processorFactory
+     * @param TranslatorInterface $nameTranslator
+     */
+    public function __construct(ProcessorFactoryInterface $processorFactory, TranslatorInterface $nameTranslator)
     {
         $this->processorFactory = $processorFactory;
+        $this->nameTranslator = $nameTranslator;
     }
 
     /**
@@ -61,7 +66,8 @@ final class ComplexParamProcessorFactory implements ChainedParamProcessorFactory
         PropertyWithConstructorParamTupleInterface $tuple
     ): ParamProcessorInterface {
         $processor = $this->processorFactory->createFromType($tuple->getType());
+        $serializationName = $this->nameTranslator->translate($tuple->getPropertyMetaData());
 
-        return new ComplexParamProcessor($tuple->getOutputKey(), $processor);
+        return new ComplexParamProcessor($serializationName, $processor);
     }
 }

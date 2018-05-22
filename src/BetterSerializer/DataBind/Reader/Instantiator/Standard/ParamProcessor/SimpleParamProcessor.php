@@ -10,9 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor;
 use BetterSerializer\DataBind\Reader\Context\ContextInterface;
 
 /**
- * Class SimpleParamProcessor
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor
+ *
  */
 final class SimpleParamProcessor implements ParamProcessorInterface
 {
@@ -23,7 +21,6 @@ final class SimpleParamProcessor implements ParamProcessorInterface
     private $key;
 
     /**
-     * SimpleParamProcessor constructor.
      * @param string $key
      */
     public function __construct($key)

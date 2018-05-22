@@ -1,22 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * Short desc
- *
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Reader\Injector\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
 use RuntimeException;
 
 /**
- * Class Factory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Injector
+ *
  */
 final class AbstractFactory implements AbstractFactoryInterface
 {
@@ -25,7 +20,7 @@ final class AbstractFactory implements AbstractFactoryInterface
      * @const string[]
      */
     private const METADATA2FACTORY_MAPPING = [
-        ReflectionPropertyMetaDataInterface::class => ReflectionFactory::class,
+        PropertyMetaDataInterface::class => ReflectionFactory::class,
     ];
 
     /**
@@ -36,7 +31,6 @@ final class AbstractFactory implements AbstractFactoryInterface
     /**
      * @param PropertyMetaDataInterface $metaData
      * @return InjectorInterface
-     * @throws RuntimeException
      */
     public function newInjector(PropertyMetaDataInterface $metaData): InjectorInterface
     {
@@ -47,10 +41,6 @@ final class AbstractFactory implements AbstractFactoryInterface
                 $foundFactoryClass = $factoryClass;
                 break;
             }
-        }
-
-        if ($foundFactoryClass === '') {
-            throw new RuntimeException(sprintf('Unexpected class: %s', get_class($metaData)));
         }
 
         $factory = $this->getFactory($foundFactoryClass);

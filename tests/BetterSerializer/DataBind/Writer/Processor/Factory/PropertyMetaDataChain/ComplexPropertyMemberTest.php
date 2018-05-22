@@ -10,6 +10,7 @@ namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataCha
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Writer\Processor\PropertyProcessorInterface;
@@ -20,7 +21,6 @@ use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ComplexPropertyMemberTest extends TestCase
@@ -36,9 +36,6 @@ class ComplexPropertyMemberTest extends TestCase
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
-        $propertyMetaData->expects(self::once())
-            ->method('getOutputKey')
-            ->willReturn('test');
 
         $objProcessor = $this->createMock(PropertyProcessorInterface::class);
 
@@ -56,8 +53,13 @@ class ComplexPropertyMemberTest extends TestCase
             ->willReturn($extractor);
 
         $context = $this->createMock(SerializationContextInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+        $nameTranslator->expects(self::once())
+            ->method('translate')
+            ->with($propertyMetaData)
+            ->willReturn('test');
 
-        $complexNestedMember = new ComplexPropertyMember($processorFactory, $extractorFactory);
+        $complexNestedMember = new ComplexPropertyMember($processorFactory, $extractorFactory, $nameTranslator);
         $processor = $complexNestedMember->create($propertyMetaData, $context);
 
         self::assertInstanceOf(ComplexPropertyProcessor::class, $processor);
@@ -77,8 +79,9 @@ class ComplexPropertyMemberTest extends TestCase
         $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
         $context = $this->createMock(SerializationContextInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
 
-        $complexNestedMember = new ComplexPropertyMember($processorFactory, $extractorFactory);
+        $complexNestedMember = new ComplexPropertyMember($processorFactory, $extractorFactory, $nameTranslator);
         $shouldBeNull = $complexNestedMember->create($propertyMetaData, $context);
 
         self::assertNull($shouldBeNull);

@@ -13,9 +13,7 @@ use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PropertyWithConstructorParamTupleTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Context
+ *
  */
 class PropertyWithConstructorParamTupleTest extends TestCase
 {
@@ -37,7 +35,7 @@ class PropertyWithConstructorParamTupleTest extends TestCase
 
         $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
-            ->method('getOutputKey')
+            ->method('getName')
             ->willReturn($propertyName);
         $propertyMetaData->expects(self::once())
             ->method('getType')

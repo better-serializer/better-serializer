@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
 
 use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
@@ -28,16 +29,17 @@ final class SimplePropertyMember extends ExtractingChainMember
     private $converterFactory;
 
     /**
-     * SimpleMember constructor.
      * @param ConverterFactoryInterface $converterFactory
      * @param ExtractorFactoryInterface $extractorFactory
+     * @param TranslatorInterface $nameTranslator
      */
     public function __construct(
         ConverterFactoryInterface $converterFactory,
-        ExtractorFactoryInterface $extractorFactory
+        ExtractorFactoryInterface $extractorFactory,
+        TranslatorInterface $nameTranslator
     ) {
         $this->converterFactory = $converterFactory;
-        parent::__construct($extractorFactory);
+        parent::__construct($extractorFactory, $nameTranslator);
     }
 
     /**
@@ -63,7 +65,8 @@ final class SimplePropertyMember extends ExtractingChainMember
     ): ProcessorInterface {
         $converter = $this->converterFactory->newConverter($metaData->getType());
         $extractor = $this->extractorFactory->newExtractor($metaData);
+        $serializationName = $this->nameTranslator->translate($metaData);
 
-        return new SimplePropertyProcessor($extractor, $converter, $metaData->getOutputKey());
+        return new SimplePropertyProcessor($extractor, $converter, $serializationName);
     }
 }

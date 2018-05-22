@@ -7,15 +7,23 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
-use ReflectionProperty;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 
 /**
- * Interface PropertyMetadataInterface
  *
- * @package BetterSerializer\DataBind\MetaData
  */
 interface PropertyMetaDataInterface
 {
+
+    /**
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
+     * @return string
+     */
+    public function getSerializationName(): string;
 
     /**
      * @return TypeInterface
@@ -23,12 +31,13 @@ interface PropertyMetaDataInterface
     public function getType(): TypeInterface;
 
     /**
-     * @return string
-     */
-    public function getOutputKey(): string;
-
-    /**
      * @return string[]
      */
     public function getGroups(): array;
+
+    /**
+     * @return ReflectionPropertyInterface
+     *
+     */
+    public function getReflectionProperty(): ReflectionPropertyInterface;
 }

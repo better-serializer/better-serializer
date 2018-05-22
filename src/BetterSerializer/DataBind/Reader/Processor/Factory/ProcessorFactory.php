@@ -18,9 +18,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class ProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory
+ *
  */
 final class ProcessorFactory implements ProcessorFactoryInterface
 {
@@ -36,7 +34,6 @@ final class ProcessorFactory implements ProcessorFactoryInterface
     private $typeChainMembers;
 
     /**
-     * ProcessorFactory constructor.
      * @param MetaDataMember[] $metaDataChainMembers
      * @param TypeMember[] $typeChainMembers
      */
@@ -67,9 +64,7 @@ final class ProcessorFactory implements ProcessorFactoryInterface
     /**
      * @param TypeInterface $type
      * @return ProcessorInterface
-     * @throws ReflectionException
      * @throws LogicException
-     * @throws RuntimeException
      */
     public function createFromType(TypeInterface $type): ProcessorInterface
     {

@@ -12,9 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
- * Class PropertyWithConstructorParamTuple
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Context
+ *
  */
 final class PropertyWithConstructorParamTuple implements PropertyWithConstructorParamTupleInterface
 {
@@ -30,7 +28,6 @@ final class PropertyWithConstructorParamTuple implements PropertyWithConstructor
     private $propertyMetaData;
 
     /**
-     * PropertyWithConstructorParamTuple constructor.
      * @param ReflectionParameterInterface $constructorParam
      * @param PropertyMetaDataInterface $propertyMetaData
      */
@@ -71,7 +68,7 @@ final class PropertyWithConstructorParamTuple implements PropertyWithConstructor
      */
     public function getPropertyName(): string
     {
-        return $this->propertyMetaData->getOutputKey();
+        return $this->propertyMetaData->getName();
     }
 
     /**

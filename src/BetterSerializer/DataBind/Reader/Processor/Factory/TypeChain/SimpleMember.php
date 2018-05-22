@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\TypeChain;
 
+use BetterSerializer\DataBind\MetaData\Type\DateTimeTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
@@ -25,7 +26,6 @@ final class SimpleMember extends ChainMember
     private $converterFactory;
 
     /**
-     * ObjectMember constructor.
      * @param ConverterFactoryInterface $converterFactory
      */
     public function __construct(ConverterFactoryInterface $converterFactory)
@@ -39,7 +39,7 @@ final class SimpleMember extends ChainMember
      */
     protected function isCreatable(TypeInterface $type): bool
     {
-        return $type instanceof SimpleTypeInterface;
+        return $type instanceof SimpleTypeInterface || $type instanceof DateTimeTypeInterface;
     }
 
     /**

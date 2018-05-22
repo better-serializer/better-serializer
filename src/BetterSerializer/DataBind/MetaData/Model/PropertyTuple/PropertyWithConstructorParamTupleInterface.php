@@ -12,9 +12,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
- * Class PropertyWithConstructorParamTuple
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Model\PropertyTuple
+ *
  */
 interface PropertyWithConstructorParamTupleInterface
 {
@@ -33,9 +31,4 @@ interface PropertyWithConstructorParamTupleInterface
      * @return TypeInterface
      */
     public function getType(): TypeInterface;
-
-    /**
-     * @return string
-     */
-    public function getOutputKey(): string;
 }

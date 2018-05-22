@@ -8,9 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 /**
- * Interface DateTimeTypeInterface
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 interface DateTimeTypeInterface extends ClassTypeInterface
 {

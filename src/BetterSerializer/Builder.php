@@ -45,7 +45,7 @@ final class Builder
     /**
      * @var string[]
      */
-    private $internalExtensions = [];
+    private $internalExtensions;
 
     /**
      * Builder constructor.

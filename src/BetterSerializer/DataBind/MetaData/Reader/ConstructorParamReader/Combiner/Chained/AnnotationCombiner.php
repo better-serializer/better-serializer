@@ -8,16 +8,14 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained;
 
 use BetterSerializer\DataBind\MetaData\Annotations\BoundToPropertyInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 
 /**
- * Class AnnotationCombiner
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\TypeReader\StringType
+ *
  */
 final class AnnotationCombiner extends ChainedCombiner
 {
@@ -48,6 +46,7 @@ final class AnnotationCombiner extends ChainedCombiner
 
     /**
      * @param Context\InitializeContextInterface $context
+     * @throws \RuntimeException
      */
     public function initialize(Context\InitializeContextInterface $context): void
     {
@@ -83,7 +82,7 @@ final class AnnotationCombiner extends ChainedCombiner
         ReflectionParameterInterface $parameter
     ): Context\PropertyWithConstructorParamTupleInterface {
         $boundTuple = $this->annotations[$parameter->getName()];
-        /* @var $propertyMetaData ReflectionPropertyMetaDataInterface */
+        /* @var $propertyMetaData PropertyMetaDataInterface */
         $propertyMetaData = $this->propertiesMetaData->shrinkBy($boundTuple->getPropertyName());
 
         return new Context\PropertyWithConstructorParamTuple($parameter, $propertyMetaData);

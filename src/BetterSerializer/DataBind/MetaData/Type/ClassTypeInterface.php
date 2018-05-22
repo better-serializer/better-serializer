@@ -8,8 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 /**
- * Interface ObjectTypeInterface
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 interface ClassTypeInterface extends ComplexTypeInterface
 {

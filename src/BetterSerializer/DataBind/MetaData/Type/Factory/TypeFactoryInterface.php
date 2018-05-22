@@ -10,9 +10,7 @@ use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormType
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
- * Class TypeFactory
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 interface TypeFactoryInterface
 {

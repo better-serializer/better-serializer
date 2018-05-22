@@ -17,7 +17,7 @@ use DateTimeImmutable;
 use DateTime;
 
 /**
- *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 final class BasicTest extends AbstractIntegrationTest
 {
@@ -66,6 +66,7 @@ final class BasicTest extends AbstractIntegrationTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getTestData(): array
     {
@@ -179,6 +180,7 @@ final class BasicTest extends AbstractIntegrationTest
 
     /**
      * @return array
+     * @throws \Exception
      */
     private function getRecursiveDataTuple(): array
     {

@@ -11,9 +11,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**
- * Class ChainMember
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain
+ *
  */
 interface ChainMemberInterface
 {

@@ -13,8 +13,7 @@ use BetterSerializer\DataBind\Reader\Processor\ExtensionProcessor;
 use BetterSerializer\DataBind\Reader\Processor\ProcessorInterface;
 
 /**
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Converter\TypeChain
+ *
  */
 final class ExtensionMember extends AbstractExtensionMember
 {

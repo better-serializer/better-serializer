@@ -13,9 +13,7 @@ use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RecursiveProcessorFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory
+ *
  */
 class RecursiveProcessorFactoryTest extends TestCase
 {
@@ -32,8 +30,6 @@ class RecursiveProcessorFactoryTest extends TestCase
         $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->method('getType')
             ->willReturn($type);
-        $propertyMetaData->method('getOutputKey')
-            ->willReturn('key');
 
         $nestedProcessor = $this->createMock(PropertyProcessorInterface::class);
         $nestedProcessor->expects(self::once())

@@ -11,14 +11,12 @@ use BetterSerializer\DataBind\MetaData\Annotations\Groups;
 use BetterSerializer\DataBind\MetaData\Annotations\Property;
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use LogicException;
 use RuntimeException;
 
 /**
- * ClassModel PropertyMetadata
  *
- * @author  mfris
- * @package BetterSerializer\DataBind\MetaData
  */
 abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
 {
@@ -34,16 +32,48 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
     private $type;
 
     /**
-     * PropertyMetadata constructor.
-     *
+     * @var ReflectionPropertyInterface
+     */
+    private $reflectionProperty;
+
+    /**
+     * @param ReflectionPropertyInterface $reflectionProperty,
      * @param AnnotationInterface[] $annotations
      * @param TypeInterface         $type
      * @throws RuntimeException
      */
-    public function __construct(array $annotations, TypeInterface $type)
-    {
+    public function __construct(
+        ReflectionPropertyInterface $reflectionProperty,
+        array $annotations,
+        TypeInterface $type
+    ) {
+        $this->reflectionProperty = $reflectionProperty;
+        $this->reflectionProperty->setAccessible(true);
         $this->setAnnotations($annotations);
         $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->reflectionProperty->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSerializationName(): string
+    {
+        if (!isset($this->annotations[Property::ANNOTATION_NAME])) {
+            return '';
+        }
+
+        /* @var $propertyAnnotation Property */
+        $propertyAnnotation = $this->annotations[Property::ANNOTATION_NAME];
+
+        return $propertyAnnotation->getName();
     }
 
     /**
@@ -55,25 +85,11 @@ abstract class AbstractPropertyMetaData implements PropertyMetaDataInterface
     }
 
     /**
-     * @return string
-     * @throws LogicException
-     * @throws RuntimeException
+     * @return ReflectionPropertyInterface
      */
-    public function getOutputKey(): string
+    public function getReflectionProperty(): ReflectionPropertyInterface
     {
-        if (!isset($this->annotations[Property::ANNOTATION_NAME])) {
-            throw new LogicException('Property annotation missing.');
-        }
-
-        /* @var  $propertyAnnotation PropertyInterface */
-        $propertyAnnotation = $this->annotations[Property::ANNOTATION_NAME];
-        $outputKey = $propertyAnnotation->getName();
-
-        if (!$outputKey) {
-            throw new RuntimeException('Missing property name.');
-        }
-
-        return $outputKey;
+        return $this->reflectionProperty;
     }
 
     /**

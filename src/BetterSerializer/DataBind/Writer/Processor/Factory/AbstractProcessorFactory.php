@@ -18,9 +18,7 @@ use LogicException;
 use RuntimeException;
 
 /**
- * Class AbstractProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Processor\Factory
+ *
  */
 abstract class AbstractProcessorFactory
 {
@@ -31,7 +29,6 @@ abstract class AbstractProcessorFactory
     private $processorFactory;
 
     /**
-     * AbstractProcessorFactory constructor.
      * @param ProcessorFactoryInterface $processorFactory
      */
     public function __construct(ProcessorFactoryInterface $processorFactory)

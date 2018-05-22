@@ -13,9 +13,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
 /**
- * Class ReflectionExtractorTest
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor\Property
+ *
  */
 class ReflectionExtractorTest extends TestCase
 {

@@ -12,9 +12,7 @@ use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use ReflectionProperty as NativeReflectionProperty;
 
 /**
- * Class ReflectionExtractor
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor\Property
+ *
  */
 final class ReflectionExtractor implements ExtractorInterface
 {
@@ -40,16 +38,16 @@ final class ReflectionExtractor implements ExtractorInterface
     }
 
     /**
-     * @param object $data
+     * @param object|null $object
      * @return mixed
      */
-    public function extract($data)
+    public function extract(?object $object)
     {
-        if ($data === null) {
+        if ($object === null) {
             return null;
         }
 
-        return $this->nativeReflectionProperty->getValue($data);
+        return $this->nativeReflectionProperty->getValue($object);
     }
 
     /**

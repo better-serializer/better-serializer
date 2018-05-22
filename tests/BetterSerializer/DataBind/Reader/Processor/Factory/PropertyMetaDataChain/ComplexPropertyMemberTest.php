@@ -10,6 +10,7 @@ namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataCha
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\PropertyProcessorInterface;
@@ -19,7 +20,6 @@ use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ComplexPropertyMemberTest extends TestCase
@@ -31,33 +31,33 @@ class ComplexPropertyMemberTest extends TestCase
     public function testCreate(): void
     {
         $type = new ClassType(Car::class);
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
-        $propertyMetaData->expects(self::once())
-            ->method('getOutputKey')
-            ->willReturn('test');
 
-        $objProcessor = $this->getMockBuilder(PropertyProcessorInterface::class)->getMock();
+        $objProcessor = $this->createMock(PropertyProcessorInterface::class);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
         $processorFactory->expects(self::once())
             ->method('createFromType')
             ->with($type)
             ->willReturn($objProcessor);
 
-        $injector = $this->getMockBuilder(InjectorInterface::class)->getMock();
+        $injector = $this->createMock(InjectorInterface::class);
 
-        $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
         $injectorFactory->expects(self::once())
             ->method('newInjector')
             ->willReturn($injector);
 
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $injectorFactory InjectorFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
-        $complexNestedMember = new ComplexPropertyMember($processorFactory, $injectorFactory);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+        $nameTranslator->expects(self::once())
+            ->method('translate')
+            ->with($propertyMetaData)
+            ->willReturn('testName');
+
+        $complexNestedMember = new ComplexPropertyMember($processorFactory, $injectorFactory, $nameTranslator);
         $processor = $complexNestedMember->create($propertyMetaData);
 
         self::assertInstanceOf(ComplexPropertyProcessor::class, $processor);
@@ -69,18 +69,16 @@ class ComplexPropertyMemberTest extends TestCase
     public function testCreateReturnsNull(): void
     {
         $type = new StringType();
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        $processorFactory = $this->getMockBuilder(ProcessorFactoryInterface::class)->getMock();
-        $injectorFactory = $this->getMockBuilder(InjectorFactoryInterface::class)->getMock();
+        $processorFactory = $this->createMock(ProcessorFactoryInterface::class);
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
 
-        /* @var $processorFactory ProcessorFactoryInterface */
-        /* @var $injectorFactory InjectorFactoryInterface */
-        /* @var $propertyMetaData PropertyMetaDataInterface */
-        $complexNestedMember = new ComplexPropertyMember($processorFactory, $injectorFactory);
+        $complexNestedMember = new ComplexPropertyMember($processorFactory, $injectorFactory, $nameTranslator);
         $shouldBeNull = $complexNestedMember->create($propertyMetaData);
 
         self::assertNull($shouldBeNull);

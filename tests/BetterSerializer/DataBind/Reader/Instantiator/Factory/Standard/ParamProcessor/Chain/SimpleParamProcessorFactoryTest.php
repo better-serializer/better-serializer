@@ -16,14 +16,12 @@ use BetterSerializer\DataBind\MetaData\Type\NullType;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\SimpleParamProcessor;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class SimpleParamProcessorFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor\Chain
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SimpleParamProcessorFactoryTest extends TestCase
@@ -35,13 +33,13 @@ class SimpleParamProcessorFactoryTest extends TestCase
     public function testNewParamProcessor(): void
     {
         $key = 'test';
-        $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
-        $tuple->expects(self::once())
-            ->method('getOutputKey')
+        $tuple = $this->createMock(PropertyWithConstructorParamTupleInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+        $nameTranslator->expects(self::once())
+            ->method('translate')
             ->willReturn($key);
 
-        /* @var $tuple PropertyWithConstructorParamTupleInterface */
-        $simpleFactory = new SimpleParamProcessorFactory();
+        $simpleFactory = new SimpleParamProcessorFactory($nameTranslator);
         $simpleProcessor = $simpleFactory->newChainedParamProcessorFactory($tuple);
 
         self::assertInstanceOf(SimpleParamProcessor::class, $simpleProcessor);
@@ -51,16 +49,23 @@ class SimpleParamProcessorFactoryTest extends TestCase
      * @dataProvider isApplicableDataProvider
      * @param TypeInterface $type
      * @param bool $expectedResult
+     * @throws \InvalidArgumentException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function testIsApplicable(TypeInterface $type, bool $expectedResult): void
     {
-        $tuple = $this->getMockBuilder(PropertyWithConstructorParamTupleInterface::class)->getMock();
+        $tuple = $this->createMock(PropertyWithConstructorParamTupleInterface::class);
         $tuple->expects(self::once())
             ->method('getType')
             ->willReturn($type);
 
-        /* @var $tuple PropertyWithConstructorParamTupleInterface */
-        $simpleFactory = new SimpleParamProcessorFactory();
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+
+        $simpleFactory = new SimpleParamProcessorFactory($nameTranslator);
         $result = $simpleFactory->isApplicable($tuple);
 
         self::assertSame($expectedResult, $result);

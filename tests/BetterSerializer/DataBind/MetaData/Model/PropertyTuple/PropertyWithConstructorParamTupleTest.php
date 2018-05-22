@@ -13,9 +13,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PropertyWithConstructorParamTupleTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Model\PropertyTuple
+ *
  */
 class PropertyWithConstructorParamTupleTest extends TestCase
 {
@@ -25,24 +23,16 @@ class PropertyWithConstructorParamTupleTest extends TestCase
      */
     public function testEverything(): void
     {
-        $type = $this->getMockBuilder(TypeInterface::class)->getMock();
-        $key = 'test';
-        $propertyMetaData = $this->getMockBuilder(PropertyMetaDataInterface::class)->getMock();
+        $type = $this->createMock(TypeInterface::class);
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
         $propertyMetaData->expects(self::once())
             ->method('getType')
             ->willReturn($type);
-        $propertyMetaData->expects(self::once())
-            ->method('getOutputKey')
-            ->willReturn($key);
-        $constrParamMetaData = $this->getMockBuilder(ConstructorParamMetaDataInterface::class)->getMock();
-
-        /* @var $propertyMetaData PropertyMetaDataInterface */
-        /* @var $constrParamMetaData ConstructorParamMetaDataInterface */
+        $constrParamMetaData = $this->createMock(ConstructorParamMetaDataInterface::class);
         $tuple = new PropertyWithConstructorParamTuple($propertyMetaData, $constrParamMetaData);
 
         self::assertSame($propertyMetaData, $tuple->getPropertyMetaData());
         self::assertSame($constrParamMetaData, $tuple->getConstructorParamMetaData());
         self::assertSame($type, $tuple->getType());
-        self::assertSame($key, $tuple->getOutputKey());
     }
 }

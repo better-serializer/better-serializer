@@ -33,7 +33,6 @@ final class ClassProcessor implements PropertyProcessorInterface
     private $resolved = false;
 
     /**
-     * Object constructor.
      * @param InstantiatorInterface $instantiator
      * @param ProcessorInterface[] $processors
      */

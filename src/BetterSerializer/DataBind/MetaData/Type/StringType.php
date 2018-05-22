@@ -7,9 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 /**
- * Class String
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 final class StringType extends AbstractSimpleType
 {

@@ -15,12 +15,10 @@ use RuntimeException;
 /**
  *
  */
-final class ClassPropertyMetaData extends AbstractReflectionPropertyMetaData implements ClassPropertyMetaDataInterface
+final class ClassPropertyMetaData extends AbstractPropertyMetaData implements ClassPropertyMetaDataInterface
 {
 
     /**
-     * PropertyMetadata constructor.
-     *
      * @param ReflectionPropertyInterface $reflectionProperty
      * @param AnnotationInterface[] $annotations
      * @param ClassType $type
