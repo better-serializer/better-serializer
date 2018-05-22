@@ -27,13 +27,23 @@ $container[BetterSerializer\Serializer::class] = function (Container $c) {
 $container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface::class] =
     function (Container $c) {
         return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\AnnotationTranslator(
-            $c[BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator::class]
+            $c[$c['translationNaming']]
         );
     };
 
 $container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator::class] =
     function () {
         return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator();
+    };
+
+$container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\CamelCaseTranslator::class] =
+    function () {
+        return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\CamelCaseTranslator;
+    };
+
+$container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\SnakeCaseTranslator::class] =
+    function () {
+        return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\SnakeCaseTranslator;
     };
 
 $container[BetterSerializer\DataBind\Reader\ReaderInterface::class] = function (Container $c) {
@@ -664,5 +674,7 @@ $container['InternalExtensions'] = function () {
         BetterSerializer\Extension\DoctrineCollection::class,
     ];
 };
+
+$container['translationNaming'] = BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator::class;
 
 return $container;
