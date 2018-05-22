@@ -91,6 +91,17 @@ final class Builder
     }
 
     /**
+     * @param string $namingStrategy
+     *
+     * @return void
+     * @throws \Pimple\Exception\FrozenServiceException
+     */
+    public function setNamingStrategy(string $namingStrategy): void
+    {
+        $this->container->offsetSet('translationNaming', $namingStrategy);
+    }
+
+    /**
      *
      */
     public function clearCache(): void

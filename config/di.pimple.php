@@ -10,6 +10,9 @@ use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver\Annota
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver\DocBlockPropertyTypeResolver;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain as TypeFactoryChain;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\HigherType;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\CamelCaseTranslator;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\SnakeCaseTranslator;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory as ReaderProcessorFactory;
 use BetterSerializer\DataBind\Writer\Processor\Factory as WriterProcessorFactory;
@@ -27,13 +30,23 @@ $container[BetterSerializer\Serializer::class] = function (Container $c) {
 $container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface::class] =
     function (Container $c) {
         return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\AnnotationTranslator(
-            $c[BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator::class]
+            new $c['translationNaming']
         );
     };
 
 $container[BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator::class] =
     function () {
         return new BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator();
+    };
+
+$container[CamelCaseTranslator::class] =
+    function () {
+        return new CamelCaseTranslator();
+    };
+
+$container[SnakeCaseTranslator::class] =
+    function () {
+        return new SnakeCaseTranslator();
     };
 
 $container[BetterSerializer\DataBind\Reader\ReaderInterface::class] = function (Container $c) {
@@ -664,5 +677,7 @@ $container['InternalExtensions'] = function () {
         BetterSerializer\Extension\DoctrineCollection::class,
     ];
 };
+
+$container['translationNaming'] = IdenticalTranslator::class;
 
 return $container;
