@@ -19,17 +19,17 @@ final class SerializationType extends Enum implements SerializationTypeInterface
     /**
      * @const string
      */
-    const JSON = 'json';
+    public const JSON = 'json';
 
     /**
      * @const string
      */
-    const PHP_ARRAY = 'php_array';
+    public const PHP_ARRAY = 'php_array';
 
     /**
      * only for testing purposes
      *
      * @const string
      */
-    const NONE = 'none';
+    public const NONE = 'none';
 }

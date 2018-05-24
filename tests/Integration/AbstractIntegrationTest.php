@@ -14,32 +14,16 @@ use JMS\Serializer\Serializer as JmsSerializer;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\TestCase;
 
-/*
- * @author mfris
- * @package Integration
+/**
+ *
  */
 abstract class AbstractIntegrationTest extends TestCase
 {
 
     /**
-     * @var Builder
+     * @var Serializer[]
      */
-    private static $builder;
-
-    /**
-     * @var Builder
-     */
-    private static $builderCached;
-
-    /**
-     * @var Serializer
-     */
-    private static $serializer;
-
-    /**
-     * @var Serializer
-     */
-    private static $cachedSerializer;
+    private static $serializers = [];
 
     /**
      * @var JmsSerializer
@@ -47,53 +31,120 @@ abstract class AbstractIntegrationTest extends TestCase
     private static $jmsSerializer;
 
     /**
-     *
+     * @const string
      */
-    public static function setUpBeforeClass()
+    protected const EXTENSIONS = 'extensions';
+
+    /**
+     * @const string
+     */
+    protected const CACHE = 'cache';
+
+    /**
+     * @const string
+     */
+    protected const NAMING_STRATEGY = 'naming_strategy';
+
+    /**
+     * @param string[] $options
+     * @param bool $dontCache
+     * @return Serializer
+     * @throws \InvalidArgumentException
+     * @throws \Pimple\Exception\UnknownIdentifierException
+     * @throws \RuntimeException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    protected function getSerializer(array $options = [], bool $dontCache = false): Serializer
     {
-        self::$builder = new Builder();
-        self::$builderCached = new Builder();
-        self::$builder->addExtension(BooleanStringExtension::class);
-        self::$builderCached->addExtension(BooleanStringExtension::class);
+        $options = array_merge(
+            [
+                self::EXTENSIONS => [
+                    BooleanStringExtension::class,
+                ],
+            ],
+            $options
+        );
 
-        if (extension_loaded('apcu') && ini_get('apc.enabled')) {
-            self::$builderCached->enableApcuCache();
-
-            return;
-        }
-
-        self::$builderCached->enableFilesystemCache(dirname(__DIR__, 2) . '/cache/better-serializer');
+        return $this->buildSerializer($options, $dontCache);
     }
 
     /**
+     * @param string[] $options
+     * @param bool $dontCache
      * @return Serializer
+     * @throws \InvalidArgumentException
      * @throws \Pimple\Exception\UnknownIdentifierException
+     * @throws \RuntimeException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    protected function getSerializer(): Serializer
+    protected function getCachedSerializer(array $options = [], bool $dontCache = false): Serializer
     {
-        if (self::$serializer === null) {
-            self::$serializer = self::$builder->createSerializer();
-        }
+        $options = array_merge(
+            [
+                self::CACHE => true,
+                self::EXTENSIONS => [
+                    BooleanStringExtension::class,
+                ],
+            ],
+            $options
+        );
 
-        return self::$serializer;
+        return $this->buildSerializer($options, $dontCache);
     }
 
     /**
+     * @param string[] $options
+     * @param bool $dontCache
      * @return Serializer
+     * @throws \InvalidArgumentException
      * @throws \Pimple\Exception\UnknownIdentifierException
+     * @throws \RuntimeException
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    protected function getCachedSerializer(): Serializer
+    private function buildSerializer(array $options, bool $dontCache = false): Serializer
     {
-        if (self::$cachedSerializer === null) {
-            self::$builderCached->clearCache();
-            self::$cachedSerializer = self::$builderCached->createSerializer();
+        $cacheKey = var_export($options, true);
+
+        if (isset(self::$serializers[$cacheKey])) {
+            return self::$serializers[$cacheKey];
         }
 
-        return self::$cachedSerializer;
+        $builder = new Builder();
+
+        if (isset($options[self::EXTENSIONS])) {
+            foreach ($options[self::EXTENSIONS] as $extension) {
+                $builder->addExtension($extension);
+            }
+        }
+
+        if (isset($options[self::CACHE])) {
+            if (extension_loaded('apcu') && ini_get('apc.enabled')) {
+                $builder->enableApcuCache();
+            } else {
+                $builder->enableFilesystemCache(dirname(__DIR__, 2) . '/cache/better-serializer');
+            }
+        }
+
+        if (isset($options[self::NAMING_STRATEGY])) {
+            $builder->setNamingStrategy($options[self::NAMING_STRATEGY]);
+        }
+
+        $serializer = $builder->createSerializer();
+
+        if ($dontCache) {
+            return $serializer;
+        }
+
+        self::$serializers[$cacheKey] = $serializer;
+
+        return $serializer;
     }
 
     /**
      * @return JmsSerializer
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \InvalidArgumentException
      * @throws \JMS\Serializer\Exception\InvalidArgumentException
      * @throws \JMS\Serializer\Exception\RuntimeException
      */

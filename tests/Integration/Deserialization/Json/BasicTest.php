@@ -49,10 +49,11 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param string $expectedJson
      * @param string $stringType
-     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      * @throws \Pimple\Exception\UnknownIdentifierException
-     * @throws \ReflectionException
      * @throws \RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function testDeserializationCached(string $expectedJson, string $stringType): void
     {

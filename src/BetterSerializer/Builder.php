@@ -9,9 +9,14 @@ namespace BetterSerializer;
 
 use BetterSerializer\Cache\Factory;
 use BetterSerializer\Cache\FactoryInterface;
-use BetterSerializer\Extension\DoctrineCollection;
+use BetterSerializer\Common\NamingStrategy;
+use BetterSerializer\Common\NamingStrategyInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\CamelCaseTranslator;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\IdenticalTranslator;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\SnakeCaseTranslator;
 use BetterSerializer\Extension\Registry\RegistryInterface;
 use Doctrine\Common\Cache\Cache;
+use InvalidArgumentException;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use RuntimeException;
@@ -46,6 +51,15 @@ final class Builder
      * @var string[]
      */
     private $internalExtensions;
+
+    /**
+     * @var string[]
+     */
+    private static $namingStrategies = [
+        NamingStrategy::IDENTITY => IdenticalTranslator::class,
+        NamingStrategy::CAMEL_CASE => CamelCaseTranslator::class,
+        NamingStrategy::SNAKE_CASE => SnakeCaseTranslator::class,
+    ];
 
     /**
      * Builder constructor.
@@ -104,6 +118,23 @@ final class Builder
     public function addExtension(string $extensionClass): void
     {
         $this->internalExtensions[] = $extensionClass;
+    }
+
+    /**
+     * @param NamingStrategyInterface $namingStrategy
+     * @throws InvalidArgumentException
+     */
+    public function setNamingStrategy(NamingStrategyInterface $namingStrategy): void
+    {
+        $nsValue = $namingStrategy->getValue();
+
+        if (!isset(self::$namingStrategies[$nsValue])) {
+            throw new InvalidArgumentException(
+                sprintf('Unknown naming strategy: %s', $nsValue)
+            );
+        }
+
+        $this->container['NamingStrategyTranslator'] = self::$namingStrategies[$nsValue];
     }
 
     /**
