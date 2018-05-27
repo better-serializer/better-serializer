@@ -39,3 +39,25 @@ $serializer->serialize($data, SerializationType::JSON());
 // deserialization
 $serializer->deserialize($jsonString, $type, SerializationType::JSON());
 ```
+
+### Naming strategies
+
+To be able to automatically convert between snake case and camel case property names, it is now possible to 
+configure a naming strategy for Better serializer. The setting is applied globally and is activated 
+in the following way:
+
+```php
+use use BetterSerializer\Serializer;
+use BetterSerializer\Common\NamingStrategy;
+
+$builder = new Builder();
+
+// to use camel case property auto conversion, run:
+$builder->setNamingStrategy(NamingStrategy::CAMEL_CASE());
+
+// alternatively, to use snake case property auto conversion, run:
+$builder->setNamingStrategy(NamingStrategy::SNAKE_CASE());
+
+// serializer instantiation:
+$serializer = $builder->createSerializer();
+```
