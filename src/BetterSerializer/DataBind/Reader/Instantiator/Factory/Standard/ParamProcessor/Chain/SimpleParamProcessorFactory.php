@@ -9,16 +9,28 @@ namespace BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamPr
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyTuple\PropertyWithConstructorParamTupleInterface;
 use BetterSerializer\DataBind\MetaData\Type\SimpleTypeInterface;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\ParamProcessorInterface;
 use BetterSerializer\DataBind\Reader\Instantiator\Standard\ParamProcessor\SimpleParamProcessor;
 
 /**
- * Class SimpleParamProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor
+ *
  */
 final class SimpleParamProcessorFactory implements ChainedParamProcessorFactoryInterface
 {
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $nameTranslator;
+
+    /**
+     * @param TranslatorInterface $translatorName
+     */
+    public function __construct(TranslatorInterface $translatorName)
+    {
+        $this->nameTranslator = $translatorName;
+    }
 
     /**
      * @param PropertyWithConstructorParamTupleInterface $tuple
@@ -36,8 +48,8 @@ final class SimpleParamProcessorFactory implements ChainedParamProcessorFactoryI
     public function newChainedParamProcessorFactory(
         PropertyWithConstructorParamTupleInterface $tuple
     ): ParamProcessorInterface {
-        $key = $tuple->getOutputKey();
+        $serializationName = $this->nameTranslator->translate($tuple->getPropertyMetaData());
 
-        return new SimpleParamProcessor($key);
+        return new SimpleParamProcessor($serializationName);
     }
 }

@@ -8,18 +8,13 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\Reader\Injector\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Reader\Injector\Property\ReflectionInjector;
-use BetterSerializer\Helper\DataBind\MetaData\FakePropertyMetaData;
 use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * Class AbstractFactoryTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Injector\Factory
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AbstractFactoryTest extends TestCase
 {
@@ -28,6 +23,9 @@ class AbstractFactoryTest extends TestCase
      * @dataProvider classMappingProvider
      * @param PropertyMetaDataInterface $propertyMetadata
      * @param string $propInjectorClass
+     * @throws RuntimeException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function testNewInjector(PropertyMetaDataInterface $propertyMetadata, string $propInjectorClass): void
     {
@@ -38,22 +36,16 @@ class AbstractFactoryTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp /Unexpected class: [A-Z][a-zA-Z0-9_]+/
-     */
-    public function testNewInjectorThrowsException(): void
-    {
-        $factory = new AbstractFactory();
-        $factory->newInjector(new FakePropertyMetaData());
-    }
-
-    /**
      * @return array
+     * @throws \InvalidArgumentException
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \PHPUnit\Framework\MockObject\RuntimeException
+     * @throws \ReflectionException
      */
     public function classMappingProvider(): array
     {
         $reflPropertyStub = $this->createMock(ReflectionPropertyInterface::class);
-        $reflPropertyMetadata = $this->createMock(ReflectionPropertyMetaDataInterface::class);
+        $reflPropertyMetadata = $this->createMock(PropertyMetaDataInterface::class);
         $reflPropertyMetadata->expects(self::once())
             ->method('getReflectionProperty')
             ->willReturn($reflPropertyStub);

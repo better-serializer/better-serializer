@@ -13,10 +13,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
 /**
- * Class ReflectionInjectorTest
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Injector\Property
- * @SuppressWarnings(PHPMD.StaticAccess)
+ *
  */
 class ReflectionInjectorTest extends TestCase
 {

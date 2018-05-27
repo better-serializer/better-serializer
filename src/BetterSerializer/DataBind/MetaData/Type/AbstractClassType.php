@@ -7,9 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\MetaData\Type;
 
 /**
- * Class String
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 abstract class AbstractClassType extends AbstractType implements ClassTypeInterface
 {
@@ -20,7 +18,6 @@ abstract class AbstractClassType extends AbstractType implements ClassTypeInterf
     protected $className;
 
     /**
-     * StringDataType constructor.
      * @param string $className
      * @SuppressWarnings(PHPMD.StaticAccess)
      */

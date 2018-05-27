@@ -11,6 +11,7 @@ use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInter
 use BetterSerializer\DataBind\MetaData\Type\ArrayType;
 use BetterSerializer\DataBind\MetaData\Type\ExtensionTypeInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\Factory\ProcessorFactoryInterface;
 use BetterSerializer\DataBind\Reader\Processor\ComplexPropertyProcessor;
@@ -31,15 +32,16 @@ final class ComplexPropertyMember extends InjectingChainMember
     private $processorFactory;
 
     /**
-     * ObjectMember constructor.
      * @param ProcessorFactoryInterface $processorFactory
      * @param InjectorFactoryInterface $injectorFactory
+     * @param TranslatorInterface $nameTranslator
      */
     public function __construct(
         ProcessorFactoryInterface $processorFactory,
-        InjectorFactoryInterface $injectorFactory
+        InjectorFactoryInterface $injectorFactory,
+        TranslatorInterface $nameTranslator
     ) {
-        parent::__construct($injectorFactory);
+        parent::__construct($injectorFactory, $nameTranslator);
         $this->processorFactory = $processorFactory;
     }
 
@@ -65,7 +67,8 @@ final class ComplexPropertyMember extends InjectingChainMember
     {
         $injector = $this->injectorFactory->newInjector($metaData);
         $nestedProcessor = $this->processorFactory->createFromType($metaData->getType());
+        $serializationName = $this->nameTranslator->translate($metaData);
 
-        return new ComplexPropertyProcessor($injector, $nestedProcessor, $metaData->getOutputKey());
+        return new ComplexPropertyProcessor($injector, $nestedProcessor, $serializationName);
     }
 }

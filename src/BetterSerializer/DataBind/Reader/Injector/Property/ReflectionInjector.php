@@ -12,9 +12,7 @@ use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use ReflectionProperty as NativeReflectionProperty;
 
 /**
- * Class ReflectionInjector
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Injector\Property
+ *
  */
 final class ReflectionInjector implements InjectorInterface
 {
@@ -30,7 +28,6 @@ final class ReflectionInjector implements InjectorInterface
     private $nativeReflectionProperty;
 
     /**
-     * ReflectionInjector constructor.
      * @param ReflectionPropertyInterface $reflectionProperty
      */
     public function __construct(ReflectionPropertyInterface $reflectionProperty)
@@ -44,7 +41,7 @@ final class ReflectionInjector implements InjectorInterface
      * @param mixed $data
      * @return mixed
      */
-    public function inject($object, $data): void
+    public function inject(object $object, $data): void
     {
         $this->nativeReflectionProperty->setValue($object, $data);
     }

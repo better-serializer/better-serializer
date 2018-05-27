@@ -1,32 +1,26 @@
 <?php
 declare(strict_types = 1);
 
-/**
- * Short desc
- *
+/*
  * @author Martin Fris <rasta@lj.sk>
  */
 namespace BetterSerializer\DataBind\Writer\Extractor\Factory;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
 use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
 use RuntimeException;
 
 /**
- * Class Converter
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor
+ *
  */
 final class AbstractFactory implements AbstractFactoryInterface
 {
 
     /**
      * @const string[]
-     * @SuppressWarnings(PHPMD)
      */
     private const METADATA2FACTORY_MAPPING = [
-        ReflectionPropertyMetaDataInterface::class => ReflectionFactory::class,
+        PropertyMetaDataInterface::class => ReflectionFactory::class,
     ];
 
     /**
@@ -37,7 +31,6 @@ final class AbstractFactory implements AbstractFactoryInterface
     /**
      * @param PropertyMetaDataInterface $metaData
      * @return ExtractorInterface
-     * @throws RuntimeException
      */
     public function newExtractor(PropertyMetaDataInterface $metaData): ExtractorInterface
     {
@@ -48,10 +41,6 @@ final class AbstractFactory implements AbstractFactoryInterface
                 $foundFactoryClass = $factoryClass;
                 break;
             }
-        }
-
-        if ($foundFactoryClass === '') {
-            throw new RuntimeException(sprintf('Unexpected class: %s', get_class($metaData)));
         }
 
         $factory = $this->getFactory($foundFactoryClass);

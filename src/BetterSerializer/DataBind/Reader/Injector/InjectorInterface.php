@@ -7,9 +7,7 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\Reader\Injector;
 
 /**
- * Class InjectorInterface
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Injector
+ *
  */
 interface InjectorInterface
 {
@@ -19,5 +17,5 @@ interface InjectorInterface
      * @param mixed $data
      * @return mixed
      */
-    public function inject($object, $data): void;
+    public function inject(object $object, $data): void;
 }

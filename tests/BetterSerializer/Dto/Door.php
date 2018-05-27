@@ -10,10 +10,7 @@ namespace BetterSerializer\Dto;
 use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
- * Class Door
- * @author mfris
- * @package BetterSerializer\Dto
- * @SuppressWarnings(PHPMD)
+ *
  */
 final class Door
 {
@@ -26,8 +23,8 @@ final class Door
     private $parentalLock;
 
     /**
-     * Door constructor.
      * @param bool $parentalLock
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(bool $parentalLock = false)
     {
@@ -37,7 +34,7 @@ final class Door
     /**
      * @return bool
      */
-    public function getParentalLock(): bool
+    public function hasParentalLock(): bool
     {
         return $this->parentalLock;
     }

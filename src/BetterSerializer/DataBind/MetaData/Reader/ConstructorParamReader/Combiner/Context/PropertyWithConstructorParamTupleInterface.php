@@ -12,9 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
 
 /**
- * Class PropertyWithConsturctorParamTupleInterface
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Context
+ *
  */
 interface PropertyWithConstructorParamTupleInterface
 {

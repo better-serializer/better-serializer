@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver;
 
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\ContextStringFormTypeInterface;
@@ -53,7 +53,7 @@ class DocBlockPropertyTypeReaderTest extends TestCase
             ->with($this->isType('string'), $reflClass)
             ->willReturn($stringType);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory, $stringTypeParser);
+        $typeReader = new DocBlockPropertyTypeResolver($docBlockFactory, $stringTypeParser);
         $stringFormType = $typeReader->resolveType($contextStub);
 
         self::assertNotNull($stringFormType);
@@ -80,7 +80,7 @@ class DocBlockPropertyTypeReaderTest extends TestCase
 
         $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactoryStub, $stringTypeParser);
+        $typeReader = new DocBlockPropertyTypeResolver($docBlockFactoryStub, $stringTypeParser);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertNull($typedContext);
@@ -105,7 +105,7 @@ class DocBlockPropertyTypeReaderTest extends TestCase
 
         $stringTypeParser = $this->createMock(StringTypeParserInterface::class);
 
-        $typeReader = new DocBlockPropertyTypeReader($docBlockFactory, $stringTypeParser);
+        $typeReader = new DocBlockPropertyTypeResolver($docBlockFactory, $stringTypeParser);
         $typedContext = $typeReader->resolveType($contextStub);
 
         self::assertNull($typedContext);

@@ -10,7 +10,7 @@ namespace BetterSerializer\DataBind\MetaData\Model\PropertyModel;
 /**
  *
  */
-interface ClassPropertyMetaDataInterface extends ReflectionPropertyMetaDataInterface
+interface ClassPropertyMetaDataInterface extends PropertyMetaDataInterface
 {
 
     /**

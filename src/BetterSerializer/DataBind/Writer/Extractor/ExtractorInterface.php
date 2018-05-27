@@ -7,16 +7,14 @@ declare(strict_types = 1);
 namespace BetterSerializer\DataBind\Writer\Extractor;
 
 /**
- * Class ExtractorInterface
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Extractor
+ *
  */
 interface ExtractorInterface
 {
 
     /**
-     * @param mixed $data
+     * @param object|null $object
      * @return mixed
      */
-    public function extract($data);
+    public function extract(?object $object);
 }

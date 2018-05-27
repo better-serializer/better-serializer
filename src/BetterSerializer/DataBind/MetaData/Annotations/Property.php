@@ -28,12 +28,12 @@ final class Property extends AbstractAnnotation implements PropertyInterface
     /**
      * @const string
      */
-    const KEY_NAME = 'name';
+    public const KEY_NAME = 'name';
 
     /**
      * @const string
      */
-    const KEY_TYPE = 'type';
+    public const KEY_TYPE = 'type';
 
     /**
      * @var string
@@ -46,7 +46,6 @@ final class Property extends AbstractAnnotation implements PropertyInterface
     private $type = '';
 
     /**
-     * Property constructor.
      * @param array $values
      * @throws Exception
      */

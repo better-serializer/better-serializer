@@ -58,13 +58,10 @@ final class Serializer
     }
 
     /**
-     * @param mixed             $data
+     * @param mixed $data
      * @param SerializationTypeInterface $type
      * @param SerializationContextInterface $context
      * @return mixed
-     * @throws LogicException
-     * @throws ReflectionException
-     * @throws RuntimeException
      */
     public function serialize(
         $data,

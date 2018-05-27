@@ -16,10 +16,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * ClassModel PropertyMetadataTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData
- * @SuppressWarnings(PHPMD.StaticAccess)
+ *
  */
 class ReflectionPropertyMetaDataTest extends TestCase
 {
@@ -29,9 +26,14 @@ class ReflectionPropertyMetaDataTest extends TestCase
      */
     public function testBasicFunctions(): void
     {
+        $name = 'testName';
+
         $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
         $reflProperty->expects(self::once())
             ->method('setAccessible');
+        $reflProperty->expects(self::once())
+            ->method('getName')
+            ->willReturn($name);
 
         $groups = [Groups::DEFAULT_GROUP];
         $groupsAnnotation = $this->createMock(GroupsInterface::class);
@@ -41,7 +43,7 @@ class ReflectionPropertyMetaDataTest extends TestCase
 
         $type = $this->createMock(TypeInterface::class);
 
-        $metaData = new ReflectionPropertyMetadata(
+        $metaData = new PropertyMetadata(
             $reflProperty,
             [Groups::ANNOTATION_NAME => $groupsAnnotation],
             $type
@@ -49,85 +51,59 @@ class ReflectionPropertyMetaDataTest extends TestCase
         self::assertSame($type, $metaData->getType());
         self::assertSame($reflProperty, $metaData->getReflectionProperty());
         self::assertSame($groups, $metaData->getGroups());
+        self::assertSame($name, $metaData->getName());
     }
 
     /**
      *
      */
-    public function testGetOutputKeyFromReflProperty(): void
+    public function testGetSerializationName(): void
     {
+        $name = 'testName';
+
         $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
         $reflProperty->expects(self::once())
-            ->method('getName')
-            ->willReturn('test');
-        $reflProperty->expects(self::once())
             ->method('setAccessible');
+
         $groupsAnnotation = $this->createMock(GroupsInterface::class);
-        $type = $this->createMock(TypeInterface::class);
-
-        $metaData = new ReflectionPropertyMetadata(
-            $reflProperty,
-            [Groups::ANNOTATION_NAME => $groupsAnnotation],
-            $type
-        );
-        self::assertSame('test', $metaData->getOutputKey());
-    }
-
-    /**
-     *
-     */
-    public function testGetOutputKeyFromReflPropertyWhenInvalidPropertyAnnotationProvided(): void
-    {
-        $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
-        $reflProperty->expects(self::once())
-            ->method('getName')
-            ->willReturn('test');
-        $reflProperty->expects(self::once())
-            ->method('setAccessible');
-        $type = $this->createMock(TypeInterface::class);
         $propertyAnnotation = $this->createMock(PropertyInterface::class);
         $propertyAnnotation->expects(self::once())
             ->method('getName')
-            ->willReturn('');
-        $groupsAnnotation = $this->createMock(GroupsInterface::class);
+            ->willReturn($name);
 
-        $metaData = new ReflectionPropertyMetadata(
+        $type = $this->createMock(TypeInterface::class);
+
+        $metaData = new PropertyMetadata(
             $reflProperty,
             [
                 Groups::ANNOTATION_NAME => $groupsAnnotation,
-                Property::ANNOTATION_NAME => $propertyAnnotation,
+                Property::ANNOTATION_NAME => $propertyAnnotation
             ],
             $type
         );
-        self::assertSame('test', $metaData->getOutputKey());
+
+        self::assertSame($name, $metaData->getSerializationName());
     }
 
     /**
      *
      */
-    public function testGetOutputKeyFromPropertyAnnotation(): void
+    public function testGetSerializationNameWithoutPropertyAnnotation(): void
     {
         $reflProperty = $this->createMock(ReflectionPropertyInterface::class);
-        $reflProperty->expects(self::exactly(0))
-            ->method('getName');
         $reflProperty->expects(self::once())
             ->method('setAccessible');
-        $type = $this->createMock(TypeInterface::class);
-        $propertyAnnotation = $this->createMock(PropertyInterface::class);
-        $propertyAnnotation->expects(self::once())
-            ->method('getName')
-            ->willReturn('test2');
-        $groupsAnnotation = $this->createMock(GroupsInterface::class);
 
-        $metaData = new ReflectionPropertyMetadata(
+        $groupsAnnotation = $this->createMock(GroupsInterface::class);
+        $type = $this->createMock(TypeInterface::class);
+
+        $metaData = new PropertyMetadata(
             $reflProperty,
-            [
-                Groups::ANNOTATION_NAME => $groupsAnnotation,
-                Property::ANNOTATION_NAME => $propertyAnnotation,
-            ],
+            [Groups::ANNOTATION_NAME => $groupsAnnotation,],
             $type
         );
-        self::assertSame('test2', $metaData->getOutputKey());
+
+        self::assertSame('', $metaData->getSerializationName());
     }
 
     /**
@@ -142,6 +118,6 @@ class ReflectionPropertyMetaDataTest extends TestCase
 
         $type = $this->createMock(TypeInterface::class);
 
-        new ReflectionPropertyMetadata($reflProperty, [], $type);
+        new PropertyMetadata($reflProperty, [], $type);
     }
 }

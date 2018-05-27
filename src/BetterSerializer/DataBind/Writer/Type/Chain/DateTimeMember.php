@@ -14,9 +14,7 @@ use DateTimeImmutable;
 use LogicException;
 
 /**
- * Class SimpleMember
- * @author mfris
- * @package BetterSerializer\DataBind\Writer\Type
+ *
  */
 final class DateTimeMember extends ChainMember
 {

@@ -7,12 +7,11 @@ declare(strict_types=1);
 
 namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
 use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
 
 /**
- * Class ExtractingChainMember
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain
+ *
  */
 abstract class InjectingChainMember extends ChainMember
 {
@@ -23,11 +22,17 @@ abstract class InjectingChainMember extends ChainMember
     protected $injectorFactory;
 
     /**
-     * ExtractingChainMember constructor.
-     * @param InjectorFactoryInterface $extractorFactory
+     * @var TranslatorInterface
      */
-    public function __construct(InjectorFactoryInterface $extractorFactory)
+    protected $nameTranslator;
+
+    /**
+     * @param InjectorFactoryInterface $injectorFactory
+     * @param TranslatorInterface $nameTranslator
+     */
+    public function __construct(InjectorFactoryInterface $injectorFactory, TranslatorInterface $nameTranslator)
     {
-        $this->injectorFactory = $extractorFactory;
+        $this->injectorFactory = $injectorFactory;
+        $this->nameTranslator = $nameTranslator;
     }
 }

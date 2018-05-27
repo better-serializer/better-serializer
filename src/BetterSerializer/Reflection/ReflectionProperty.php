@@ -11,9 +11,7 @@ use ReflectionProperty as NativeReflectionProperty;
 use ReflectionException;
 
 /**
- * Class ReflectionProperty
- * @author mfris
- * @package BetterSerializer\Reflection
+ *
  */
 final class ReflectionProperty implements ReflectionPropertyInterface
 {
@@ -34,7 +32,6 @@ final class ReflectionProperty implements ReflectionPropertyInterface
     private $propertyName;
 
     /**
-     * ReflectionProperty constructor.
      * @param NativeReflectionProperty $nativeReflProperty
      * @param ReflectionClassInterface $declaringClass
      */

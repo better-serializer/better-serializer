@@ -16,9 +16,7 @@ use ReflectionClass as NativeReflectionClass;
 use ReflectionException;
 
 /**
- * Class UnserializeConstructor
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Instantiator
+ *
  */
 final class StandardInstantiator implements ProcessingInstantiatorInterface
 {
@@ -44,10 +42,8 @@ final class StandardInstantiator implements ProcessingInstantiatorInterface
     private $processorsResolved = false;
 
     /**
-     * ReflectionConstructor constructor.
      * @param ReflectionClassInterface $reflectionClass
      * @param ParamProcessorInterface[] $paramProcessors
-     * @throws ReflectionException
      */
     public function __construct(ReflectionClassInterface $reflectionClass, array $paramProcessors)
     {

@@ -11,8 +11,7 @@ use BetterSerializer\DataBind\Converter\ConverterInterface;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 
 /**
- * Interface FactoryInterface
- * @package BetterSerializer\DataBind\Writer\Converter
+ *
  */
 interface ConverterFactoryInterface
 {

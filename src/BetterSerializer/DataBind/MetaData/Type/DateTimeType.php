@@ -11,9 +11,7 @@ use DateTimeImmutable;
 use LogicException;
 
 /**
- * Class String
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Type
+ *
  */
 final class DateTimeType extends AbstractClassType implements DateTimeTypeInterface
 {
@@ -32,7 +30,6 @@ final class DateTimeType extends AbstractClassType implements DateTimeTypeInterf
     ];
 
     /**
-     * StringDataType constructor.
      * @param string $className
      * @param string $format
      * @throws LogicException

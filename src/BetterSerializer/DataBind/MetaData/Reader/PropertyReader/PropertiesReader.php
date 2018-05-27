@@ -8,22 +8,19 @@ namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader;
 
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ClassPropertyMetaData;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetadata;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetadata;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContext;
-use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader\TypeReaderInterface;
-use BetterSerializer\DataBind\MetaData\Type\Factory\TypeFactoryInterface;
+use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver\TypeResolverChainInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
+use BetterSerializer\Reflection\ReflectionPropertyInterface;
 use Doctrine\Common\Annotations\Reader as AnnotationReader;
 use BetterSerializer\Reflection\ReflectionClassInterface;
 use ReflectionException;
 use RuntimeException;
 
 /**
- * Class PropertyReader
  *
- * @author  mfris
- * @package BetterSerializer\DataBind\MetaData
  */
 final class PropertiesReader implements PropertiesReaderInterface
 {
@@ -34,35 +31,19 @@ final class PropertiesReader implements PropertiesReaderInterface
     private $annotationReader;
 
     /**
-     * @var TypeFactoryInterface
+     * @var TypeResolverChainInterface
      */
-    private $typeFactory;
-
-    /**
-     * @var TypeReaderInterface[]
-     */
-    private $typeReaders;
+    private $typeResolverChain;
 
     /**
      * PropertyReader constructor.
      * @param AnnotationReader $annotationReader
-     * @param TypeFactoryInterface $typeFactory
-     * @param TypeReaderInterface[] $typeReaders
-     * @throws RuntimeException
+     * @param TypeResolverChainInterface $typeResolverChain
      */
-    public function __construct(
-        AnnotationReader $annotationReader,
-        TypeFactoryInterface $typeFactory,
-        array $typeReaders
-    ) {
+    public function __construct(AnnotationReader $annotationReader, TypeResolverChainInterface $typeResolverChain)
+    {
         $this->annotationReader = $annotationReader;
-        $this->typeFactory = $typeFactory;
-
-        if (empty($typeReaders)) {
-            throw new RuntimeException('Type readers missing.');
-        }
-
-        $this->typeReaders = $typeReaders;
+        $this->typeResolverChain = $typeResolverChain;
     }
 
     /**
@@ -78,41 +59,49 @@ final class PropertiesReader implements PropertiesReaderInterface
         foreach ($reflectionClass->getProperties() as $reflectionProperty) {
             $nativeReflProperty = $reflectionProperty->getNativeReflProperty();
             $propertyName = $nativeReflProperty->getName();
-            $annotations = $this->annotationReader->getPropertyAnnotations($nativeReflProperty);
-            $context = new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
-            $type = $this->getType($context);
-            $propertyClassName = $type instanceof ClassType ?
-                                    ClassPropertyMetaData::class : ReflectionPropertyMetadata::class;
-
-            $metaData[$propertyName] = new $propertyClassName($reflectionProperty, $context->getAnnotations(), $type);
+            $context = $this->createPropertyContext($reflectionClass, $reflectionProperty);
+            $type = $this->typeResolverChain->resolveType($context);
+            $metaData[$propertyName] = $this->createPropertyMetaData(
+                $reflectionProperty,
+                $context,
+                $type
+            );
         }
 
         return $metaData;
     }
 
     /**
-     * @param PropertyContext $context
-     * @return TypeInterface
+     * @param ReflectionPropertyInterface $reflectionProperty
+     * * @param PropertyContext $context
+     * @param TypeInterface $type
+     * @return PropertyMetaDataInterface
      * @throws RuntimeException
      */
-    private function getType(PropertyContext $context): TypeInterface
-    {
-        foreach ($this->typeReaders as $typeReader) {
-            $typedContext = $typeReader->resolveType($context);
-
-            if ($typedContext) {
-                return $this->typeFactory->getType($typedContext);
-            }
+    private function createPropertyMetaData(
+        ReflectionPropertyInterface $reflectionProperty,
+        PropertyContext $context,
+        TypeInterface $type
+    ): PropertyMetaDataInterface {
+        if ($type instanceof ClassType) {
+            return new ClassPropertyMetaData($reflectionProperty, $context->getAnnotations(), $type);
         }
 
-        $reflectionProperty = $context->getReflectionProperty();
+        return new PropertyMetadata($reflectionProperty, $context->getAnnotations(), $type);
+    }
 
-        throw new RuntimeException(
-            sprintf(
-                'Type declaration missing in class: %s, property: %s.',
-                $reflectionProperty->getDeclaringClass()->getName(),
-                $reflectionProperty->getName()
-            )
-        );
+    /**
+     * @param ReflectionClassInterface $reflectionClass
+     * @param ReflectionPropertyInterface $reflectionProperty
+     * @return PropertyContext
+     * @throws RuntimeException
+     */
+    private function createPropertyContext(
+        ReflectionClassInterface $reflectionClass,
+        ReflectionPropertyInterface $reflectionProperty
+    ): PropertyContext {
+        $annotations = $this->annotationReader->getPropertyAnnotations($reflectionProperty->getNativeReflProperty());
+
+        return new PropertyContext($reflectionClass, $reflectionProperty, $annotations);
     }
 }

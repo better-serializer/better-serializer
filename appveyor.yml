@@ -30,4 +30,4 @@ install:
 
 test_script:
   - cd C:\projects\better-serializer
-  - vendor\bin\phpunit.bat
+  - vendor\bin\phpunit.bat --coverage-clover .\log\clover.xml

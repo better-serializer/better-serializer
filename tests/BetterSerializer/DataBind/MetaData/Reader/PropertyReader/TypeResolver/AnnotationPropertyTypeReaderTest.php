@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeReader;
+namespace BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver;
 
 use BetterSerializer\DataBind\MetaData\Annotations\PropertyInterface;
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\Context\PropertyContextInterface;
@@ -35,7 +35,7 @@ class AnnotationPropertyTypeReaderTest extends TestCase
             ->method('getPropertyAnnotation')
             ->willReturn(null);
 
-        $reader = new AnnotationPropertyTypeReader($stringTypeParser);
+        $reader = new AnnotationPropertyTypeResolver($stringTypeParser);
         $typedContext = $reader->resolveType($context);
 
         self::assertNull($typedContext);
@@ -70,7 +70,7 @@ class AnnotationPropertyTypeReaderTest extends TestCase
             ->with($propertyType, $reflClass)
             ->willReturn($stringType);
 
-        $reader = new AnnotationPropertyTypeReader($stringTypeParser);
+        $reader = new AnnotationPropertyTypeResolver($stringTypeParser);
         $typedContext = $reader->resolveType($context);
 
         self::assertNotNull($typedContext);

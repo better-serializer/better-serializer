@@ -8,16 +8,14 @@ declare(strict_types=1);
 namespace BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained;
 
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context;
-use BetterSerializer\DataBind\MetaData\Model\PropertyModel\ReflectionPropertyMetaDataInterface;
+use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Context\InitializeContextInterface;
 use BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\ShrinkingPropertiesMetaDataInterface;
 use BetterSerializer\Reflection\ReflectionParameterInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class EqualNamesCombinerTest
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Reader\ConstructorParamReader\Combiner\Chained
+ *
  */
 class EqualNamesCombinerTest extends TestCase
 {
@@ -30,7 +28,7 @@ class EqualNamesCombinerTest extends TestCase
         $paramName = 'test';
         $argName = 'test';
 
-        $propertyMetaData = $this->createMock(ReflectionPropertyMetaDataInterface::class);
+        $propertyMetaData = $this->createMock(PropertyMetaDataInterface::class);
 
         $propertiesMetaData = $this->createMock(ShrinkingPropertiesMetaDataInterface::class);
         $propertiesMetaData->expects(self::once())

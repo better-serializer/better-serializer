@@ -5,24 +5,24 @@ declare(strict_types=1);
  * @author Martin Fris <rasta@lj.sk>
  */
 
-namespace BetterSerializer\DataBind\Writer\Processor\Factory\PropertyMetaDataChain;
+namespace BetterSerializer\DataBind\Reader\Processor\Factory\PropertyMetaDataChain;
 
+use BetterSerializer\DataBind\Naming\PropertyNameTranslator\TranslatorInterface;
+use BetterSerializer\DataBind\Reader\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\Converter\ConverterInterface;
-use BetterSerializer\DataBind\Writer\Converter\ConverterFactoryInterface;
 use BetterSerializer\DataBind\MetaData\Model\PropertyModel\PropertyMetaDataInterface;
 use BetterSerializer\DataBind\MetaData\Type\ClassType;
 use BetterSerializer\DataBind\MetaData\Type\StringType;
-use BetterSerializer\DataBind\Writer\Extractor\ExtractorInterface;
-use BetterSerializer\DataBind\Writer\Extractor\Factory\AbstractFactoryInterface as ExtractorFactoryInterface;
-use BetterSerializer\DataBind\Writer\Processor\SimplePropertyProcessor;
-use BetterSerializer\DataBind\Writer\SerializationContextInterface;
+use BetterSerializer\DataBind\Reader\Injector\InjectorInterface;
+use BetterSerializer\DataBind\Reader\Injector\Factory\AbstractFactoryInterface as InjectorFactoryInterface;
+use BetterSerializer\DataBind\Reader\Processor\SimplePropertyProcessor;
 use BetterSerializer\Dto\Car;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @SuppressWarnings(PHPMD.StaticAccess)
+ *
  */
-class SimpleMemberTest extends TestCase
+class SimplePropertyMemberTest extends TestCase
 {
 
     /**
@@ -35,9 +35,13 @@ class SimpleMemberTest extends TestCase
         $propertyMetaData->expects(self::exactly(2))
             ->method('getType')
             ->willReturn($type);
-        $propertyMetaData->expects(self::once())
-            ->method('getOutputKey')
-            ->willReturn('test');
+
+        $injector = $this->createMock(InjectorInterface::class);
+
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
+        $injectorFactory->expects(self::once())
+            ->method('newInjector')
+            ->willReturn($injector);
 
         $converter = $this->createMock(ConverterInterface::class);
 
@@ -46,16 +50,14 @@ class SimpleMemberTest extends TestCase
             ->method('newConverter')
             ->willReturn($converter);
 
-        $extractor = $this->createMock(ExtractorInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
+        $nameTranslator->expects(self::once())
+            ->method('translate')
+            ->with($propertyMetaData)
+            ->willReturn('test');
 
-        $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
-        $extractorFactory->expects(self::once())
-            ->method('newExtractor')
-            ->willReturn($extractor);
-        $context = $this->createMock(SerializationContextInterface::class);
-
-        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
-        $processor = $simpleMember->create($propertyMetaData, $context);
+        $simpleMember = new SimplePropertyMember($converterFactory, $injectorFactory, $nameTranslator);
+        $processor = $simpleMember->create($propertyMetaData);
 
         self::assertInstanceOf(SimplePropertyProcessor::class, $processor);
     }
@@ -71,12 +73,12 @@ class SimpleMemberTest extends TestCase
             ->method('getType')
             ->willReturn($type);
 
+        $injectorFactory = $this->createMock(InjectorFactoryInterface::class);
         $converterFactory = $this->createMock(ConverterFactoryInterface::class);
-        $extractorFactory = $this->createMock(ExtractorFactoryInterface::class);
-        $context = $this->createMock(SerializationContextInterface::class);
+        $nameTranslator = $this->createMock(TranslatorInterface::class);
 
-        $simpleMember = new SimplePropertyMember($converterFactory, $extractorFactory);
-        $shouldBeNull = $simpleMember->create($propertyMetaData, $context);
+        $simpleMember = new SimplePropertyMember($converterFactory, $injectorFactory, $nameTranslator);
+        $shouldBeNull = $simpleMember->create($propertyMetaData);
 
         self::assertNull($shouldBeNull);
     }

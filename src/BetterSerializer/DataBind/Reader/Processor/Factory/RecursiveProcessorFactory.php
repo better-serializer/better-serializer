@@ -17,9 +17,7 @@ use ReflectionException;
 use RuntimeException;
 
 /**
- * Class RecursiveProcessorFactory
- * @author mfris
- * @package BetterSerializer\DataBind\Reader\Processor\Factory
+ *
  */
 final class RecursiveProcessorFactory extends AbstractProcessorFactory implements ProcessorFactoryInterface
 {

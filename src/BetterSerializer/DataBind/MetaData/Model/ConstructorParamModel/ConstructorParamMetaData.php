@@ -12,9 +12,7 @@ use BetterSerializer\DataBind\MetaData\Type\TypeInterface;
 use LogicException;
 
 /**
- * Class ConstructorParam
- * @author mfris
- * @package BetterSerializer\DataBind\MetaData\Model\ConstructorParamModel
+ *
  */
 final class ConstructorParamMetaData implements ConstructorParamMetaDataInterface
 {

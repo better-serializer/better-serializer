@@ -14,9 +14,6 @@ use BetterSerializer\Dto\CarInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ObjectMapperTest
- * @author mfris
- * @package BetterSerializer\DataBind
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class SerializerTest extends TestCase
