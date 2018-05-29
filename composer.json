@@ -9,7 +9,6 @@
             "email": "rasta@lj.sk"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
         "doctrine/annotations": "^1.3",
