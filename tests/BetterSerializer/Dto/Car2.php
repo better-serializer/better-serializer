@@ -12,9 +12,7 @@ use DateTime;
 use DateTimeImmutable;
 
 /**
- * Class Car
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 class Car2
 {

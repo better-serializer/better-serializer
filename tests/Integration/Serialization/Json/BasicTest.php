@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Integration\Serialization\Json;
 
 use BetterSerializer\Common\SerializationType;
+use BetterSerializer\Dto\Aliases;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Car2;
 use BetterSerializer\Dto\Category;
@@ -18,6 +19,11 @@ use BetterSerializer\Dto\SpecialCar;
 use Integration\AbstractIntegrationTest;
 use DateTime;
 use DateTimeImmutable;
+use InvalidArgumentException;
+use PHPUnit\Framework\ExpectationFailedException;
+use Pimple\Exception\UnknownIdentifierException;
+use RuntimeException;
+use SebastianBergmann\RecursionContext\InvalidArgumentException as RecursionInvalidArgumentException;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -31,9 +37,11 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
-     * @throws \LogicException
-     * @throws \ReflectionException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @throws UnknownIdentifierException
+     * @throws RuntimeException
+     * @throws RecursionInvalidArgumentException
      */
     public function testSerialization($data, string $expectedJson): void
     {
@@ -49,9 +57,11 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param mixed $data
      * @param string $expectedJson
-     * @throws \LogicException
-     * @throws \ReflectionException
-     * @throws \RuntimeException
+     * @throws ExpectationFailedException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     * @throws UnknownIdentifierException
+     * @throws RecursionInvalidArgumentException
      */
     public function testSerializationCached($data, string $expectedJson): void
     {
@@ -78,6 +88,7 @@ final class BasicTest extends AbstractIntegrationTest
             $this->getNamespaceFeatureTupleWithDateTimes(),
             $this->getRecursiveDataTuple(),
             $this->getPrimitiveDataTuple(),
+            $this->getAliasesTuple(),
         ];
     }
 
@@ -247,5 +258,20 @@ final class BasicTest extends AbstractIntegrationTest
     private function getPrimitiveDataTuple(): array
     {
         return [6, 6];
+    }
+
+    /**
+     * @return array
+     */
+    private function getAliasesTuple(): array
+    {
+        $aliases = new Aliases(1, 2);
+        $aliasesArray = [
+            'integer1' => 1,
+            'integer2' => 2,
+        ];
+        $json = json_encode($aliasesArray);
+
+        return [$aliases, $json];
     }
 }

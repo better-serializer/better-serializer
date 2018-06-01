@@ -10,9 +10,6 @@ use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
 use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
- * Class Car
- * @author mfris
- * @package BetterSerializer\Dto
  * @Serializer\RootName(value="car")
  */
 class Car implements CarInterface

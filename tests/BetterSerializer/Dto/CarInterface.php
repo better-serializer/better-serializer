@@ -7,9 +7,6 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 /**
- * Class Car
- * @author mfris
- * @package BetterSerializer\Dto
  * @Serializer\RootName(value="car")
  */
 interface CarInterface

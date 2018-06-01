@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Integration\Deserialization\Json;
 
 use BetterSerializer\Common\SerializationType;
+use BetterSerializer\Dto\Aliases;
 use BetterSerializer\Dto\Car;
 use BetterSerializer\Dto\Car2;
 use BetterSerializer\Dto\Category;
@@ -15,6 +16,11 @@ use BetterSerializer\Dto\Nested\CarFactory;
 use Integration\AbstractIntegrationTest;
 use DateTimeImmutable;
 use DateTime;
+use InvalidArgumentException;
+use PHPUnit\Framework\ExpectationFailedException;
+use Pimple\Exception\UnknownIdentifierException;
+use RuntimeException;
+use SebastianBergmann\RecursionContext\InvalidArgumentException as RecursionInvalidArgumentException;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -28,10 +34,11 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param string $expectedJson
      * @param string $stringType
-     * @throws \LogicException
-     * @throws \Pimple\Exception\UnknownIdentifierException
-     * @throws \ReflectionException
-     * @throws \RuntimeException
+     * @throws UnknownIdentifierException
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @throws RuntimeException
+     * @throws RecursionInvalidArgumentException
      */
     public function testDeserialization(string $expectedJson, string $stringType): void
     {
@@ -49,11 +56,11 @@ final class BasicTest extends AbstractIntegrationTest
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @param string $expectedJson
      * @param string $stringType
-     * @throws \InvalidArgumentException
-     * @throws \PHPUnit\Framework\ExpectationFailedException
-     * @throws \Pimple\Exception\UnknownIdentifierException
-     * @throws \RuntimeException
-     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws ExpectationFailedException
+     * @throws UnknownIdentifierException
+     * @throws RuntimeException
+     * @throws RecursionInvalidArgumentException
      */
     public function testDeserializationCached(string $expectedJson, string $stringType): void
     {
@@ -81,6 +88,7 @@ final class BasicTest extends AbstractIntegrationTest
             $this->getNamespaceFeatureTupleWithDateTimes(),
             $this->getRecursiveDataTuple(),
             $this->getPrimitiveDataTuple(),
+            $this->getAliasesTuple(),
         ];
     }
 
@@ -199,5 +207,19 @@ final class BasicTest extends AbstractIntegrationTest
     private function getPrimitiveDataTuple(): array
     {
         return [6, 'int'];
+    }
+
+    /**
+     * @return array
+     */
+    private function getAliasesTuple(): array
+    {
+        $aliasesArray = [
+            'integer1' => 1,
+            'integer2' => 2,
+        ];
+        $json = json_encode($aliasesArray);
+
+        return [$json, Aliases::class];
     }
 }

@@ -6,12 +6,11 @@ declare(strict_types=1);
  */
 namespace BetterSerializer\Dto;
 
+use Exception;
 use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
- * Class Category
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 class Category
 {
@@ -39,9 +38,10 @@ class Category
     private $children = [];
 
     /**
-     * @param int           $id
+     * @param int $id
      * @param Category|null $parent
-     * @param Category[]    $children
+     * @param Category[] $children
+     * @throws Exception
      */
     public function __construct(int $id, Category $parent = null, array $children = [])
     {
