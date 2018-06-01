@@ -8,9 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 /**
- * Class DateTime
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 final class DateTime
 {

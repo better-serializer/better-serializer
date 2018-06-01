@@ -8,8 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 /**
- * Interface RadioInterface
- * @package BetterSerializer\Dto
+ *
  */
 interface RadioInterface
 {

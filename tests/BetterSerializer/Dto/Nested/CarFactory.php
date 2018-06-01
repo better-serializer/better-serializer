@@ -13,9 +13,7 @@ use JMS\Serializer\Annotation as JmsSerializer;
 use BetterSerializer\Dto\SpecialCar;
 
 /**
- * Class CarFactory
- * @author mfris
- * @package BetterSerializer\Dto\Nested
+ *
  */
 final class CarFactory
 {

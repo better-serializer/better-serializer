@@ -8,9 +8,7 @@ declare(strict_types=1);
 namespace BetterSerializer\Dto;
 
 /**
- * Class SpecialCar
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 final class SpecialCar extends Car implements SpecialCarInterface
 {

@@ -11,9 +11,7 @@ use BetterSerializer\DataBind\MetaData\Annotations as Serializer;
 use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
- * Class Radio
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 final class Radio implements RadioInterface
 {

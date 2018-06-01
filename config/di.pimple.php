@@ -10,6 +10,7 @@ use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver\Annota
 use BetterSerializer\DataBind\MetaData\Reader\PropertyReader\TypeResolver\DocBlockPropertyTypeResolver;
 use BetterSerializer\DataBind\MetaData\Type\Factory\Chain as TypeFactoryChain;
 use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\HigherType;
+use BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\PrimitiveType\AliasedTypeResolver;
 use BetterSerializer\DataBind\Reader\Instantiator\Factory\Standard\ParamProcessor;
 use BetterSerializer\DataBind\Reader\Processor\Factory as ReaderProcessorFactory;
 use BetterSerializer\DataBind\Writer\Processor\Factory as WriterProcessorFactory;
@@ -577,7 +578,7 @@ $container[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolve
     function (Container $c) {
         return new BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\ResolverChain(
             [
-                $c[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\PrimitiveTypeResolver::class],
+                $c[AliasedTypeResolver::class],
                 $c[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\HigherTypeResolver::class],
             ]
         );
@@ -586,6 +587,13 @@ $container[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolve
 $container[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\PrimitiveTypeResolver::class] =
     function () {
         return new BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\PrimitiveTypeResolver();
+    };
+
+$container[AliasedTypeResolver::class] =
+    function (Container $c) {
+        return new AliasedTypeResolver(
+            $c[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\PrimitiveTypeResolver::class]
+        );
     };
 
 $container[BetterSerializer\DataBind\MetaData\Type\StringFormType\Parser\Resolver\HigherTypeResolver::class] =

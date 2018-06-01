@@ -11,9 +11,7 @@ use DateTimeImmutable;
 use JMS\Serializer\Annotation as JmsSerializer;
 
 /**
- * Trait TimeStampable
- * @author mfris
- * @package BetterSerializer\Dto
+ *
  */
 trait TimeStampable
 {
