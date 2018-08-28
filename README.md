@@ -30,7 +30,7 @@ metadata caching, the serialization process is already
 [4-6x faster](tests/Performance/Serialization/JsonTest.php) than using JmsSerializer. 
 The deserialization process is also faster, but only [cca 3.5x faster](tests/Performance/Deserialization/JsonTest.php).
 
-There is also another benchmark, which compares JMS Serializer, [Ivory Serializer]() and Better Serialier. 
+There is also another benchmark, which compares JMS Serializer, [Ivory Serializer](https://github.com/egeloen/ivory-serializer) and Better Serialier. 
 It also integrates Symfony serializer, but I needed to comment it out, because it was 100-300x slower 
 than Better Serializer.
 You can find a fork of it [here](https://github.com/better-serializer/ivory-serializer-benchmark) and try it 
