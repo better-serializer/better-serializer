@@ -2,6 +2,8 @@ parameters:
     git_dir: .
     bin_dir: vendor/bin
     process_timeout: 600
+    stop_on_failure: true
+    ignore_unstaged_changes: true
     tasks:
       phpcs:
         standard: PSR2

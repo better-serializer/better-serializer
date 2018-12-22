@@ -52,9 +52,7 @@ final class PropertyExtractor implements ExtractorInterface
             return null;
         }
 
-        $getter = $this->getter->bindTo($data, $this->className);
-
-        return $getter();
+        return $this->getter[0]($data);
     }
 
     /**
@@ -77,13 +75,13 @@ final class PropertyExtractor implements ExtractorInterface
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function createGetter(): void
     {
         $propertyName = $this->propertyName;
-        $this->getter = function () use ($propertyName) {
-            return $this->$propertyName;
-        };
+        $this->getter = [Closure::bind(static function (object $object) use ($propertyName) {
+            return $object->$propertyName;
+        }, null, $this->className)];
     }
 }
