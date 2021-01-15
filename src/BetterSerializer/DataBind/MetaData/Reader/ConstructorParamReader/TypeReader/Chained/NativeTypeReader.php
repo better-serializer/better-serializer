@@ -63,7 +63,7 @@ final class NativeTypeReader implements ChainedTypeReaderInterface
         }
 
         $stringFormType = $this->stringTypeParser->parseWithParentContext(
-            (string) $type->getName(),
+            $type->getName(),
             $parameter->getDeclaringClass()
         );
 
